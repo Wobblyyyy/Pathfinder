@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value=" ======================================================================&#10; || Copyright (c) 2020 Colin Robertson (wobblyyyy@gmail.com)         ||&#10; ||                                                                  ||&#10; || This file is part of the &quot;Pathfinder&quot; project, which is licensed ||&#10; || and distributed under the GPU General Public License V3.         ||&#10; ||                                                                  ||&#10; || Pathfinder is available on GitHub:                               ||&#10; || https://github.com/Wobblyyyy/Pathfinder                          ||&#10; ||                                                                  ||&#10; || Pathfinder's license is available:                               ||&#10; || https://www.gnu.org/licenses/gpl-3.0.en.html                     ||&#10; ||                                                                  ||&#10; || Re-distribution of this, or any other files, is allowed so long  ||&#10; || as this same copyright notice is included and made evident.      ||&#10; ======================================================================" />
+    <option name="myName" value="Pathfinder" />
+  </copyright>
+</component>

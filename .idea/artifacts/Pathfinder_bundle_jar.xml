@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Pathfinder-bundle:jar">
+    <output-path>$PROJECT_DIR$/bin/artifacts/</output-path>
+    <root id="archive" name="Pathfinder-bundle.jar">
+      <element id="dir-copy" path="$PROJECT_DIR$/jnis/linux" />
+      <element id="dir-copy" path="$PROJECT_DIR$/jnis/osx" />
+      <element id="dir-copy" path="$PROJECT_DIR$/jnis/windows" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/intra_utils.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/JNILoader-1.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/OdometryCore-1.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/Pathfinder-Java-Main.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/PathfindingCore.jar" path-in-jar="/" />
+      <element id="module-output" name="Pathfinder" />
+      <element id="module-output" name="Pathfinder-frc" />
+      <element id="module-output" name="Pathfinder-ftc" />
+      <element id="module-output" name="Pathfinder-rlib" />
+      <element id="module-source" name="Pathfinder" />
+      <element id="module-source" name="Pathfinder-frc" />
+      <element id="module-source" name="Pathfinder-ftc" />
+      <element id="module-source" name="Pathfinder-rlib" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Pathfinder.iml" filepath="$PROJECT_DIR$/.idea/Pathfinder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pathfinder-frc/Pathfinder-frc.iml" filepath="$PROJECT_DIR$/Pathfinder-frc/Pathfinder-frc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pathfinder-ftc/Pathfinder-ftc.iml" filepath="$PROJECT_DIR$/Pathfinder-ftc/Pathfinder-ftc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pathfinder-rlib/Pathfinder-rlib.iml" filepath="$PROJECT_DIR$/Pathfinder-rlib/Pathfinder-rlib.iml" />
+    </modules>
+  </component>
+</project>
