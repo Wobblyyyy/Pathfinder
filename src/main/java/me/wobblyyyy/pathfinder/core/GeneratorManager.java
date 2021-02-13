@@ -29,9 +29,17 @@ import java.util.ArrayList;
 /**
  * Manager class used for controlling and manipulating different generators.
  *
+ * <p>
+ * "Generator" and "path finder" are practically synonymous - I just had to
+ * use different words to make sure the internal nomenclature made sense.
+ * </p>
+ *
  * @author Colin Robertson
  */
 public class GeneratorManager {
+    /**
+     * All of the generators that should be used.
+     */
     private final ArrayList<Generator> gens = new ArrayList<>();
 
     /**
@@ -52,6 +60,12 @@ public class GeneratorManager {
     /**
      * Add a generator to the execution cycle.
      *
+     * <p>
+     * If you have your own pathfinding system you'd like to use, you can use
+     * it here - you just need to make sure to implement the Generator
+     * interface and you're all good!
+     * </p>
+     *
      * @param g     the generator to add.
      * @param index the index to add it at. The closer this number is to zero,
      *              the higher priority the generator has over other generators.
@@ -63,6 +77,12 @@ public class GeneratorManager {
 
     /**
      * Add a generator to the execution cycle.
+     *
+     * <p>
+     * If you have your own pathfinding system you'd like to use, you can use
+     * it here - you just need to make sure to implement the Generator
+     * interface and you're all good!
+     * </p>
      *
      * @param g the generator to add.
      */

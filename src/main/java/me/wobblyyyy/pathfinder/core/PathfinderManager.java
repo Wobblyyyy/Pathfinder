@@ -52,6 +52,12 @@ import java.util.Arrays;
  * </p>
  *
  * <p>
+ * This is one of the few situations in which I'd use the term "big daddy"
+ * without hesitance when describing a class. Everything related to actually
+ * finding paths and all of that is in this class.
+ * </p>
+ *
+ * <p>
  * Best of luck in your pathfinding adventures!
  * </p>
  *
@@ -102,6 +108,19 @@ public class PathfinderManager {
      * Create a new PathfinderManager.
      *
      * <p>
+     * This constructor...
+     * <ul>
+     *     <li>Initializes constructor parameters.</li>
+     *     <li>Creates a new GeneratorManager and adds generators.</li>
+     *     <li>Create a new execution thread.</li>
+     *     <li>Create a new odometry thread.</li>
+     *     <li>Initialize the follower factory.</li>
+     *     <li>Start both of the two aforementioned threads.</li>
+     * </ul>
+     * In other words, there's a lot of stuff that goes on here.
+     * </p>
+     *
+     * <p>
      * All of the Core subcomponents are initialized here as well. Although
      * they should work perfectly fine, if you're getting initialization errors,
      * you're probably doing something wrong with your pathfinder configuration.
@@ -135,6 +154,12 @@ public class PathfinderManager {
      * This method assumes that any end user already has all of the paths they
      * plan on following in order. If the paths are not in order, the final
      * merged path won't be either.
+     * </p>
+     *
+     * <p>
+     * Merged paths ensure that all the different types of followers can
+     * generate a trajectory for a given set of points without encountering
+     * any issue.
      * </p>
      *
      * @param paths several pre-sorted array lists of target points.
@@ -174,14 +199,32 @@ public class PathfinderManager {
      */
     public ArrayList<Point> getPath(HeadingPoint start,
                                     HeadingPoint end) {
+        /*
+         * If the start and end targets are the same, tell the user that
+         * they're basically stupid.
+         *
+         * Yeah. Makes sense.
+         */
         if (HeadingPoint.isSame(start, end)) {
             try {
+                /*
+                 * Throw an InvalidPathException.
+                 *
+                 * Points can't be identical - no (0, 0) (0, 0).
+                 */
                 throw new InvalidPathException("Points can not be identical!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        /*
+         * If the points aren't the same, however, we can use the generator
+         * to generate a path between the two points.
+         *
+         * Typically, this will fall on the lightning finder, then the speed
+         * finder, and finally, the actual pathfinders.
+         */
         return finder.getCoordinatePath(start, end);
     }
 
@@ -211,6 +254,13 @@ public class PathfinderManager {
      * @return an extended path based off of waypoints.
      */
     public ArrayList<Point> getWaypointPath(ArrayList<HeadingPoint> points) {
+        /*
+         * If the size of the points array is 0 or 1, tell the user that there
+         * are too few points to actually create a path.
+         *
+         * Paths must be greater than 1 (greater than or equal to 2, actually)
+         * in order for a path to be generated.
+         */
         if (points.size() < 2) {
             try {
                 throw new InvalidPathException("Too few target points!");
@@ -219,17 +269,44 @@ public class PathfinderManager {
             }
         }
 
+        /*
+         * An ArrayList of ArrayList - in all actuality, several different
+         * points.
+         *
+         * I don't know why this is an array list of an array list, but I
+         * don't want to break something that's already working, so I'm
+         * leaving it exactly as is. Sucks.
+         */
         ArrayList<ArrayList<Point>> paths = new ArrayList<>();
 
+        /*
+         * Add all of the points to the grand list of points.
+         */
         for (HeadingPoint p : points) {
             try {
+                /*
+                 * Try to get the next point following the current point.
+                 *
+                 * If there is no next point, we get a NullPointException,
+                 * or an ArrayOutOfBoundsException, I can't remember which one.
+                 * Either way, the exception is ignored.
+                 */
                 HeadingPoint q = points.get(points.indexOf(p) + 1);
                 ArrayList<Point> pqPath = getPath(p, q);
                 paths.add(pqPath);
             } catch (Exception ignored) {
+                /*
+                 * We know we'll get an exception here, so we just entirely
+                 * ignore it.
+                 */
             }
         }
 
+        /*
+         * Return the result of merging all of the paths.
+         *
+         * This removes any duplicates, etc.
+         */
         return merge(paths);
     }
 
@@ -321,8 +398,18 @@ public class PathfinderManager {
      * @return a list of followers to follow that path.
      */
     public ArrayList<Follower> generateFollowers(ArrayList<HeadingPoint> path) {
+        /*
+         * Create a new list of all of the followers that have been generated.
+         */
         ArrayList<Follower> followers = new ArrayList<>();
 
+        /*
+         * We have to get the right type of follower, of course.
+         *
+         * If the user's configuration indicates they want a PID follower, we
+         * need to give them a PID follower. To accomplish this, we use a big
+         * switch statement.
+         */
         switch (config.getFollowerType()) {
             case PID:
                 for (HeadingPoint p : path) {
@@ -338,6 +425,10 @@ public class PathfinderManager {
                 break;
             case PROPORTIONAL:
                 // TODO add a proportional follower!
+                /*
+                 * We're still missing a proportional follower - I'm incredibly
+                 * lazy and don't really have the desire to code one.
+                 */
             case LINEAR:
                 for (HeadingPoint p : path) {
                     try {
@@ -351,10 +442,22 @@ public class PathfinderManager {
                 }
                 break;
             case SWERVE:
+                /*
+                 * Swerve followers are created in a much more simple manner,
+                 * as swerve followers are designed to cover several
+                 * trajectories, rather than a single trajectory.
+                 */
                 followers.add(Factory.swerve.build(path));
                 break;
         }
 
+        /*
+         * Return the list of followers.
+         *
+         * If this list is of size 0, no followers have been generated or
+         * found. This either represents a pathfinding issue (no path
+         * found, etc) or a follower issue (very unlikely).
+         */
         return followers;
     }
 
@@ -380,12 +483,18 @@ public class PathfinderManager {
      * may be some issues with the robot's heading.
      * </p>
      *
+     * <p>
+     * This is best stated as a wrapper for generating followers - why just
+     * generate them when you can generate AND queue them? Crazy, I know.
+     * </p>
+     *
      * @param start the starting position.
      * @param end   the ending position.
      */
     public void generateAndQueueFollowers(HeadingPoint start,
                                           HeadingPoint end) {
         ArrayList<Point> path = getPath(start, end);
+
         ArrayList<Follower> followers = generateFollowers(
                 withHeading(
                         path,
@@ -393,6 +502,7 @@ public class PathfinderManager {
                         end
                 )
         );
+
         exec.queueFollowers(followers);
     }
 
@@ -410,6 +520,10 @@ public class PathfinderManager {
      * @param followers followers to be queued.
      */
     public void queueFollowers(ArrayList<Follower> followers) {
+        /*
+         * We don't actually queue the followers here - that's done in the
+         * follower manager / executor class.
+         */
         exec.queueFollowers(followers);
     }
 
@@ -482,6 +596,10 @@ public class PathfinderManager {
      * @param end the target position.
      */
     public void goToPosition(HeadingPoint end) {
+        /*
+         * Generate and then queue followers for getting to the target
+         * position.
+         */
         generateAndQueueFollowers(
                 config.getOdometry().getPos(),
                 end
@@ -508,8 +626,14 @@ public class PathfinderManager {
      * @param points the waypoints that should be used in path generation.
      */
     public void followPath(HeadingPoint... points) {
+        /*
+         * Create a list of paths to go to.
+         */
         ArrayList<HeadingPoint> list = new ArrayList<>(Arrays.asList(points));
 
+        /*
+         * Call the regular followPath method.
+         */
         followPath(list);
     }
 
@@ -533,7 +657,22 @@ public class PathfinderManager {
      * @param points the waypoints that should be used in path generation.
      */
     public void followPath(ArrayList<HeadingPoint> points) {
+        /*
+         * Create a path of waypoints used in later trajectory generation.
+         *
+         * getWaypointPath(), remember, returns a list of points in a path
+         * to get to a target point while still hitting some certain points.
+         */
         ArrayList<Point> path = getWaypointPath(points);
+
+        /*
+         * Generate the needed followers for following the path.
+         *
+         * Linear, proportional, PID, etc, followers all require the generation
+         * of more than one follower. Swerve/tank/meccanum followers, on the
+         * other hand, only require a single follower - remember that while
+         * trying to debug what's going on here.
+         */
         ArrayList<Follower> followers = generateFollowers(
                 withHeading(
                         path,
@@ -542,6 +681,10 @@ public class PathfinderManager {
                 )
         );
 
+        /*
+         * Actually queue the followers and tell the pathfinder to start
+         * doing cool pathfinding stuff.
+         */
         queueFollowers(followers);
     }
 
@@ -571,6 +714,11 @@ public class PathfinderManager {
      * </p>
      */
     public void lock() {
+        /*
+         * Thread-locking isn't handled here - rather, it's done in the
+         * execution thread's locking mechanism. If thread-locking isn't working
+         * here, you should go check out the exec locking.
+         */
         exec.lock();
     }
 
