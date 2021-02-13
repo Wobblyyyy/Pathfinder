@@ -29,6 +29,13 @@ import java.util.ArrayList;
  * The fastest pathfinder available. Or something like that.
  *
  * <p>
+ * Generally speaking, we want to attempt to use this finder whenever possible.
+ * Using this, compared to the SpeedFinder or especially the actually
+ * algorithmic finders, is significantly faster. And we know what that means -
+ * more speed means more swag. It's a 1-1 correlation.
+ * </p>
+ *
+ * <p>
  * This generator works by checking to see if the area in question of the
  * field is empty or not. If the area is empty, this returns the start and
  * the end points in an array. If the area is not empty, this returns an
@@ -50,6 +57,9 @@ import java.util.ArrayList;
  * @author Colin Robertson
  */
 public class LightningFinder implements Generator {
+    /**
+     * A reference to the pathfinder's configuration class.
+     */
     private final PathfinderConfig config;
 
     /**
@@ -79,8 +89,18 @@ public class LightningFinder implements Generator {
     @Override
     public ArrayList<Point> getCoordinatePath(Point start,
                                               Point end) {
+        /*
+         * Start and end test points.
+         *
+         * If the path is clear, we add the start and end points.
+         *
+         * If it's not, we don't.
+         */
         ArrayList<Point> points = new ArrayList<>();
 
+        /*
+         * Check if the area is empty.
+         */
         if (MapTools.isAreaEmpty(
                 config.getMap(),
                 new MapTools.Area(
@@ -88,10 +108,22 @@ public class LightningFinder implements Generator {
                         end
                 )
         )) {
+            /*
+             * The area's empty!
+             *
+             * We can add our start and end points to the array list.
+             */
             points.add(start);
             points.add(end);
         }
 
+        /*
+         * Return the points we've gotten.
+         *
+         * If this list is of size 0, no points have been added, meaning no
+         * path has been found. The GeneratorManager class should handle this
+         * for us.
+         */
         return points;
     }
 }

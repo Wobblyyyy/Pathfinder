@@ -150,6 +150,11 @@ public class SwerveChassisTracker implements Tracker {
                                 double wheelDiameter,
                                 double gapX,
                                 double gapY) {
+        /*
+         * Set all of the constructor parameters, because those are (at least
+         * a little bit) useful for the robot's operation actually, well...
+         * operating, y'know?
+         */
         this.frTurn = frTurn;
         this.frDrive = frDrive;
         this.flTurn = flTurn;
@@ -162,6 +167,11 @@ public class SwerveChassisTracker implements Tracker {
         this.gapX = gapX;
         this.gapY = gapY;
 
+        /*
+         * The robot's gap needs to be taken into account here - create
+         * points - fr, fl, br, bl - indicating the relative position of
+         * the swerve modules.
+         */
         Point frO = new Point(
                 gapX / 2,
                 gapY / 2
@@ -179,6 +189,10 @@ public class SwerveChassisTracker implements Tracker {
                 gapY / 2 * -1
         );
 
+        /*
+         * Create four trackers - one for each wheel - based on the provided
+         * measurements and values.
+         */
         SwerveModuleTracker fr = new SwerveModuleTracker(
                 frTurn,
                 frDrive,
@@ -204,6 +218,9 @@ public class SwerveChassisTracker implements Tracker {
                 blO
         );
 
+        /*
+         * Finalize the swerve trackers.
+         */
         this.fr = fr;
         this.fl = fl;
         this.br = br;
@@ -212,6 +229,11 @@ public class SwerveChassisTracker implements Tracker {
 
     /**
      * Create a new swerve chassis tracker.
+     *
+     * <p>
+     * This constructor kinda sucks, and you should probably use the other
+     * one if you don't mind passing a ton of parameters at the same time.
+     * </p>
      *
      * @param fr front-right tracker.
      * @param fl front-left tracker.
@@ -282,27 +304,52 @@ public class SwerveChassisTracker implements Tracker {
      */
     @Override
     public void update() {
+        /*
+         * Calling all four of the methods like this is a little bit ugly -
+         * is there a better way, potentially involving lists, to do this?
+         */
+
         fr.update();
         fl.update();
         br.update();
         bl.update();
     }
 
+    /**
+     * Get the front-right tracker's position.
+     *
+     * @return the front-right tracker's position.
+     */
     @Override
     public HeadingPoint getFrPos() {
         return fr.getPosition();
     }
 
+    /**
+     * Get the front-left tracker's position.
+     *
+     * @return the front-left tracker's position.
+     */
     @Override
     public HeadingPoint getFlPos() {
         return fl.getPosition();
     }
 
+    /**
+     * Get the back-right tracker's position.
+     *
+     * @return the back-right tracker's position.
+     */
     @Override
     public HeadingPoint getBrPos() {
         return br.getPosition();
     }
 
+    /**
+     * Get the back-left tracker's position.
+     *
+     * @return the back-left tracker's position.
+     */
     @Override
     public HeadingPoint getBlPos() {
         return bl.getPosition();

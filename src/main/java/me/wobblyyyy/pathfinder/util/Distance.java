@@ -41,6 +41,18 @@ import me.wobblyyyy.pathfinder.geometry.Point;
  */
 public class Distance {
     /**
+     * The factor by which an inch measurement should be multiplied to get
+     * the same measurement in meters.
+     */
+    public static double INCHES_TO_METERS = 0.0254;
+
+    /**
+     * The factor by which an inch measurement should be multiplied to get
+     * the same measurement in meters.
+     */
+    public static double METERS_TO_INCHES = 39.371;
+
+    /**
      * Get the distance between two points.
      *
      * <p>
@@ -184,7 +196,7 @@ public class Distance {
      * @return the distance, measured in meters.
      */
     public static double inchesToMeters(double inches) {
-        return inches * 0.0254;
+        return inches * INCHES_TO_METERS;
     }
 
     /**
@@ -194,6 +206,6 @@ public class Distance {
      * @return the distance, measured in inches.
      */
     public static double metersToInches(double meters) {
-        return meters * 39.37;
+        return meters * METERS_TO_INCHES;
     }
 }

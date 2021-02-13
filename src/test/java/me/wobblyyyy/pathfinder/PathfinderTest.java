@@ -41,6 +41,7 @@ public class PathfinderTest {
 
         execTRA = System.currentTimeMillis();
         pathfinder.followPath(points);
+        pathfinder.lock();
         execTRA = System.currentTimeMillis() - execTRA;
 
         ArrayList<Point> path = pathfinder.getManager().getWaypointPath(points);
