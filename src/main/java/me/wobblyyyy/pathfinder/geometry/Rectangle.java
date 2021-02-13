@@ -554,12 +554,28 @@ public class Rectangle implements Shape {
      * @return a list of all the components.
      */
     public int getComponents() {
+        /*
+         * 12:
+         * - Four points (corners)
+         * - Four lines (lines, ofc)
+         * - Four something else, I forget.
+         */
         return 12;
     }
 
     @Override
     public boolean isLineInShape(me.wobblyyyy.pathfinder.geometry.Line line) {
-        return false;
+        /*
+         * For now, we handle line collision detection by checking for any
+         * potential intersections. If ANY of the values are true, we say
+         * that there's a collision and the line is in the shape.
+         *
+         * TODO In the future we should make this more precise.
+         */
+        return Line.doesIntersect(top, line) ||
+                Line.doesIntersect(right, line) ||
+                Line.doesIntersect(bottom, line) ||
+                Line.doesIntersect(left, line);
     }
 
     /**

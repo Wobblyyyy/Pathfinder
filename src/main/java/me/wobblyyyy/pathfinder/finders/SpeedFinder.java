@@ -42,8 +42,20 @@ import java.util.ArrayList;
  * @author Colin Robertson
  */
 public class SpeedFinder implements Generator {
+    /**
+     * The robot's X value (inches, preferably).
+     */
     private final double rX;
+
+    /**
+     * The robot's X value (inches, preferably).
+     */
     private final double rY;
+
+    /**
+     * A reference to the pathfinder's configuration, obviously used in
+     * doing configuration things and stuff.
+     */
     private final PathfinderConfig config;
 
     /**
@@ -75,6 +87,13 @@ public class SpeedFinder implements Generator {
     @Override
     public ArrayList<Point> getCoordinatePath(Point start,
                                               Point end) {
+        /*
+         * All of the zones contained in the scanned area.
+         *
+         * Typically, we're only calling this method if lightning has already
+         * failed, so we don't need to perform another check to see if the
+         * area is empty - we're assuming it's not.
+         */
         ArrayList<Zone> itw = MapTools.getZonesInArea(
                 config.getMap(),
                 new MapTools.Area(
@@ -83,26 +102,47 @@ public class SpeedFinder implements Generator {
                 )
         );
 
+        /*
+         * Distance between the start and end point.
+         */
         double distance = Distance.getDistance(start, end);
 
+        /*
+         * The difference between two points - used largely in angle
+         * calculation. Instead of doing math, we're lazy - we just use the
+         * Math.atan2 method. And make a new point. But whatever.
+         */
         Point difference = new Point(
                 end.getX() - start.getX(),
                 end.getY() - start.getY()
         );
 
+        /*
+         * Get the angle, using Point.getTheta().
+         */
         double angle = difference.getTheta();
 
+        /*
+         * Left line base.
+         */
         Point lBase = Distance.inDirection(
                 start,
                 angle + 90,
                 Math.hypot(rX, rY)
         );
+
+        /*
+         * Right line base.
+         */
         Point rBase = Distance.inDirection(
                 start,
                 angle - 90,
                 Math.hypot(rX, rY)
         );
 
+        /*
+         * Left line - used in collision checking.
+         */
         Line left = new Line(
                 lBase,
                 Distance.inDirection(
@@ -111,6 +151,10 @@ public class SpeedFinder implements Generator {
                         distance
                 )
         );
+
+        /*
+         * Right line - used in collision checking.
+         */
         Line right = new Line(
                 rBase,
                 Distance.inDirection(
@@ -120,6 +164,11 @@ public class SpeedFinder implements Generator {
                 )
         );
 
+        /*
+         * For each of the zones contained in the list of zones that are
+         * present inside the scanned area, we need to run collision checks.
+         * Check whether or not the given lines are in the shapes.
+         */
         for (Zone z : itw) {
             if (z.getParentShape().isLineInShape(left) ||
                     z.getParentShape().isLineInShape(right))
