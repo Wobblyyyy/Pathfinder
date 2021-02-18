@@ -13,7 +13,18 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.followers;
@@ -53,6 +64,8 @@ import java.util.ArrayList;
  * </p>
  *
  * @author Colin Robertson
+ * @version 1.0.0
+ * @since 0.1.0
  */
 public class SwerveFollower implements Follower {
     /**
@@ -159,17 +172,64 @@ public class SwerveFollower implements Follower {
      */
     private Point origin;
 
+    /**
+     * Front-right distance travelled.
+     */
     private double distance_fr;
+
+    /**
+     * Power for the front-right wheel.
+     */
     private double power_fr;
+
+    /**
+     * Heading for the front-right wheel.
+     */
     private double heading_fr;
+
+    /**
+     * Front-left distance travelled.
+     */
     private double distance_fl;
+
+    /**
+     * Power for the front-left wheel.
+     */
     private double power_fl;
+
+    /**
+     * Heading for the front-left wheel.
+     */
     private double heading_fl;
+
+    /**
+     * Back-right distance travelled.
+     */
     private double distance_br;
+
+    /**
+     * Power for the back-right wheel.
+     */
     private double power_br;
+
+    /**
+     * Heading for the back-right wheel.
+     */
     private double heading_br;
+
+    /**
+     * Back-left distance travelled.
+     */
     private double distance_bl;
+
+    /**
+     * Power for the back-left wheel.
+     */
     private double power_bl;
+
+    /**
+     * Heading for the back-left wheel.
+     */
     private double heading_bl;
 
     /**
@@ -238,6 +298,10 @@ public class SwerveFollower implements Follower {
      * values can be determined yet, we surround our logic in a try-catch
      * statement.
      * </p>
+     *
+     * @see Distance#getDistance(Point, Point)
+     * @see DistanceFollower#calculate(double)
+     * @see DistanceFollower#getHeading()
      */
     @Override
     public void update() {
@@ -268,6 +332,10 @@ public class SwerveFollower implements Follower {
      * a separate thread and logic in the main thread is surrounded by try
      * and catch statements to ensure nothing goes wrong.
      * </p>
+     *
+     * @see Trajectory
+     * @see DistanceFollower
+     * @see SwerveModifier
      */
     @Override
     public void calculate() {
@@ -350,6 +418,7 @@ public class SwerveFollower implements Follower {
      * Has the follower finished its trajectory yet?
      *
      * @return whether or not the follower's execution is over.
+     * @see DistanceFollower#isFinished()
      */
     @Override
     public boolean isDone() {

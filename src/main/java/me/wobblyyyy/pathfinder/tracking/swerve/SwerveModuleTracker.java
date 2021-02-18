@@ -13,7 +13,18 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.tracking.swerve;
@@ -33,6 +44,10 @@ import me.wobblyyyy.pathfinder.tracking.PointTracker;
  * </p>
  *
  * @author Colin Robertson
+ * @version 1.0.1
+ * @since 0.1.0
+ * @see AngleTracker
+ * @see PointTracker
  */
 public class SwerveModuleTracker {
     /**
@@ -74,6 +89,15 @@ public class SwerveModuleTracker {
                                Encoder driveEncoder,
                                double driveWheelDiameter,
                                Point offset) {
+        /*
+         * Set up constructor variables.
+         *
+         * I don't like how there's varying levels of abstraction in this
+         * constructor - ideally, tTurn and tDrive should both take the
+         * same number of parameters.
+         *
+         * Maybe we should make an object to fix this?
+         */
         tTurn = new AngleTracker(turnEncoder);
         tDrive = new PointTracker(
                 driveEncoder,
@@ -81,6 +105,9 @@ public class SwerveModuleTracker {
                 offset
         );
 
+        /*
+         * Set the swerve module's offset.
+         */
         this.offset = offset;
     }
 
@@ -102,9 +129,35 @@ public class SwerveModuleTracker {
      * Generally, it's a wise idea to have a thread dedicated to updating
      * the odometric position of the robot.
      * </p>
+     *
+     * <p>
+     * None of the math that's responsible for tracking the chassis' position
+     * is stored in this class. Rather, it's available in the point and
+     * angle tracker classes, both of which have an `@see` tag.
+     * </p>
+     *
+     * @see AngleTracker#update()
+     * @see PointTracker#update(double)
      */
     public void update() {
+        /*
+         * Update the turn tracker first.
+         *
+         * The turn tracker doesn't take any parameters - the encoder that's
+         * used by the turn tracker is stored inside of the class.
+         */
         tTurn.update();
+
+        /*
+         * Update the drive tracker next.
+         *
+         * This is updated after the turn tracker to ensure that the turn
+         * tracker provides the most updated angle possible.
+         *
+         * Unlike the turn tracker, the point tracker needs a single parameter
+         * passed to it - that, of course, being the angle of the angle
+         * tracker.
+         */
         tDrive.update(tTurn.getAngle());
     }
 
@@ -123,22 +176,47 @@ public class SwerveModuleTracker {
         return tDrive.getPosition();
     }
 
+    /**
+     * Get the turn encoder.
+     *
+     * @return the turn encoder.
+     */
     protected Encoder gt() {
         return tTurn.getEncoder();
     }
 
+    /**
+     * Get the drive encoder.
+     *
+     * @return the drive encoder.
+     */
     protected Encoder gd() {
         return tDrive.getEncoder();
     }
 
+    /**
+     * Get the drive wheel's diameter.
+     *
+     * @return the drive wheel's diameter.
+     */
     protected double gwd() {
         return tDrive.getDiameter();
     }
 
+    /**
+     * Get the swerve module's X offset.
+     *
+     * @return the swerve module's X offset.
+     */
     protected double gxo() {
         return offset.getX();
     }
 
+    /**
+     * Get the swerve module's Y offset.
+     *
+     * @return the swerve module's Y offset.
+     */
     protected double gyo() {
         return offset.getY();
     }

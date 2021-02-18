@@ -13,7 +13,18 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.tracking;
@@ -71,6 +82,8 @@ import me.wobblyyyy.pathfinder.util.Distance;
  * </p>
  *
  * @author Colin Robertson
+ * @version 1.0.0
+ * @since 0.1.0
  */
 public class PointTracker {
     /**
@@ -152,6 +165,10 @@ public class PointTracker {
     public PointTracker(Encoder encoder,
                         double diameter,
                         Point startingPoint) {
+        /*
+         * Set all of the constructor values we have.
+         */
+
         this.startingPoint = startingPoint;
         this.position = new HeadingPoint(
                 startingPoint.getX(),
@@ -178,6 +195,10 @@ public class PointTracker {
      * @return how many inches have been travelled.
      */
     public double ticksToInches(int ticks) {
+        /*
+         * Ticks to inches is a very easy conversion - it's as simple as
+         * dividing the number of ticks by the number of ticks per inch.
+         */
         return ticks / tpi;
     }
 
@@ -208,8 +229,13 @@ public class PointTracker {
      *              should be notated in degrees, not radians. Additionally,
      *              this angle should be determined externally - you shouldn't
      *              pass a raw encoder value to this method, ever.
+     * @see PointTracker#update(double, int)
      */
     public void update(double angle) {
+        /*
+         * This is an overloaded method here - we need to offload the
+         * real calculations to the real update method.
+         */
         update(angle, encoder.getCount());
     }
 
@@ -247,14 +273,40 @@ public class PointTracker {
      */
     public void update(double angle,
                        int count) {
+        /*
+         * The position of the point can be determined by using the Distance
+         * class' inDirection method, which returns a point a given distance
+         * and direction away from an origin point.
+         */
         position = (HeadingPoint) Distance.inDirection(
+                /*
+                 * We need to use a HeadingPoint here instead of a point.
+                 *
+                 * The inDirection method accepts a HeadingPoint as an input
+                 * parameter, and not a point and an angle.
+                 */
                 HeadingPoint.withNewHeading(
                         this.position,
                         angle
                 ),
+
+                /*
+                 * To determine the distance that the point has travelled since
+                 * the point's position was last updated is quite simple.
+                 *
+                 * The distance which the point has travelled can be best
+                 * represented as the amount of ticks that have elapsed since
+                 * the last time the encoder's value was queried.
+                 *
+                 * These elapsed ticks can then be converted into inches, thus
+                 * giving us the point's position.
+                 */
                 ticksToInches(count - lastCount)
         );
 
+        /*
+         * Update the local last count field.
+         */
         this.lastCount = count;
     }
 

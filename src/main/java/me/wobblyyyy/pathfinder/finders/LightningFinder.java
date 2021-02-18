@@ -13,7 +13,18 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.finders;
@@ -48,6 +59,8 @@ import java.util.ArrayList;
  * </p>
  *
  * @author Colin Robertson
+ * @version 1.0.0
+ * @since 0.1.0
  */
 public class LightningFinder implements Generator {
     private final PathfinderConfig config;
@@ -79,8 +92,26 @@ public class LightningFinder implements Generator {
     @Override
     public ArrayList<Point> getCoordinatePath(Point start,
                                               Point end) {
+        /*
+         * Create a new ArrayList of points.
+         *
+         * This list will be used no matter what - if no path is found, the
+         * list will be returned empty. If a path is found, however, the path
+         * will be returned as intended.
+         */
         ArrayList<Point> points = new ArrayList<>();
 
+        /*
+         * Check to see if the area of the map that the robot needs to find
+         * a path (a big rectangle from the START point to the END point,
+         * actually) is clear.
+         *
+         * If the area is clear, we can add our two points (start and end) to
+         * the array list of points on our path.
+         *
+         * If the area isn't clear, however, we return the array list as is:
+         * entirely empty.
+         */
         if (MapTools.isAreaEmpty(
                 config.getMap(),
                 new MapTools.Area(

@@ -13,7 +13,18 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.tracking.swerve;
@@ -21,7 +32,6 @@ package me.wobblyyyy.pathfinder.tracking.swerve;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.robot.Encoder;
-import me.wobblyyyy.pathfinder.tracking.PointTracker;
 import me.wobblyyyy.pathfinder.tracking.Tracker;
 
 /**
@@ -34,7 +44,16 @@ import me.wobblyyyy.pathfinder.tracking.Tracker;
  * the {@link me.wobblyyyy.pathfinder.util.ChassisConverter} class.
  * </p>
  *
+ * <p>
+ * Much of the tracking math behind the swerve chassis tracker happens
+ * elsewhere in the code. A lot of it happens in the SwerveModuleTracker class,
+ * which is included as an `@see` tag in this doc.
+ * </p>
+ *
  * @author Colin Robertson
+ * @version 1.0.1
+ * @since 0.1.0
+ * @see SwerveModuleTracker
  */
 public class SwerveChassisTracker implements Tracker {
     /**
@@ -150,6 +169,14 @@ public class SwerveChassisTracker implements Tracker {
                                 double wheelDiameter,
                                 double gapX,
                                 double gapY) {
+        /*
+         * Set constructor parameters/fields.
+         *
+         * We have a ton of these. Ideally, there should be a way to cut
+         * down on this at some point - methods should rarely ever exceed
+         * 20 lines in length for the purpose of simplicity.
+         */
+
         this.frTurn = frTurn;
         this.frDrive = frDrive;
         this.flTurn = flTurn;
@@ -161,6 +188,15 @@ public class SwerveChassisTracker implements Tracker {
         this.wheelDiameter = wheelDiameter;
         this.gapX = gapX;
         this.gapY = gapY;
+
+        /*
+         * Calculate "offset points."
+         *
+         * These offset points are used in swerve calculations. Because the
+         * angle and position of each of the wheels can be entirely independent
+         * of one another, we need to know the offset of each of these wheels
+         * in order to be able to track the relative movement of the chassis.
+         */
 
         Point frO = new Point(
                 gapX / 2,
@@ -178,6 +214,19 @@ public class SwerveChassisTracker implements Tracker {
                 gapX / 2 * -1,
                 gapY / 2 * -1
         );
+
+        /*
+         * After calculating offset points, we have to initialize the swerve
+         * module trackers.
+         *
+         * Although pretending to track things is cool and all, in order to
+         * actually track them, we need to have access to the math in the
+         * SwerveModuleTracker class. This math depends on several things:
+         * - Turn motor
+         * - Drive motor
+         * - The diameter of the drive wheel
+         * - The offset of the swerve module's center axis
+         */
 
         SwerveModuleTracker fr = new SwerveModuleTracker(
                 frTurn,
@@ -203,6 +252,10 @@ public class SwerveChassisTracker implements Tracker {
                 wheelDiameter,
                 blO
         );
+
+        /*
+         * Set our FR, FL, BR, and BL module trackers.
+         */
 
         this.fr = fr;
         this.fl = fl;
@@ -240,6 +293,12 @@ public class SwerveChassisTracker implements Tracker {
     /**
      * Get the chassis' position WITHOUT HEADING.
      *
+     * <p>
+     * This point is calculated by averaging the position of all four of
+     * the swerve modules. In theory, this should give the chassis's center
+     * position, as the robot's position is defined as the very center of it.
+     * </p>
+     *
      * @return the chassis position, without heading.
      */
     private HeadingPoint getHeadlessPoint() {
@@ -265,6 +324,7 @@ public class SwerveChassisTracker implements Tracker {
      * </p>
      *
      * @return the robot's position and heading.
+     * @see SwerveChassisTracker#getHeadlessPoint()
      */
     @Override
     public HeadingPoint getPos() {
@@ -279,30 +339,58 @@ public class SwerveChassisTracker implements Tracker {
      * be called as frequently as possible. A whole thread can even be
      * dedicated to doing just this.
      * </p>
+     * @see SwerveModuleTracker#update()
      */
     @Override
     public void update() {
+        /*
+         * Update the position of each of the swerve trackers.
+         *
+         * Positional updating is handled in the SwerveModuleTracker class,
+         * not this class - go look there if you're angry about something.
+         */
+
         fr.update();
         fl.update();
         br.update();
         bl.update();
     }
 
+    /**
+     * Get the position of the front right swerve module.
+     *
+     * @return the front right swerve module's position.
+     */
     @Override
     public HeadingPoint getFrPos() {
         return fr.getPosition();
     }
 
+    /**
+     * Get the position of the front left swerve module.
+     *
+     * @return the front left swerve module's position.
+     */
     @Override
     public HeadingPoint getFlPos() {
         return fl.getPosition();
     }
 
+    /**
+     * Get the position of the back right swerve module.
+     *
+     * @return the back right swerve module's position.
+     */
     @Override
     public HeadingPoint getBrPos() {
         return br.getPosition();
     }
 
+    /**
+     * Get the position of the back left swerve module.
+     *
+     * @return the back left swerve module's position.
+     */
     @Override
     public HeadingPoint getBlPos() {
         return bl.getPosition();

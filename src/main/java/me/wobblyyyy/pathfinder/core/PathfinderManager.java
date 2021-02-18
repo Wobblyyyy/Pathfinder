@@ -13,7 +13,18 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.core;
@@ -56,6 +67,8 @@ import java.util.Arrays;
  * </p>
  *
  * @author Colin Robertson
+ * @version 1.0.0
+ * @since 0.1.0
  */
 public class PathfinderManager {
     /**
@@ -65,11 +78,15 @@ public class PathfinderManager {
 
     /**
      * The robot's width.
+     *
+     * @see PathfinderConfig#getRobotX()
      */
     private final int width;
 
     /**
      * The robot's height.
+     *
+     * @see PathfinderConfig#getRobotY()
      */
     private final int height;
 
@@ -139,6 +156,7 @@ public class PathfinderManager {
      *
      * @param paths several pre-sorted array lists of target points.
      * @return a merged array list of several different paths.
+     * @see Extra#removeDuplicatePoints(ArrayList) 
      */
     public final ArrayList<Point> merge(ArrayList<ArrayList<Point>> paths) {
         ArrayList<Point> merged = new ArrayList<>();
@@ -171,6 +189,7 @@ public class PathfinderManager {
      * @param start starting position.
      * @param end   ending position.
      * @return a path between two given points.
+     * @see GeneratorManager#getCoordinatePath(Point, Point) 
      */
     public ArrayList<Point> getPath(HeadingPoint start,
                                     HeadingPoint end) {
@@ -209,6 +228,7 @@ public class PathfinderManager {
      *
      * @param points a list of target points that must be met.
      * @return an extended path based off of waypoints.
+     * @see PathfinderManager#getPath(HeadingPoint, HeadingPoint) 
      */
     public ArrayList<Point> getWaypointPath(ArrayList<HeadingPoint> points) {
         if (points.size() < 2) {
@@ -319,6 +339,11 @@ public class PathfinderManager {
      *
      * @param path a list of points, comprising a path.
      * @return a list of followers to follow that path.
+     * @see Factory
+     * @see PathfinderConfig#getFollowerType() 
+     * @see Factory.PID
+     * @see Factory.Linear
+     * @see Factory.Swerve
      */
     public ArrayList<Follower> generateFollowers(ArrayList<HeadingPoint> path) {
         ArrayList<Follower> followers = new ArrayList<>();
@@ -382,10 +407,15 @@ public class PathfinderManager {
      *
      * @param start the starting position.
      * @param end   the ending position.
+     * @return a chainable PromisedFinder object.
+     * @see PathfinderManager#getPath(HeadingPoint, HeadingPoint)
+     * @see PathfinderManager#generateFollowers(ArrayList) 
+     * @see FollowerExecutor#queueFollower(Follower) 
      */
-    public void generateAndQueueFollowers(HeadingPoint start,
+    public PromisedFinder generateAndQueueFollowers(HeadingPoint start,
                                           HeadingPoint end) {
         ArrayList<Point> path = getPath(start, end);
+        
         ArrayList<Follower> followers = generateFollowers(
                 withHeading(
                         path,
@@ -393,7 +423,13 @@ public class PathfinderManager {
                         end
                 )
         );
+        
         exec.queueFollowers(followers);
+
+        return new PromisedFinder(
+                path.size() > 0,
+                path
+        );
     }
 
     /**
@@ -408,6 +444,7 @@ public class PathfinderManager {
      * </p>
      *
      * @param followers followers to be queued.
+     * @see FollowerExecutor#queueFollower(Follower) 
      */
     public void queueFollowers(ArrayList<Follower> followers) {
         exec.queueFollowers(followers);
@@ -480,11 +517,38 @@ public class PathfinderManager {
      * </p>
      *
      * @param end the target position.
+     * @return a chainable PromisedFinder object.
+     * @see PathfinderManager#generateAndQueueFollowers(HeadingPoint, HeadingPoint)
      */
-    public void goToPosition(HeadingPoint end) {
-        generateAndQueueFollowers(
+    public PromisedFinder goToPosition(HeadingPoint end) {
+        /*
+         * A bit confusing here - but what happens...
+         *
+         * generateAndQueueFollowers returns a PromisedFinder, meaning we can
+         * get the path after the path has been generated.
+         *
+         * That's not all, however.
+         *
+         * When that method is invoked, followers are generated and queued.
+         *
+         * Thus, we're knocking two birds out with one stone by calling the
+         * generateAndQueueFollowers() method and getting the path from there.
+         *
+         * This is bad programming practice and should be refactored for the
+         * sake of my sanity, as well as code cleanliness, but for now, it
+         * should get the job done.
+         */
+        ArrayList<Point> path = generateAndQueueFollowers(
                 config.getOdometry().getPos(),
                 end
+        ).getPath();
+
+        /*
+         * Create a new PromisedFinder based on the path that's been generated.
+         */
+        return new PromisedFinder(
+                path.size() > 0,
+                path
         );
     }
 
@@ -506,11 +570,13 @@ public class PathfinderManager {
      * </p>
      *
      * @param points the waypoints that should be used in path generation.
+     * @return a chainable PromisedFinder object.
+     * @see PathfinderManager#followPath(ArrayList)
      */
-    public void followPath(HeadingPoint... points) {
+    public PromisedFinder followPath(HeadingPoint... points) {
         ArrayList<HeadingPoint> list = new ArrayList<>(Arrays.asList(points));
 
-        followPath(list);
+        return followPath(list);
     }
 
     /**
@@ -531,8 +597,12 @@ public class PathfinderManager {
      * </p>
      *
      * @param points the waypoints that should be used in path generation.
+     * @return a chainable PromisedFinder object.
+     * @see PathfinderManager#getWaypointPath(ArrayList)
+     * @see PathfinderManager#generateFollowers(ArrayList) 
+     * @see PathfinderManager#queueFollowers(ArrayList) 
      */
-    public void followPath(ArrayList<HeadingPoint> points) {
+    public PromisedFinder followPath(ArrayList<HeadingPoint> points) {
         ArrayList<Point> path = getWaypointPath(points);
         ArrayList<Follower> followers = generateFollowers(
                 withHeading(
@@ -543,6 +613,11 @@ public class PathfinderManager {
         );
 
         queueFollowers(followers);
+
+        return new PromisedFinder(
+                path.size() > 0,
+                path
+        );
     }
 
     /**
@@ -569,6 +644,8 @@ public class PathfinderManager {
      * This type of code is known as blocking code, meaning that nothing on
      * the current thread can happen until a certain thing has happened.
      * </p>
+     * 
+     * @see FollowerExecutor#lock() 
      */
     public void lock() {
         exec.lock();

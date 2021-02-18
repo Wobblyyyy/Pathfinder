@@ -13,16 +13,29 @@
  *  ||                                                                  ||
  *  || Re-distribution of this, or any other files, is allowed so long  ||
  *  || as this same copyright notice is included and made evident.      ||
+ *  ||                                                                  ||
+ *  || Unless required by applicable law or agreed to in writing, any   ||
+ *  || software distributed under the license is distributed on an "AS  ||
+ *  || IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either  ||
+ *  || express or implied. See the license for specific language        ||
+ *  || governing permissions and limitations under the license.         ||
+ *  ||                                                                  ||
+ *  || Along with this file, you should have received a license file,   ||
+ *  || containing a copy of the GNU General Public License V3. If you   ||
+ *  || did not receive a copy of the license, you may find it online.   ||
  *  ======================================================================
+ *
  */
 
 package me.wobblyyyy.pathfinder.api;
 
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.PathfinderManager;
+import me.wobblyyyy.pathfinder.core.PromisedFinder;
 import me.wobblyyyy.pathfinder.followers.PIDFollower;
 import me.wobblyyyy.pathfinder.followers.SwerveFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
 
 import java.util.ArrayList;
 
@@ -50,7 +63,18 @@ import java.util.ArrayList;
  * in the {@link PathfinderConfig} class.
  * </p>
  *
+ * <p>
+ * This class, as a result of its high level of abstraction, is little more
+ * than a wrapper class with more user-friendly documentation. Anything that
+ * you'd like to accomplish but can't with this class can likely be
+ * accomplished by using the {@link PathfinderManager} class, which contains
+ * many more methods and bits of functionality that you can make use of.
+ * </p>
+ *
  * @author Colin Robertson
+ * @version 1.0.1
+ * @see PathfinderManager
+ * @since 0.1.0
  */
 public class Pathfinder {
     /**
@@ -87,6 +111,14 @@ public class Pathfinder {
      *               configuration options do.
      */
     public Pathfinder(PathfinderConfig config) {
+        /*
+         * Set variables that are initialized in the constructor.
+         *
+         * The variables we're talking about here, are, of course:
+         * - The pathfinder's configuration.
+         * - The pathfinder's manager class.
+         */
+
         this.config = config;
         pathfinderManager = new PathfinderManager(config);
     }
@@ -103,6 +135,11 @@ public class Pathfinder {
      * @return the robot's position.
      */
     public HeadingPoint getPosition() {
+        /*
+         * Get the odometry subsystem from the Pathfinder configuration, and
+         * determine the robot's position by asking the odometry system "hey,
+         * where am I?"
+         */
         return config.getOdometry().getPos();
     }
 
@@ -153,14 +190,17 @@ public class Pathfinder {
      * </p>
      *
      * @param target the robot's target position and orientation.
+     * @return a chainable PromisedFinder object.
+     * @see PathfinderManager#goToPosition(HeadingPoint)
      */
-    public void goToPosition(HeadingPoint target) {
-        HeadingPoint current = getPosition();
-
-        getManager().generateAndQueueFollowers(
-                current,
-                target
-        );
+    public PromisedFinder goToPosition(HeadingPoint target) {
+        /*
+         * As a wrapper class, Pathfinder doesn't do very much.
+         *
+         * We simply pass along the request to the manager, which will
+         * accomplish our task for us.
+         */
+        return getManager().goToPosition(target);
     }
 
     /**
@@ -196,9 +236,18 @@ public class Pathfinder {
      * </p>
      *
      * @param points the points to be used as waypoints in path generation.
+     * @return a chainable PromisedFinder object.
+     * @see PathfinderManager#followPath(HeadingPoint...)
      */
-    public void followPath(ArrayList<HeadingPoint> points) {
-        getManager().followPath(points);
+    public PromisedFinder followPath(ArrayList<HeadingPoint> points) {
+        /*
+         * As a wrapper class, Pathfinder provides very little functionality.
+         *
+         * The PathfinderManager class, then, does all of the heavy lifting.
+         * The methods presented in the Pathfinder class are designed to
+         * simplify the implementation of Pathfinder, not add to it.
+         */
+        return getManager().followPath(points);
     }
 
     /**
@@ -225,6 +274,9 @@ public class Pathfinder {
      * This type of code is known as blocking code, meaning that nothing on
      * the current thread can happen until a certain thing has happened.
      * </p>
+     *
+     * @see PathfinderManager#lock()
+     * @see FollowerExecutor#lock()
      */
     public void lock() {
         getManager().lock();
