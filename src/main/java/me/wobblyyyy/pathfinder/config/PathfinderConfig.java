@@ -385,7 +385,10 @@ public class PathfinderConfig {
                             RobotProfile profile,
                             Drive drive,
                             Map map,
-                            Followers follower, boolean usesLightning, boolean usesFast, boolean usesThetaStar) {
+                            Followers follower,
+                            boolean usesLightning,
+                            boolean usesFast,
+                            boolean usesThetaStar) {
         this.odometry = odometry;
         this.fieldHeight = fieldHeight;
         this.fieldWidth = fieldWidth;

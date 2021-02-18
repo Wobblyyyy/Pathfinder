@@ -68,17 +68,36 @@ public class FollowerExecutor {
 
     /**
      * The currently-executed follower(s?).
+     *
+     * <p>
+     * This list currently serves as a single element only - the size of
+     * this list should always either be 0 or 1. It would be a good idea to
+     * seek refactoring in the near future - using a single element, rather
+     * than a list of elements (that serves as a single element) would be
+     * a pretty hecking cool optimization.
+     * </p>
      */
     private final ArrayList<Follower> followers = new ArrayList<>();
 
     /**
      * A list of all of the followers that have run their calculation
      * method already.
+     *
+     * <p>
+     * Depending on for how long the pathfinder is run for, this array list
+     * may eventually overflow. In order to compensate for this potential
+     * overflow, we should add some code that clears this list at some point.
+     * </p>
      */
     private final ArrayList<Follower> hasCalculated = new ArrayList<>();
 
     /**
      * Actions to execute. MUST BE THREAD SAFE!
+     *
+     * <p>
+     * Modification should only be handled through synchronized methods to
+     * ensure no bad stuff happens.
+     * </p>
      */
     private final ArrayList<Runnable> actions = new ArrayList<>();
 
@@ -311,6 +330,9 @@ public class FollowerExecutor {
             }
         }
 
+        /*
+         * Return a list of all of the Runnable items that need to be ran.
+         */
         return runnables;
     }
 
@@ -322,10 +344,36 @@ public class FollowerExecutor {
      * @return a Runnable to move upwards in the execution order.
      */
     private synchronized Runnable moveUp(Follower f) {
+        /*
+         * Return a new Runnable with the actions we need.
+         */
         return () -> {
             try {
+                /*
+                 * Try removing the follower from the main follower list.
+                 */
                 followers.remove(f);
+
+                /*
+                 * Try removing the follower from the follower bank list.
+                 *
+                 * This list is more important than the other list - while
+                 * the first list has checking to ensure proper list sizes,
+                 * this one doesn't - we need to be precise about removing
+                 * followers from the list of followers.
+                 */
                 followerBank.remove(f);
+
+                /*
+                 * Add the next follower to the regular list of followers.
+                 *
+                 * This essentially sets the next follower.
+                 *
+                 * This code will also throw errors - if the follower bank
+                 * is empty, meaning there aren't any more follower instances
+                 * that need to be followed, we get a null pointer
+                 * exception, which needs to be caught.
+                 */
                 followers.add(followerBank.get(0));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -352,8 +400,23 @@ public class FollowerExecutor {
      * @param f the follower to queue.
      */
     public synchronized void queueFollower(Follower f) {
+        /*
+         * Run the follower's calculations before we need them - this way
+         * the pathfinder can get right to pathfinding.
+         *
+         * Especially useful when calculations are performed on a secondary
+         * thread, as they often are.
+         */
         f.calculate();
+
+        /*
+         * Add the follower to the bank of followers.
+         */
         followerBank.add(f);
+
+        /*
+         * Add the follower to the regular followers list.
+         */
         followers.add(f);
     }
 
@@ -376,6 +439,9 @@ public class FollowerExecutor {
      * @param followers the follower elements to queue.
      */
     public synchronized void queueFollowers(Collection<Follower> followers) {
+        /*
+         * For each follower, we go ahead and queue it. Crazy!
+         */
         for (Follower f : followers) {
             queueFollower(f);
         }
@@ -388,6 +454,9 @@ public class FollowerExecutor {
      * @return whether or not the pathfinder is idle.
      */
     public synchronized boolean isEmpty() {
+        /*
+         * Check whether both the follower bank and the followers list is empty.
+         */
         return followerBank.isEmpty() && followers.isEmpty();
     }
 
@@ -408,7 +477,17 @@ public class FollowerExecutor {
      * </p>
      */
     public void lock() {
+        /*
+         * While-true loop - should be repeated as long as the follower
+         * list is NOT empty.
+         */
         do {
+            /*
+             * Call the Thread.onSpinWait() method to ensure we don't waste
+             * too many CPU cycles. This method marks the calling code as
+             * unimportant in terms of the CPU - the CPU can prioritize other,
+             * more important operation, over this right here.
+             */
             Thread.onSpinWait();
         } while (!isEmpty());
     }

@@ -29,6 +29,9 @@
 
 package me.wobblyyyy.pathfinder.map;
 
+import me.wobblyyyy.pathfinder.error.NoFieldException;
+import me.wobblyyyy.pathfinder.error.NonRectangularFieldException;
+import me.wobblyyyy.pathfinder.geometry.Rectangle;
 import me.wobblyyyy.pathfinder.geometry.Shape;
 import me.wobblyyyy.pathfinder.geometry.Zone;
 
@@ -55,11 +58,36 @@ import java.util.Arrays;
  * </ul>
  * </p>
  *
+ * <p>
+ * Zone/map/field wrapping is not yet done - we need to work on that before we
+ * can hope to do anything important with this library.
+ * </p>
+ *
  * @author Colin Robertson
  * @version 1.0.0
  * @since 0.1.0
  */
 public class Map {
+    /**
+     * A list of all of the possible names for field zones.
+     *
+     * <p>
+     * Please, for the sake of everyone's sanity - name every single zone that's
+     * a field "field". Every potential problem is thus averted - wonderful,
+     * right?!
+     * </p>
+     */
+    public static final ArrayList<String> FIELD_NAMES = new ArrayList<>() {{
+        add("field");
+        add("main");
+        add("field2d");
+        add("frame");
+        add("box");
+        add("reference");
+        add("bounds");
+        add("limits");
+    }};
+
     /**
      * All of the zones contained within the map.
      */
@@ -86,6 +114,7 @@ public class Map {
     public Map(Zone zone) {
         zones = new ArrayList<>();
         zones.add(zone);
+        wrap(zones);
     }
 
     /**
@@ -104,5 +133,52 @@ public class Map {
      */
     public Map(ArrayList<Zone> zones) {
         this.zones = zones;
+        wrap(zones);
+    }
+
+    /**
+     * Check whether or not a given zone is technically field.
+     *
+     * @param zone the zone to check.
+     * @return whether or not that zone is classified as a field zone.
+     */
+    private static boolean isField(Zone zone) {
+        for (String s : FIELD_NAMES) {
+            if (zone.getName().equalsIgnoreCase(s)) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Wrap an entire field with four zones, to prevent the pathfinder from
+     * finding paths that are out-of-bounds.
+     *
+     * @param zones the original zones.
+     * @return a list of wrapped zones.
+     */
+    private ArrayList<Zone> wrap(ArrayList<Zone> zones) {
+        Zone field = null;
+
+        for (Zone zone : zones) {
+            if (isField(zone)) field = zone;
+        }
+
+        if (field == null) try {
+            throw new NoFieldException("You didn't pass any " +
+                    "zones named `field` to a map constructor!");
+        } catch (NoFieldException e) {
+            e.printStackTrace();
+        }
+
+        assert field != null;
+        if (!(field.getParentShape() instanceof Rectangle)) try {
+            throw new NonRectangularFieldException("The field zone you " +
+                    "passed is not rectangular!");
+        } catch (NonRectangularFieldException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 }

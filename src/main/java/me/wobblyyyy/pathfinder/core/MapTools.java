@@ -227,7 +227,7 @@ public class MapTools {
                 scaleMap(
                         map,
                         robotX,
-                        robotY
+                        robotY * 1.0
                 ),
                 fieldX,
                 fieldY,
@@ -264,7 +264,7 @@ public class MapTools {
                 scaleMap(
                         map,
                         rX,
-                        rY
+                        rY * 1.0
                 ),
                 minX,
                 minY,
@@ -415,7 +415,6 @@ public class MapTools {
         Circle updated;
 
         double halfRobotWidth = width / 2;
-        double halfRobotHeight = height / 2;
 
         Point center = original.center;
         double radius = original.radius;
@@ -494,7 +493,13 @@ public class MapTools {
     /**
      * Is a given area completely void of any zones?
      *
-     * @param map the field's map. (unscaled)
+     * <p>
+     * Non-solid zones aren't counted here - for example, the field, which is
+     * the largest (and sometimes only) non-solid zone on the field, isn't
+     * counted when deciding whether or not a zone is empty.
+     * </p>
+     *
+     * @param map  the field's map. (unscaled)
      * @param area the area of the field to test. (unscaled)
      * @return whether or not the given area is empty.
      */

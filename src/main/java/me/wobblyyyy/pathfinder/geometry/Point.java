@@ -47,6 +47,11 @@ import me.wobblyyyy.intra.ftc2.utils.math.Math;
  * half of this file - they're incredibly useful for point manipulation.
  * </p>
  *
+ * <p>
+ * Although points are incredibly simple as a concept - I mean, come on, man.
+ * It's a point! How hard can point things really be? Not very is your answer.
+ * </p>
+ *
  * @author Colin Robertson
  * @version 1.0.0
  * @since 0.1.0
@@ -124,6 +129,9 @@ public class Point {
      * @return the theta measurement, in degrees.
      */
     public double getTheta() {
+        /*
+         * Use Math.atan2 to get the theta and convert it to degrees.
+         */
         return Math.atan2(getY(), getX()) * (180 / Math.PI);
     }
 
@@ -157,6 +165,10 @@ public class Point {
      */
     public static Point blend(Point a,
                               Point b) {
+        /*
+         * Return a new point, which, in reality, is the average of the
+         * two inputted points.
+         */
         return new Point(
                 Math.average(a.getX(), b.getX()),
                 Math.average(a.getY(), b.getY())
@@ -166,12 +178,20 @@ public class Point {
     /**
      * Add two points together to form another point.
      *
+     * <p>
+     * This is NOT the same as blending! Blending is averaging, whereas this
+     * method is simply addition.
+     * </p>
+     *
      * @param a one of the two points.
      * @param b one of the two points.
      * @return the sum of the two points.
      */
     public static Point add(Point a,
                             Point b) {
+        /*
+         * Return the simple sum of the two points.
+         */
         return new Point(
                 a.getX() + b.getX(),
                 a.getY() + b.getY()
@@ -197,6 +217,9 @@ public class Point {
      */
     public static Point scale(Point a,
                               double multiplier) {
+        /*
+         * Scale a point - scale the X and Y values the same.
+         */
         return new Point(
                 a.getX() * multiplier,
                 a.getY() * multiplier
@@ -361,6 +384,12 @@ public class Point {
 
     /**
      * Creates a copied point.
+     *
+     * <p>
+     * This is a DEEP, not a SHALLOW clone. Deep clones are entirely new
+     * objects - no shared hash codes, etc. Shallow clones aren't new objects.
+     * This is essentially the clone() method, but cooler.
+     * </p>
      *
      * @return a cloned version of this point.
      */

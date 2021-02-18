@@ -115,4 +115,22 @@ public class EncodedMotor implements Motor, Encoder {
     public double getPower() {
         return motor.getPower();
     }
+
+    /**
+     * Get the wrapper's motor.
+     *
+     * @return the wrapper's motor.
+     */
+    public PfMotor getPfMotor() {
+        return motor;
+    }
+
+    /**
+     * Get the wrapper's encoder.
+     *
+     * @return the wrapper's encoder.
+     */
+    public PfEncoder getPfEncoder() {
+        return encoder;
+    }
 }

@@ -279,6 +279,14 @@ public class Pathfinder {
      * @see FollowerExecutor#lock()
      */
     public void lock() {
+        /*
+         * Lock the current thread until the pathfinder's execution has
+         * finished.
+         *
+         * Can we add a lockFor(Double) method that locks the current thread
+         * for a given amount of time? That might make it a bit easier to
+         * use Pathfinder in the future.
+         */
         getManager().lock();
     }
 

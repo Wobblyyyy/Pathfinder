@@ -85,8 +85,14 @@ public class HeadingPoint extends Point {
     public HeadingPoint(double x,
                         double y,
                         double heading) {
+        /*
+         * Super, of course, because we're clean like that.
+         */
         super(x, y);
 
+        /*
+         * Assign the heading value so we're all good.
+         */
         this.heading = heading;
     }
 
@@ -308,12 +314,21 @@ public class HeadingPoint extends Point {
      * @return the blended/averaged points.
      */
     public static HeadingPoint average(HeadingPoint... points) {
+        /*
+         * The cumulative point - the point to be averaged.
+         */
         HeadingPoint t = new HeadingPoint(0, 0, 0);
 
+        /*
+         * Add to the main point.
+         */
         for (HeadingPoint p : points) {
             add(t, p);
         }
 
+        /*
+         * Scale the point, emulating averaging functionality.
+         */
         return scale(t, points.length);
     }
 
@@ -330,6 +345,11 @@ public class HeadingPoint extends Point {
      */
     @Override
     public String toString() {
+        /*
+         * The current string format looks a bit like this...
+         * {(0, 0) @ 0}
+         * Meaning (x, y) at (@) heading.
+         */
         return "{(" + getX() + ", " + getY() + ") @ " + getHeading() + "}";
     }
 
@@ -348,6 +368,12 @@ public class HeadingPoint extends Point {
      */
     public static boolean isSame(HeadingPoint a,
                                  HeadingPoint b) {
+        /*
+         * Check to ensure that the points are exactly identical.
+         *
+         * Because the sub-values of a heading point are all in double form,
+         * simple, this is as simple as running three comparisons.
+         */
         return a.getX() == b.getX() &&
                 a.getY() == b.getY() &&
                 a.getHeading() == b.getHeading();
