@@ -29,8 +29,6 @@
 
 package me.wobblyyyy.pathfinder.map;
 
-import me.wobblyyyy.pathfinder.error.NoFieldException;
-import me.wobblyyyy.pathfinder.error.NonRectangularFieldException;
 import me.wobblyyyy.pathfinder.geometry.Rectangle;
 import me.wobblyyyy.pathfinder.geometry.Shape;
 import me.wobblyyyy.pathfinder.geometry.Zone;
@@ -158,26 +156,26 @@ public class Map {
      * @return a list of wrapped zones.
      */
     private ArrayList<Zone> wrap(ArrayList<Zone> zones) {
-        Zone field = null;
-
-        for (Zone zone : zones) {
-            if (isField(zone)) field = zone;
-        }
-
-        if (field == null) try {
-            throw new NoFieldException("You didn't pass any " +
-                    "zones named `field` to a map constructor!");
-        } catch (NoFieldException e) {
-            e.printStackTrace();
-        }
-
-        assert field != null;
-        if (!(field.getParentShape() instanceof Rectangle)) try {
-            throw new NonRectangularFieldException("The field zone you " +
-                    "passed is not rectangular!");
-        } catch (NonRectangularFieldException e) {
-            e.printStackTrace();
-        }
+//        Zone field = null;
+//
+//        for (Zone zone : zones) {
+//            if (isField(zone)) field = zone;
+//        }
+//
+//        if (field == null) try {
+//            throw new NoFieldException("You didn't pass any " +
+//                    "zones named `field` to a map constructor!");
+//        } catch (NoFieldException e) {
+//            e.printStackTrace();
+//        }
+//
+//        assert field != null;
+//        if (!(field.getParentShape() instanceof Rectangle)) try {
+//            throw new NonRectangularFieldException("The field zone you " +
+//                    "passed is not rectangular!");
+//        } catch (NonRectangularFieldException e) {
+//            e.printStackTrace();
+//        }
 
         return new ArrayList<>();
     }
