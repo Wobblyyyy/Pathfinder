@@ -577,7 +577,7 @@ public class Rectangle implements Shape {
     }
 
     @Override
-    public boolean isLineInShape(me.wobblyyyy.pathfinder.geometry.Line line) {
+    public boolean isLineInShape(Line line) {
         /*
          * For now, we handle line collision detection by checking for any
          * potential intersections. If ANY of the values are true, we say

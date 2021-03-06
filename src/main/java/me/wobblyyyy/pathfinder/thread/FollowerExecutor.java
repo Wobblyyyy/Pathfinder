@@ -29,8 +29,9 @@
 
 package me.wobblyyyy.pathfinder.thread;
 
-import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.core.Follower;
+import me.wobblyyyy.pathfinder.drive.Drive;
+import me.wobblyyyy.pathfinder.util.BcThread;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -151,7 +152,7 @@ public class FollowerExecutor {
                          * This should improve performance by freeing up some
                          * processing time.
                          */
-                        Thread.onSpinWait();
+                        BcThread.spin();
 
                         /*
                          * Thread-safe way to add a list of actions.
@@ -488,7 +489,7 @@ public class FollowerExecutor {
              * unimportant in terms of the CPU - the CPU can prioritize other,
              * more important operation, over this right here.
              */
-            Thread.onSpinWait();
+            BcThread.spin();
         } while (!isEmpty());
     }
 }

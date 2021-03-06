@@ -262,7 +262,7 @@ public class Xygum implements Generator {
          * @param maxX maximum X value.
          * @param maxY maximum Y value.
          * @return a new navigation grid based on minimum and maximum values.
-         * @see Xygum.Nav#getCells(int, int, int, int)
+         * @see Nav#getCells(int, int, int, int)
          */
         NavigationGrid<GridCell> getNav(int minX,
                                         int minY,
@@ -546,7 +546,7 @@ public class Xygum implements Generator {
      * @param start the start position (notated as a double coordinate).
      * @param end   the end position (notated as a double coordinate).
      * @return a list of scaled-up (1440x1440) {@link GridCell} instances.
-     * @see Xygum.Finder#getCellPath(Point, Point)
+     * @see Finder#getCellPath(Point, Point)
      */
     private ArrayList<GridCell> getCellPath(Point start,
                                             Point end) {

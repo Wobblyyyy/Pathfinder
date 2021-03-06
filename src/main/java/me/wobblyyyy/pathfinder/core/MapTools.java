@@ -447,7 +447,7 @@ public class MapTools {
      */
     public static ArrayList<Zone> getZonesInArea(Map map,
                                                  Area area) {
-        ArrayList<Point> _testPoints = new ArrayList<>() {{
+        ArrayList<Point> _testPoints = new ArrayList<Point>() {{
             add(new Point(
                     area.getMinX(),
                     area.getMinY()

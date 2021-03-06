@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.util;
 
-import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 
 import java.util.ArrayList;

@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.util;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 

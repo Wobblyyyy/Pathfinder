@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.map;
 
-import me.wobblyyyy.pathfinder.geometry.Rectangle;
 import me.wobblyyyy.pathfinder.geometry.Shape;
 import me.wobblyyyy.pathfinder.geometry.Zone;
 
@@ -75,7 +74,8 @@ public class Map {
      * right?!
      * </p>
      */
-    public static final ArrayList<String> FIELD_NAMES = new ArrayList<>() {{
+    public static final ArrayList<String> FIELD_NAMES =
+            new ArrayList<String>() {{
         add("field");
         add("main");
         add("field2d");

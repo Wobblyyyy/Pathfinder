@@ -30,8 +30,8 @@
 package me.wobblyyyy.pathfinder.tracking.swerve;
 
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.robot.Gyroscope;
 import me.wobblyyyy.pathfinder.robot.Encoder;
+import me.wobblyyyy.pathfinder.robot.Gyroscope;
 
 /**
  * A combination of a gyroscopic tracker and a swerve chassis tracker!

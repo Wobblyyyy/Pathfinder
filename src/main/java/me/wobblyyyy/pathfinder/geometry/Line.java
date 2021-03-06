@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
 import me.wobblyyyy.pathfinder.util.Distance;
 
 /**

@@ -353,7 +353,8 @@ public class PathfinderManager {
                 for (HeadingPoint p : path) {
                     try {
                         HeadingPoint n = path.get(path.indexOf(p) + 1);
-                        followers.add(Factory.pid.build(new ArrayList<>() {{
+                        followers.add(Factory.pid.build(
+                                new ArrayList<HeadingPoint>() {{
                             add(p);
                             add(n);
                         }}));
@@ -367,7 +368,8 @@ public class PathfinderManager {
                 for (HeadingPoint p : path) {
                     try {
                         HeadingPoint n = path.get(path.indexOf(p) + 1);
-                        followers.add(Factory.linear.build(new ArrayList<>() {{
+                        followers.add(Factory.linear.build(
+                                new ArrayList<HeadingPoint>() {{
                             add(p);
                             add(n);
                         }}));
