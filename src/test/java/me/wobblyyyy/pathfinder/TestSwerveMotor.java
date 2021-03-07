@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder;
 
 import me.wobblyyyy.pathfinder.robot.Motor;
 
-public class TestMotor implements Motor {
+public class TestSwerveMotor implements Motor {
     double lastPower = 0;
 
     /**
@@ -99,7 +99,7 @@ public class TestMotor implements Motor {
     public void setPower(double power) {
         if (power != lastPower) {
             lastPower = power;
-            System.out.println("Power set to " + power);
+            System.out.println("Turn power set to " + power);
         }
     }
 
