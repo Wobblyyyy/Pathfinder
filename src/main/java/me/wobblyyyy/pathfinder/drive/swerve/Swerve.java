@@ -146,6 +146,15 @@ public class Swerve implements Drive {
     private final Comparator ac;
 
     /**
+     * Calculator used in determining swerve module power based on current
+     * and target positions. The values behind this PID controller were
+     * determined experimentally while I was working on my high school team's
+     * swerve drive chassis. This is only the default turn calculator - it
+     * can be customized however you like.
+     */
+    private final SwerveTurn turnCalculator = SwerveModulePid::calculate;
+
+    /**
      * Create a new swerve drivetrain.
      *
      * <p>
@@ -397,15 +406,15 @@ public class Swerve implements Drive {
         double current = getDeg(encoder);
 
         /*
-         * If current > target, we turn forwards.
-         *
-         * If target > current, we turn backwards.
+         * Hand off our current information to the swerve module turn calculator
+         * defined earlier in this class.
          */
-        if (current > target) {
-            motor.setPower(0.5);
-        } else {
-            motor.setPower(-0.5);
-        }
+        double power = turnCalculator.calculate(current, target);
+
+        /*
+         * Finally set power to the motor. Epic sauce.
+         */
+        motor.setPower(power);
     }
 
     /**
@@ -461,6 +470,9 @@ public class Swerve implements Drive {
     public boolean isNearTarget(double target) {
         /*
          * Compare all four of the motors individually.
+         *
+         * If any of the motors ARE NOT at the target angle, we need to adjust
+         * in order to make sure that they are.
          */
 
         boolean fr = ac.compare(getDeg(this.fr_turn_enc), target);
@@ -493,7 +505,12 @@ public class Swerve implements Drive {
     }
 
     /**
-     * Set power to motors based on positions.
+     * Set power to motors based on positions. This chassis will entirely stop
+     * all movement until the modules are at their target angle. This is done
+     * to ensure precision. In most situations, this won't impact you at all.
+     * Unless the trajectory you're following is more a zig-zag than a spline,
+     * waiting for the system to be at the correct position shouldn't harm
+     * anything TOO much.
      *
      * <p>
      * If the turn wheels are properly aligned, we can just go straight to
@@ -528,8 +545,8 @@ public class Swerve implements Drive {
             fl_drive.setPower(0, false);
             br_drive.setPower(0, false);
             bl_drive.setPower(0, false);
-            turnModules(end.getHeading());
         }
+        turnModules(end.getHeading());
     }
 
     /**
