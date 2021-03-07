@@ -113,10 +113,14 @@ public class LinearFollower implements Follower {
      */
     @Override
     public boolean isDone() {
-        return Distance.isNearPoint(
+        if (Distance.isNearPoint(
                 odometry.getPos(),
                 end,
                 4
-        );
+        )) {
+            drive.drive(0.0, 0.0);
+            return true;
+        }
+        return false;
     }
 }

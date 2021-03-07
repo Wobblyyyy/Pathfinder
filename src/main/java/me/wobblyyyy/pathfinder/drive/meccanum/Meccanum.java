@@ -146,7 +146,8 @@ public class Meccanum implements Drive {
 
         int ctr = 0;
         for (double d : fixed) {
-            scaled[ctr] = d * absScale;
+            final double c;
+            scaled[ctr] = (!(Math.abs(c = d * absScale) > 0)) ? 0 : c;
             ctr++;
         }
 

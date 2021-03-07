@@ -56,6 +56,22 @@ public class SimpleConfig extends PathfinderConfig {
     private static final boolean FAST = true;
     private static final boolean THETA = true;
 
+    public SimpleConfig() {
+        this(
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                new RobotProfile(0, 0, 0, 0, 0, 0),
+                null,
+                null,
+                Followers.LINEAR
+        );
+    }
+
     /**
      * Create a new PathfinderConfig to be fed to a Pathfinder.
      *
