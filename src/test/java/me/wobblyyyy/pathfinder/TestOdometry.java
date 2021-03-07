@@ -30,14 +30,20 @@
 package me.wobblyyyy.pathfinder;
 
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.robot.Odometry;
+import me.wobblyyyy.pathfinder.tracking.Tracker;
 
-public class TestOdometry implements Odometry {
+public class TestOdometry implements Tracker {
+    private double size;
     private HeadingPoint pos = new HeadingPoint(0, 0, 0);
 
     public void setPos(HeadingPoint pos) {
         this.pos = pos;
     }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
     /**
      * Get the robot's position and heading.
      *
@@ -54,5 +60,53 @@ public class TestOdometry implements Odometry {
     @Override
     public void update() {
 
+    }
+
+    @Override
+    public HeadingPoint getFrPos() {
+        return HeadingPoint.add(
+                new HeadingPoint(
+                        size / 2,
+                        size / 2,
+                        0
+                ),
+                getPos()
+        );
+    }
+
+    @Override
+    public HeadingPoint getFlPos() {
+        return HeadingPoint.add(
+                new HeadingPoint(
+                        -size / 2,
+                        size / 2,
+                        0
+                ),
+                getPos()
+        );
+    }
+
+    @Override
+    public HeadingPoint getBrPos() {
+        return HeadingPoint.add(
+                new HeadingPoint(
+                        size / 2,
+                        -size / 2,
+                        0
+                ),
+                getPos()
+        );
+    }
+
+    @Override
+    public HeadingPoint getBlPos() {
+        return HeadingPoint.add(
+                new HeadingPoint(
+                        -size / 2,
+                        -size / 2,
+                        0
+                ),
+                getPos()
+        );
     }
 }

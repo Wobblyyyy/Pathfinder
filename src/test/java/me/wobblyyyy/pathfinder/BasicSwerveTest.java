@@ -31,9 +31,11 @@ package me.wobblyyyy.pathfinder;
 
 import me.wobblyyyy.pathfinder.api.Pathfinder;
 import me.wobblyyyy.pathfinder.config.SimpleConfig;
+import me.wobblyyyy.pathfinder.core.Followers;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.map.Map;
+import me.wobblyyyy.pathfinder.util.RobotProfile;
 import org.junit.jupiter.api.Test;
 
 public class BasicSwerveTest {
@@ -49,6 +51,8 @@ public class BasicSwerveTest {
             setOdometry(odometry);
             setRobotX(10);
             setRobotY(10);
+            setFollower(Followers.LINEAR);
+            setProfile(new RobotProfile(1, 1, 15, 15, 5, 1));
         }};
 
         Pathfinder pathfinder = new Pathfinder(config);

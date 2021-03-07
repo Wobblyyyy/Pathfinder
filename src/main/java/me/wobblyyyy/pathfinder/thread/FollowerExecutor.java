@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.thread;
 
 import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.core.Follower;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.util.BcThread;
@@ -98,7 +99,7 @@ public class FollowerExecutor {
      * ensure no bad stuff happens.
      * </p>
      */
-    private final DynamicArray<Runnable> actions = new DynamicArray<>();
+    private StaticArray<Runnable> actions = new StaticArray<>();
 
     /**
      * Should the thread continue its execution.
@@ -218,7 +219,7 @@ public class FollowerExecutor {
      *
      * @return actions to be executed.
      */
-    public synchronized DynamicArray<Runnable> getActions() {
+    public synchronized StaticArray<Runnable> getActions() {
         return actions;
     }
 
@@ -226,16 +227,15 @@ public class FollowerExecutor {
      * Thread-safe method to generate actions.
      */
     public synchronized void addActions() {
-        DynamicArray<Runnable> actions = generateRunnables();
-
-        actions.itr().forEach(this.actions::add);
+        StaticArray<Runnable> actions = generateRunnables();
+        this.actions = new StaticArray<>(actions);
     }
 
     /**
      * Thread-safe method to clear all of the actions.
      */
     public synchronized void clearActions() {
-        this.actions.clear();
+
     }
 
     /**
@@ -261,7 +261,7 @@ public class FollowerExecutor {
      *
      * @return to-be-executed Runnable elements.
      */
-    public DynamicArray<Runnable> generateRunnables() {
+    public StaticArray<Runnable> generateRunnables() {
         DynamicArray<Runnable> runnables = new DynamicArray<>();
 
         followers.itr().forEach(f -> {
@@ -334,7 +334,7 @@ public class FollowerExecutor {
         /*
          * Return a list of all of the Runnable items that need to be ran.
          */
-        return runnables;
+        return new StaticArray<>(runnables);
     }
 
     /**

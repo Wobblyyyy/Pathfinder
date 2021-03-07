@@ -54,13 +54,13 @@ public class Jaci {
      */
     public static Waypoint getWaypoint(Point p) {
         if (p instanceof HeadingPoint) return new Waypoint(
-                Distance.inchesToMeters(p.getX()),
-                Distance.inchesToMeters(p.getY()),
+                p.getX(),
+                p.getY(),
                 Math.toRadians(((HeadingPoint) p).getHeading())
         );
         else return new Waypoint(
-                Distance.inchesToMeters(p.getX()),
-                Distance.inchesToMeters(p.getY()),
+                p.getX(),
+                p.getY(),
                 0
         );
     }
@@ -81,7 +81,7 @@ public class Jaci {
                                        double a) {
         return getWaypoint(
                 HeadingPoint.withNewHeading(
-                        Point.scale(p, Distance.INCHES_TO_METERS),
+                        Point.scale(p, 1.0),
                         Math.toRadians(a)
                 )
         );
