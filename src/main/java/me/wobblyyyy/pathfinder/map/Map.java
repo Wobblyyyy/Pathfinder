@@ -29,11 +29,9 @@
 
 package me.wobblyyyy.pathfinder.map;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.Shape;
 import me.wobblyyyy.pathfinder.geometry.Zone;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A representation of all of the physical elements on a playing field.
@@ -41,7 +39,7 @@ import java.util.Arrays;
  * <p>
  * Maps are simply a list of a bunch of different zones. In order to create a
  * new map, you can create a class that extends this one, and, in the
- * constructor of your extension, put a call to super with a new ArrayList
+ * constructor of your extension, put a call to super with a new DynamicArray
  * of zones representing the field's physical layout.
  * </p>
  *
@@ -74,22 +72,22 @@ public class Map {
      * right?!
      * </p>
      */
-    public static final ArrayList<String> FIELD_NAMES =
-            new ArrayList<String>() {{
-        add("field");
-        add("main");
-        add("field2d");
-        add("frame");
-        add("box");
-        add("reference");
-        add("bounds");
-        add("limits");
-    }};
+    public static final DynamicArray<String> FIELD_NAMES =
+            new DynamicArray<>() {{
+                add("field");
+                add("main");
+                add("field2d");
+                add("frame");
+                add("box");
+                add("reference");
+                add("bounds");
+                add("limits");
+            }};
 
     /**
      * All of the zones contained within the map.
      */
-    public final ArrayList<Zone> zones;
+    public final DynamicArray<Zone> zones;
 
     /**
      * Create a new map without any elements.
@@ -100,8 +98,9 @@ public class Map {
      * a new map like this.
      * </p>
      */
+    @SuppressWarnings("unused")
     public Map() {
-        this(new ArrayList<>());
+        this(new DynamicArray<>());
     }
 
     /**
@@ -109,8 +108,9 @@ public class Map {
      *
      * @param zone the zone to add.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public Map(Zone zone) {
-        zones = new ArrayList<>();
+        zones = new DynamicArray<>();
         zones.add(zone);
         wrap(zones);
     }
@@ -118,10 +118,11 @@ public class Map {
     /**
      * Create a new map with several zones.
      *
-     * @param zone the zones to add to the map.
+     * @param zones the zones to add to the map.
      */
-    public Map(Zone... zone) {
-        this(new ArrayList<>(Arrays.asList(zone)));
+    @SuppressWarnings("unused")
+    public Map(Zone... zones) {
+        this(new DynamicArray<>(zones));
     }
 
     /**
@@ -129,7 +130,8 @@ public class Map {
      *
      * @param zones the zones to add to the map.
      */
-    public Map(ArrayList<Zone> zones) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public Map(DynamicArray<Zone> zones) {
         this.zones = zones;
         wrap(zones);
     }
@@ -140,12 +142,15 @@ public class Map {
      * @param zone the zone to check.
      * @return whether or not that zone is classified as a field zone.
      */
+    @SuppressWarnings("unused")
     private static boolean isField(Zone zone) {
-        for (String s : FIELD_NAMES) {
-            if (zone.getName().equalsIgnoreCase(s)) return true;
-        }
+        final boolean[] isField = {false};
 
-        return false;
+        FIELD_NAMES.itr().forEach(name -> {
+            if (zone.getName().equalsIgnoreCase(name)) isField[0] = true;
+        });
+
+        return isField[0];
     }
 
     /**
@@ -155,7 +160,8 @@ public class Map {
      * @param zones the original zones.
      * @return a list of wrapped zones.
      */
-    private ArrayList<Zone> wrap(ArrayList<Zone> zones) {
+    @SuppressWarnings("unused")
+    private DynamicArray<Zone> wrap(DynamicArray<Zone> zones) {
 //        Zone field = null;
 //
 //        for (Zone zone : zones) {
@@ -177,6 +183,6 @@ public class Map {
 //            e.printStackTrace();
 //        }
 
-        return new ArrayList<>();
+        return new DynamicArray<>();
     }
 }

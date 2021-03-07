@@ -29,11 +29,12 @@
 
 package me.wobblyyyy.pathfinder.core;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.*;
 import me.wobblyyyy.pathfinder.map.Map;
 import org.xguzm.pathfinding.grid.GridCell;
 
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A wide variety of different tools for playing around with maps.
@@ -76,35 +77,25 @@ public class MapTools {
     public static Map scaleMap(Map map,
                                double length,
                                double width) {
-        ArrayList<Zone> newZones = new ArrayList<>();
+        DynamicArray<Zone> newZones = new DynamicArray<>();
 
-        for (Zone z : map.zones) {
-            if (z.getParentShape() instanceof Rectangle) {
-                newZones.add(
-                        createNewZone(
-                                z,
-                                createNewRectangle(
-                                        z,
-                                        width,
-                                        length
-                                )
-                        )
-                );
+        map.zones.itr().forEach(zone -> {
+            if (zone.getParentShape() instanceof Rectangle) {
+                newZones.add(createNewZone(zone, createNewRectangle(
+                        zone,
+                        width,
+                        length
+                )));
             }
 
-            if (z.getParentShape() instanceof Circle) {
-                newZones.add(
-                        createNewZone(
-                                z,
-                                createNewCircle(
-                                        z,
-                                        width,
-                                        length
-                                )
-                        )
-                );
+            if (zone.getParentShape() instanceof Circle) {
+                newZones.add(createNewZone(zone, createNewCircle(
+                        zone,
+                        width,
+                        length
+                )));
             }
-        }
+        });
 
         return new Map(newZones);
     }
@@ -137,26 +128,30 @@ public class MapTools {
 
         GridCell[][] cells = new GridCell[(x * scale)][(y * scale)];
 
-        ArrayList<Zone> solids = new ArrayList<>();
-        for (Zone z : map.zones) if (z.isSolid()) solids.add(z);
+        DynamicArray<Zone> solids = new DynamicArray<>();
+        map.zones.itr().forEach(zone -> {
+            if (zone.isSolid()) solids.add(zone);
+        });
 
         for (int i = 0; i < x * scale; i++) {
             for (int j = 0; j < y * scale; j++) {
-                boolean isWalkable = true;
+                AtomicBoolean isWalkable = new AtomicBoolean(true);
 
-                for (Zone z : solids) {
-                    if (z.isPointInZone(
-                            new Point(
-                                    (i * scale) + (minX * scale),
-                                    (j * scale) + (minY * scale)
-                            )
-                    )) isWalkable = false;
-                }
+                int finalI = i;
+                int finalJ = j;
+                int finalMinX = minX;
+                int finalMinY = minY;
+                solids.itr().forEach(zone -> {
+                    if (zone.isPointInZone(new Point(
+                            (finalI * scale) + (finalMinX * scale),
+                            (finalJ * scale) + (finalMinY * scale)
+                    ))) isWalkable.set(false);
+                });
 
                 cells[i][j] = new GridCell(
                         i,
                         j,
-                        isWalkable
+                        isWalkable.get()
                 );
             }
         }
@@ -183,23 +178,25 @@ public class MapTools {
                                            int specificity) {
         GridCell[][] cells = new GridCell[sizeX * specificity][sizeY * specificity];
 
-        ArrayList<Zone> solids = new ArrayList<>();
-        for (Zone z : map.zones) if (z.isSolid()) solids.add(z);
+        DynamicArray<Zone> solids = new DynamicArray<>();
+        map.zones.itr().forEach(zone -> {
+            if (zone.isSolid()) solids.add(zone);
+        });
 
         for (int i = 0; i < sizeX * specificity; i++) {
             for (int j = 0; j < sizeY * specificity; j++) {
-                boolean isWalkable = true;
+                AtomicBoolean isWalkable = new AtomicBoolean(true);
 
-                for (Zone z : solids) {
-                    if (z.isPointInZone(
-                            new Point(
-                                    i * specificity,
-                                    j * specificity
-                            )
-                    )) isWalkable = false;
-                }
+                int finalI = i;
+                int finalJ = j;
+                solids.itr().forEach(zone -> {
+                    if (zone.isPointInZone(new Point(
+                            (finalI * specificity),
+                            (finalJ * specificity)
+                    ))) isWalkable.set(false);
+                });
 
-                cells[i][j] = new GridCell(i, j, isWalkable);
+                cells[i][j] = new GridCell(i, j, isWalkable.get());
             }
         }
 
@@ -217,6 +214,7 @@ public class MapTools {
      * @param robotY           the robot's Y size. X/Y are the same here.
      * @return a 2d GridCell array representing the field.
      */
+    @SuppressWarnings("unused")
     public static GridCell[][] getCells(Map map,
                                         int fieldX,
                                         int fieldY,
@@ -408,6 +406,7 @@ public class MapTools {
      * @param height robot height.
      * @return new circle.
      */
+    @SuppressWarnings("unused")
     public static Circle createNewCircle(Zone zone,
                                          double width,
                                          double height) {
@@ -445,9 +444,10 @@ public class MapTools {
      * @param area the area to check. (unscaled)
      * @return a list of all of the zones inside a given area.
      */
-    public static ArrayList<Zone> getZonesInArea(Map map,
-                                                 Area area) {
-        ArrayList<Point> _testPoints = new ArrayList<Point>() {{
+    @SuppressWarnings("unused")
+    public static DynamicArray<Zone> getZonesInArea(Map map,
+                                                    Area area) {
+        DynamicArray<Point> _testPoints = new DynamicArray<>() {{
             add(new Point(
                     area.getMinX(),
                     area.getMinY()
@@ -465,27 +465,28 @@ public class MapTools {
                     area.getMaxY()
             ));
         }};
-        ArrayList<Point> testPoints = new ArrayList<>();
+        DynamicArray<Point> testPoints = new DynamicArray<>();
 
-        for (Point p : _testPoints) {
-            Point half = Point.scale(p, 0.5);
-            Point quarter = Point.scale(p, 0.25);
+        // TODO - not working right now, fix later
+//        for (Point p : _testPoints) {
+//            Point half = Point.scale(p, 0.5);
+//            Point quarter = Point.scale(p, 0.25);
+//
+//            testPoints.add(p);
+//            testPoints.add(half);
+//            testPoints.add(quarter);
+//        }
 
-            testPoints.add(p);
-            testPoints.add(half);
-            testPoints.add(quarter);
-        }
+        DynamicArray<Zone> zones = new DynamicArray<>();
 
-        ArrayList<Zone> zones = new ArrayList<>();
-
-        for (Zone z : map.zones) {
-            if (z.isSolid()) {
-                Shape s = z.getParentShape();
-                for (Point p : testPoints) {
-                    if (s.isPointInShape(p)) zones.add(z);
-                }
+        map.zones.itr().forEach(zone -> {
+            if (zone.isSolid()) {
+                Shape shape = zone.getParentShape();
+                testPoints.itr().forEach(point -> {
+                    if (shape.isPointInShape(point)) zones.add(zone);
+                });
             }
-        }
+        });
 
         return zones;
     }

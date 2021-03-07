@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.api;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.PathfinderManager;
 import me.wobblyyyy.pathfinder.core.PromisedFinder;
@@ -36,8 +37,6 @@ import me.wobblyyyy.pathfinder.followers.PIDFollower;
 import me.wobblyyyy.pathfinder.followers.SwerveFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
-
-import java.util.ArrayList;
 
 /**
  * The highest-level Pathfinder available.
@@ -75,7 +74,9 @@ import java.util.ArrayList;
  * @version 1.0.1
  * @see PathfinderManager
  * @since 0.1.0
+ *
  */
+@SuppressWarnings("unused")
 public class Pathfinder {
     /**
      * The pathfinder's configuration.
@@ -239,7 +240,7 @@ public class Pathfinder {
      * @return a chainable PromisedFinder object.
      * @see PathfinderManager#followPath(HeadingPoint...)
      */
-    public PromisedFinder followPath(ArrayList<HeadingPoint> points) {
+    public PromisedFinder followPath(DynamicArray<HeadingPoint> points) {
         /*
          * As a wrapper class, Pathfinder provides very little functionality.
          *

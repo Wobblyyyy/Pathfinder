@@ -29,9 +29,10 @@
 
 package me.wobblyyyy.pathfinder.util;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.Point;
 
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Random utilities that don't have a specific classification.
@@ -48,27 +49,25 @@ public class Extra {
      * @param <T>  the list.
      * @return the list, without duplicates.
      */
-    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list) {
-        ArrayList<T> newList = new ArrayList<T>();
-        for (T element : list) {
-            if (!newList.contains(element)) {
-                newList.add(element);
-            }
-        }
+    public static <T> DynamicArray<T> removeDuplicates(DynamicArray<T> list) {
+        DynamicArray<T> newList = new DynamicArray<T>();
+        list.itr().forEach(element -> {
+            if (!newList.contains(element)) newList.add(element);
+        });
         return newList;
     }
 
-    public static ArrayList<Point> removeDuplicatePoints(
-            ArrayList<Point> points) {
-        ArrayList<Point> cleaned = new ArrayList<>();
+    public static DynamicArray<Point> removeDuplicatePoints(
+            DynamicArray<Point> points) {
+        DynamicArray<Point> cleaned = new DynamicArray<>();
 
-        for (Point p : points) {
-            boolean canAdd = true;
-            for (Point c : cleaned) {
-                if (Point.isSame(p, c)) canAdd = false;
-            }
-            if (canAdd) cleaned.add(p);
-        }
+        points.itr().forEach(point -> {
+            AtomicBoolean canAdd = new AtomicBoolean(true);
+            cleaned.itr().forEach(cleanedPoint -> {
+                if (Point.isSame(point, cleanedPoint)) canAdd.set(false);
+            });
+            if (canAdd.get()) cleaned.add(point);
+        });
 
         return cleaned;
     }

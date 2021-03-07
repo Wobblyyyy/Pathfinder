@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder.core;
 
 import me.wobblyyyy.pathfinder.geometry.Point;
 
-import java.util.ArrayList;
+import me.wobblyyyy.edt.DynamicArray;
 
 /**
  * A partially uncompleted (or partially completed) pathfinder state.
@@ -116,7 +116,7 @@ public class PromisedFinder {
     /**
      * The pathfinder's path generation's outputted path.
      */
-    private final ArrayList<Point> path;
+    private final DynamicArray<Point> path;
 
     /**
      * Create a new PromisedFinder object.
@@ -125,7 +125,7 @@ public class PromisedFinder {
      * @param path the path generation's outputted path.
      */
     public PromisedFinder(boolean pass,
-                          ArrayList<Point> path) {
+                          DynamicArray<Point> path) {
         /*
          * Set constructor variables.
          *
@@ -148,7 +148,7 @@ public class PromisedFinder {
      *
      * @return the generated path.
      */
-    public ArrayList<Point> getPath() {
+    public DynamicArray<Point> getPath() {
         return path;
     }
 

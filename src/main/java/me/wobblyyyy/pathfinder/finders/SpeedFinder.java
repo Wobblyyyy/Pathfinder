@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.finders;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.Generator;
 import me.wobblyyyy.pathfinder.core.MapTools;
@@ -36,8 +37,6 @@ import me.wobblyyyy.pathfinder.geometry.Line;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.geometry.Zone;
 import me.wobblyyyy.pathfinder.util.Distance;
-
-import java.util.ArrayList;
 
 /**
  * A relatively quick path generator - think of it as an extended version of
@@ -112,10 +111,10 @@ public class SpeedFinder implements Generator {
      * @return either no or two points for a path.
      */
     @Override
-    public ArrayList<Point> getCoordinatePath(Point start,
-                                              Point end) {
+    public DynamicArray<Point> getCoordinatePath(Point start,
+                                                 Point end) {
         /*
-         * An ArrayList of zones that are considered to be "in the way."
+         * An DynamicArray of zones that are considered to be "in the way."
          *
          * A zone which is in the way, in this case, is in the same area as
          * the pathfinder's active search area. The lightning finder is much
@@ -126,7 +125,7 @@ public class SpeedFinder implements Generator {
          * will be added to this list of zones, which are used later to ensure
          * there aren't any solid collisions.
          */
-        ArrayList<Zone> itw = MapTools.getZonesInArea(
+        DynamicArray<Zone> itw = MapTools.getZonesInArea(
                 config.getMap(),
                 new MapTools.Area(
                         start,
@@ -215,17 +214,20 @@ public class SpeedFinder implements Generator {
          * However, if the line DOES NOT enter ANY of the zones, the path is
          * valid as is.
          */
-        for (Zone z : itw) {
-            if (z.getParentShape().isLineInShape(left) ||
-                    z.getParentShape().isLineInShape(right))
-                return new ArrayList<>();
+        for (Object o : itw.toArrayList()) {
+            if (o instanceof Zone) {
+                Zone z = (Zone) o;
+                if (z.getParentShape().isLineInShape(left) ||
+                        z.getParentShape().isLineInShape(right))
+                    return new DynamicArray<>();
+            }
         }
 
         /*
-         * Create a new ArrayList of points, just to return the value.
+         * Create a new DynamicArray of points, just to return the value.
          */
 
-        ArrayList<Point> points = new ArrayList<>();
+        DynamicArray<Point> points = new DynamicArray<>();
         points.add(start);
         points.add(end);
 

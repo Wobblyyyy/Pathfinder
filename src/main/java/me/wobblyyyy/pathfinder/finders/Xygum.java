@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.finders;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.Generator;
 import me.wobblyyyy.pathfinder.core.MapTools;
@@ -375,8 +376,8 @@ public class Xygum implements Generator {
          * @see ThetaStarGridFinder#findPath(int, int, int, int, NavigationGridGraph)
          * @see AStarGridFinder#findPath(int, int, int, int, NavigationGridGraph)
          */
-        ArrayList<GridCell> getPath(Point start,
-                                    Point end) {
+        DynamicArray<GridCell> getPath(Point start,
+                                       Point end) {
             /*
              * Declare minimum and maximum values for later use.
              *
@@ -479,14 +480,14 @@ public class Xygum implements Generator {
                         /*
                          * We use the theta star pathfinding algorithm.
                          */
-                        return new ArrayList<>(
-                                thetaFinder.findPath(
+                        return new DynamicArray<>(
+                                new ArrayList<>(thetaFinder.findPath(
                                         startX,
                                         startY,
                                         endX,
                                         endY,
                                         grid
-                                )
+                                ))
                         );
                     default:
                         /*
@@ -501,14 +502,14 @@ public class Xygum implements Generator {
                         /*
                          * We use the A star pathfinding algorithm.
                          */
-                        return new ArrayList<>(
-                                aStarFinder.findPath(
+                        return new DynamicArray<>(
+                                new ArrayList<>(aStarFinder.findPath(
                                         startX,
                                         startY,
                                         endX,
                                         endY,
                                         grid
-                                )
+                                ))
                         );
                 }
             } else {
@@ -548,8 +549,8 @@ public class Xygum implements Generator {
      * @return a list of scaled-up (1440x1440) {@link GridCell} instances.
      * @see Finder#getCellPath(Point, Point)
      */
-    private ArrayList<GridCell> getCellPath(Point start,
-                                            Point end) {
+    private DynamicArray<GridCell> getCellPath(Point start,
+                                               Point end) {
         return finder.getPath(start, end);
     }
 
@@ -563,19 +564,19 @@ public class Xygum implements Generator {
      * @see Xygum#getCellPath(Point, Point)
      */
     @Override
-    public ArrayList<Point> getCoordinatePath(Point start, Point end) {
+    public DynamicArray<Point> getCoordinatePath(Point start, Point end) {
         /*
          * Get a path, in cells, from point A to point B.
          */
-        ArrayList<GridCell> cells = getCellPath(start, end);
+        DynamicArray<GridCell> cells = getCellPath(start, end);
 
         /*
-         * Initialize a new ArrayList of points.
+         * Initialize a new DynamicArray of points.
          *
-         * This ArrayList should be contributed to later by converting
+         * This DynamicArray should be contributed to later by converting
          * GridCell elements into points.
          */
-        ArrayList<Point> points = new ArrayList<>();
+        DynamicArray<Point> points = new DynamicArray<>();
 
         /*
          * For each cell, we add a new element to the list of points
@@ -585,14 +586,8 @@ public class Xygum implements Generator {
          * be modified by. Obviously, the GridCell X and Y values won't ever
          * correspond 100% to our values.
          */
-        for (GridCell c : cells) {
-            points.add(
-                    new Point(
-                            c.getX(),
-                            c.getY()
-                    )
-            );
-        }
+        cells.itr().forEach(cell ->
+                points.add(new Point(cell.getX(), cell.getY())));
 
         return points;
     }

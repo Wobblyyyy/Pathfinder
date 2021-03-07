@@ -29,12 +29,11 @@
 
 package me.wobblyyyy.pathfinder.finders;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.Generator;
 import me.wobblyyyy.pathfinder.core.MapTools;
 import me.wobblyyyy.pathfinder.geometry.Point;
-
-import java.util.ArrayList;
 
 /**
  * The fastest pathfinder available. Or something like that.
@@ -90,16 +89,16 @@ public class LightningFinder implements Generator {
      * @return a path (or not) from A to B.
      */
     @Override
-    public ArrayList<Point> getCoordinatePath(Point start,
-                                              Point end) {
+    public DynamicArray<Point> getCoordinatePath(Point start,
+                                                 Point end) {
         /*
-         * Create a new ArrayList of points.
+         * Create a new DynamicArray of points.
          *
          * This list will be used no matter what - if no path is found, the
          * list will be returned empty. If a path is found, however, the path
          * will be returned as intended.
          */
-        ArrayList<Point> points = new ArrayList<>();
+        DynamicArray<Point> points = new DynamicArray<>();
 
         /*
          * Check to see if the area of the map that the robot needs to find

@@ -29,9 +29,8 @@
 
 package me.wobblyyyy.pathfinder.core;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.Point;
-
-import java.util.ArrayList;
 
 /**
  * Interface used for connecting different types of path generation.
@@ -61,5 +60,5 @@ public interface Generator {
      * @param end   the end coordinate.
      * @return a group, composed of individual Point items.
      */
-    ArrayList<Point> getCoordinatePath(Point start, Point end);
+    DynamicArray<Point> getCoordinatePath(Point start, Point end);
 }

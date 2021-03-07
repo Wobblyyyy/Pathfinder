@@ -29,12 +29,10 @@
 
 package me.wobblyyyy.pathfinder.thread;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.core.Follower;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.util.BcThread;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Execute a given follower among several different threads.
@@ -65,7 +63,7 @@ public class FollowerExecutor {
     /**
      * A "bank" of all of the followers that need to be queued.
      */
-    private final ArrayList<Follower> followerBank = new ArrayList<>();
+    private final DynamicArray<Follower> followerBank = new DynamicArray<>();
 
     /**
      * The currently-executed follower(s?).
@@ -78,7 +76,7 @@ public class FollowerExecutor {
      * a pretty hecking cool optimization.
      * </p>
      */
-    private final ArrayList<Follower> followers = new ArrayList<>();
+    private final DynamicArray<Follower> followers = new DynamicArray<>();
 
     /**
      * A list of all of the followers that have run their calculation
@@ -90,7 +88,7 @@ public class FollowerExecutor {
      * overflow, we should add some code that clears this list at some point.
      * </p>
      */
-    private final ArrayList<Follower> hasCalculated = new ArrayList<>();
+    private final DynamicArray<Follower> hasCalculated = new DynamicArray<>();
 
     /**
      * Actions to execute. MUST BE THREAD SAFE!
@@ -100,7 +98,7 @@ public class FollowerExecutor {
      * ensure no bad stuff happens.
      * </p>
      */
-    private final ArrayList<Runnable> actions = new ArrayList<>();
+    private final DynamicArray<Runnable> actions = new DynamicArray<>();
 
     /**
      * Should the thread continue its execution.
@@ -168,12 +166,12 @@ public class FollowerExecutor {
                          * one of the generated Runnable elements, you need to
                          * make sure that you no longer ignore the exception.
                          */
-                        for (Runnable r : getActions()) {
+                        getActions().itr().forEach(runnable -> {
                             try {
-                                r.run();
+                                runnable.run();
                             } catch (Exception ignored) {
                             }
-                        }
+                        });
 
                         /*
                          * Clear all of the actions - until next time!
@@ -220,7 +218,7 @@ public class FollowerExecutor {
      *
      * @return actions to be executed.
      */
-    public synchronized ArrayList<Runnable> getActions() {
+    public synchronized DynamicArray<Runnable> getActions() {
         return actions;
     }
 
@@ -228,8 +226,9 @@ public class FollowerExecutor {
      * Thread-safe method to generate actions.
      */
     public synchronized void addActions() {
-        ArrayList<Runnable> actions = generateRunnables();
-        this.actions.addAll(actions);
+        DynamicArray<Runnable> actions = generateRunnables();
+
+        actions.itr().forEach(this.actions::add);
     }
 
     /**
@@ -243,6 +242,7 @@ public class FollowerExecutor {
      * Clear all of the followers and runnables, essentially resetting the
      * FollowerExecutor instance.
      */
+    @SuppressWarnings("unused")
     public synchronized void clear() {
         followerBank.clear();
         followers.clear();
@@ -261,10 +261,10 @@ public class FollowerExecutor {
      *
      * @return to-be-executed Runnable elements.
      */
-    public ArrayList<Runnable> generateRunnables() {
-        ArrayList<Runnable> runnables = new ArrayList<>();
+    public DynamicArray<Runnable> generateRunnables() {
+        DynamicArray<Runnable> runnables = new DynamicArray<>();
 
-        for (Follower f : followers) {
+        followers.itr().forEach(f -> {
             if (!f.isDone()) {
                 /*
                  * If the follower hasn't had its calculations executed yet,
@@ -329,7 +329,7 @@ public class FollowerExecutor {
                         moveUp(f)
                 );
             }
-        }
+        });
 
         /*
          * Return a list of all of the Runnable items that need to be ran.
@@ -353,7 +353,7 @@ public class FollowerExecutor {
                 /*
                  * Try removing the follower from the main follower list.
                  */
-                followers.remove(f);
+                followers.remove(followers.indexOf(f));
 
                 /*
                  * Try removing the follower from the follower bank list.
@@ -363,7 +363,7 @@ public class FollowerExecutor {
                  * this one doesn't - we need to be precise about removing
                  * followers from the list of followers.
                  */
-                followerBank.remove(f);
+                followerBank.remove(followerBank.indexOf(f));
 
                 /*
                  * Add the next follower to the regular list of followers.
@@ -439,13 +439,11 @@ public class FollowerExecutor {
      *
      * @param followers the follower elements to queue.
      */
-    public synchronized void queueFollowers(Collection<Follower> followers) {
+    public synchronized void queueFollowers(DynamicArray<Follower> followers) {
         /*
          * For each follower, we go ahead and queue it. Crazy!
          */
-        for (Follower f : followers) {
-            queueFollower(f);
-        }
+        followers.itr().forEach(this::queueFollower);
     }
 
     /**

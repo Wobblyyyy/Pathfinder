@@ -1,18 +1,17 @@
 package me.wobblyyyy.pathfinder;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.api.Pathfinder;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 public class PathfinderTest {
     Pathfinder pathfinder;
 
     @Test
     public void testPathfinder() throws InterruptedException {
-        ArrayList<HeadingPoint> points = new ArrayList<>() {{
+        DynamicArray<HeadingPoint> points = new DynamicArray<>() {{
             add(new HeadingPoint(
                     0,
                     0,
@@ -41,15 +40,12 @@ public class PathfinderTest {
 
         execTRA = System.currentTimeMillis();
         pathfinder.followPath(points);
-        pathfinder.lock();
+//        pathfinder.lock();
         execTRA = System.currentTimeMillis() - execTRA;
 
-        ArrayList<Point> path = pathfinder.getManager().getWaypointPath(points);
+        DynamicArray<Point> path = pathfinder.getManager().getWaypointPath(points);
 
-        for (Point p : path) {
-            if (p instanceof HeadingPoint) System.out.println(((HeadingPoint) p).toString());
-            else System.out.println(p.toString());
-        }
+        path.itr().forEach(point -> System.out.println(point.toString()));
 
         System.out.println(execTRA);
     }

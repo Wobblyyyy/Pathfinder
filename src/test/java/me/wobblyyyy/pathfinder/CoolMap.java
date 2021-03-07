@@ -1,15 +1,11 @@
 package me.wobblyyyy.pathfinder;
 
-import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.geometry.Rectangle;
-import me.wobblyyyy.pathfinder.geometry.Shape;
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.Zone;
 import me.wobblyyyy.pathfinder.map.Map;
 
-import java.util.ArrayList;
-
 public class CoolMap extends Map {
-//    private static final ArrayList<Zone> zones = new ArrayList<>() {{
+//    private static final DynamicArray<Zone> zones = new DynamicArray<>() {{
 //        add(
 //        new Zone() {
 //            @Override
@@ -59,11 +55,11 @@ public class CoolMap extends Map {
 //    }};
 
     public CoolMap() {
-        super(
-                new ArrayList<Zone>() {{
-                    add(new BlockZone());
-                }}
-        );
+//        super(
+//                new DynamicArray<Zone>() {{
+//                    add(new BlockZone());
+//                }}
+//        );
 //        super(zones);
     }
 }

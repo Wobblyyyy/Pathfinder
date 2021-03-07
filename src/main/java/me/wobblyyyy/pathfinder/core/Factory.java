@@ -35,7 +35,7 @@ import me.wobblyyyy.pathfinder.followers.PIDFollower;
 import me.wobblyyyy.pathfinder.followers.SwerveFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 
-import java.util.ArrayList;
+import me.wobblyyyy.edt.DynamicArray;
 
 /**
  * Factory used for generating followers.
@@ -82,7 +82,7 @@ public class Factory {
      * Core used between different follower factories.
      */
     public interface FollowerFactory {
-        Follower build(ArrayList<HeadingPoint> points);
+        Follower build(DynamicArray<HeadingPoint> points);
     }
 
     /**
@@ -90,7 +90,7 @@ public class Factory {
      */
     public static class PID implements FollowerFactory {
         @Override
-        public Follower build(ArrayList<HeadingPoint> points) {
+        public Follower build(DynamicArray<HeadingPoint> points) {
             return new PIDFollower(
                     config.getDrive(),
                     config.getProfile(),
@@ -105,7 +105,7 @@ public class Factory {
      */
     public static class Linear implements FollowerFactory {
         @Override
-        public Follower build(ArrayList<HeadingPoint> points) {
+        public Follower build(DynamicArray<HeadingPoint> points) {
             return new LinearFollower(
                     config.getDrive(),
                     config.getOdometry(),
@@ -121,7 +121,7 @@ public class Factory {
      */
     public static class Swerve implements FollowerFactory {
         @Override
-        public Follower build(ArrayList<HeadingPoint> points) {
+        public Follower build(DynamicArray<HeadingPoint> points) {
             return new SwerveFollower(
                     points,
                     config.getOdometry(),

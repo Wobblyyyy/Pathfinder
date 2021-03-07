@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.core;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.error.InvalidPathException;
 import me.wobblyyyy.pathfinder.followers.LinearFollower;
@@ -40,9 +41,6 @@ import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
 import me.wobblyyyy.pathfinder.thread.PathfinderThreadManager;
 import me.wobblyyyy.pathfinder.util.Extra;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A manager, designed for interacting with the whole of Pathfinder.
@@ -70,6 +68,7 @@ import java.util.Arrays;
  * @version 1.0.0
  * @since 0.1.0
  */
+@SuppressWarnings("unused")
 public class PathfinderManager {
     /**
      * The pathfinder's configuration.
@@ -145,7 +144,7 @@ public class PathfinderManager {
     }
 
     /**
-     * Merge several paths into a single path by adding the ArrayList of points
+     * Merge several paths into a single path by adding the DynamicArray of points
      * of each of the paths together and then removing any duplicates.
      *
      * <p>
@@ -156,16 +155,15 @@ public class PathfinderManager {
      *
      * @param paths several pre-sorted array lists of target points.
      * @return a merged array list of several different paths.
-     * @see Extra#removeDuplicatePoints(ArrayList) 
+     * @see Extra#removeDuplicatePoints(DynamicArray)
      */
-    public final ArrayList<Point> merge(ArrayList<ArrayList<Point>> paths) {
-        ArrayList<Point> merged = new ArrayList<>();
+    public final DynamicArray<Point> merge(DynamicArray<DynamicArray<Point>> paths) {
+        DynamicArray<Point> merged = new DynamicArray<>();
 
-        for (ArrayList<Point> p : paths) {
-            merged.addAll(p);
-        }
+        DynamicArray<Point> finalMerged = merged;
+        paths.itr().forEach(path -> path.itr().forEach(finalMerged::add));
 
-        merged = Extra.removeDuplicatePoints(merged);
+        merged = Extra.removeDuplicatePoints(finalMerged);
 
         return merged;
     }
@@ -189,10 +187,10 @@ public class PathfinderManager {
      * @param start starting position.
      * @param end   ending position.
      * @return a path between two given points.
-     * @see GeneratorManager#getCoordinatePath(Point, Point) 
+     * @see GeneratorManager#getCoordinatePath(Point, Point)
      */
-    public ArrayList<Point> getPath(HeadingPoint start,
-                                    HeadingPoint end) {
+    public DynamicArray<Point> getPath(HeadingPoint start,
+                                       HeadingPoint end) {
         if (HeadingPoint.isSame(start, end)) {
             try {
                 throw new InvalidPathException("Points can not be identical!");
@@ -228,9 +226,9 @@ public class PathfinderManager {
      *
      * @param points a list of target points that must be met.
      * @return an extended path based off of waypoints.
-     * @see PathfinderManager#getPath(HeadingPoint, HeadingPoint) 
+     * @see PathfinderManager#getPath(HeadingPoint, HeadingPoint)
      */
-    public ArrayList<Point> getWaypointPath(ArrayList<HeadingPoint> points) {
+    public DynamicArray<Point> getWaypointPath(DynamicArray<HeadingPoint> points) {
         if (points.size() < 2) {
             try {
                 throw new InvalidPathException("Too few target points!");
@@ -239,16 +237,16 @@ public class PathfinderManager {
             }
         }
 
-        ArrayList<ArrayList<Point>> paths = new ArrayList<>();
+        DynamicArray<DynamicArray<Point>> paths = new DynamicArray<>();
 
-        for (HeadingPoint p : points) {
+        points.itr().forEach(point -> {
             try {
-                HeadingPoint q = points.get(points.indexOf(p) + 1);
-                ArrayList<Point> pqPath = getPath(p, q);
+                HeadingPoint q = points.itr().next();
+                DynamicArray<Point> pqPath = getPath(point, q);
                 paths.add(pqPath);
             } catch (Exception ignored) {
             }
-        }
+        });
 
         return merge(paths);
     }
@@ -316,7 +314,7 @@ public class PathfinderManager {
      * @return a new swerve follower.
      * @deprecated Use the Factory class to generate and create new followers.
      */
-    public SwerveFollower getSwerveFollower(ArrayList<HeadingPoint> points) {
+    public SwerveFollower getSwerveFollower(DynamicArray<HeadingPoint> points) {
         return new SwerveFollower(
                 points,
                 config.getOdometry(),
@@ -340,42 +338,44 @@ public class PathfinderManager {
      * @param path a list of points, comprising a path.
      * @return a list of followers to follow that path.
      * @see Factory
-     * @see PathfinderConfig#getFollowerType() 
+     * @see PathfinderConfig#getFollowerType()
      * @see Factory.PID
      * @see Factory.Linear
      * @see Factory.Swerve
      */
-    public ArrayList<Follower> generateFollowers(ArrayList<HeadingPoint> path) {
-        ArrayList<Follower> followers = new ArrayList<>();
+    public DynamicArray<Follower> generateFollowers(DynamicArray<HeadingPoint> path) {
+        DynamicArray<Follower> followers = new DynamicArray<>();
 
         switch (config.getFollowerType()) {
             case PID:
-                for (HeadingPoint p : path) {
+                path.itr().forEach(point -> {
                     try {
-                        HeadingPoint n = path.get(path.indexOf(p) + 1);
-                        followers.add(Factory.pid.build(
-                                new ArrayList<HeadingPoint>() {{
-                            add(p);
-                            add(n);
-                        }}));
+                        HeadingPoint next = path.itr().next();
+                        if (next != null)
+                            followers.add(Factory.pid.build(
+                                    new DynamicArray<>() {{
+                                        add(point);
+                                        add(next);
+                                    }}));
                     } catch (Exception ignored) {
                     }
-                }
+                });
                 break;
             case PROPORTIONAL:
                 // TODO add a proportional follower!
             case LINEAR:
-                for (HeadingPoint p : path) {
+                path.itr().forEach(point -> {
                     try {
-                        HeadingPoint n = path.get(path.indexOf(p) + 1);
-                        followers.add(Factory.linear.build(
-                                new ArrayList<HeadingPoint>() {{
-                            add(p);
-                            add(n);
-                        }}));
+                        HeadingPoint next = path.itr().next();
+                        if (next != null)
+                            followers.add(Factory.linear.build(
+                                    new DynamicArray<>() {{
+                                        add(point);
+                                        add(next);
+                                    }}));
                     } catch (Exception ignored) {
                     }
-                }
+                });
                 break;
             case SWERVE:
                 followers.add(Factory.swerve.build(path));
@@ -393,7 +393,7 @@ public class PathfinderManager {
      * @return next follower.
      * @deprecated Archaic and stupid. Don't use it.
      */
-    public Follower getNextFollower(ArrayList<Follower> list,
+    public Follower getNextFollower(DynamicArray<Follower> list,
                                     Follower currentFollower) {
         return list.get(list.indexOf(currentFollower) + 1);
     }
@@ -411,21 +411,21 @@ public class PathfinderManager {
      * @param end   the ending position.
      * @return a chainable PromisedFinder object.
      * @see PathfinderManager#getPath(HeadingPoint, HeadingPoint)
-     * @see PathfinderManager#generateFollowers(ArrayList) 
-     * @see FollowerExecutor#queueFollower(Follower) 
+     * @see PathfinderManager#generateFollowers(DynamicArray)
+     * @see FollowerExecutor#queueFollower(Follower)
      */
     public PromisedFinder generateAndQueueFollowers(HeadingPoint start,
-                                          HeadingPoint end) {
-        ArrayList<Point> path = getPath(start, end);
-        
-        ArrayList<Follower> followers = generateFollowers(
+                                                    HeadingPoint end) {
+        DynamicArray<Point> path = getPath(start, end);
+
+        DynamicArray<Follower> followers = generateFollowers(
                 withHeading(
                         path,
                         start,
                         end
                 )
         );
-        
+
         exec.queueFollowers(followers);
 
         return new PromisedFinder(
@@ -446,14 +446,14 @@ public class PathfinderManager {
      * </p>
      *
      * @param followers followers to be queued.
-     * @see FollowerExecutor#queueFollower(Follower) 
+     * @see FollowerExecutor#queueFollower(Follower)
      */
-    public void queueFollowers(ArrayList<Follower> followers) {
+    public void queueFollowers(DynamicArray<Follower> followers) {
         exec.queueFollowers(followers);
     }
 
     /**
-     * Convert an ArrayList of Point instances to an ArrayList of
+     * Convert an DynamicArray of Point instances to an DynamicArray of
      * HeadingPoint instances.
      *
      * <p>
@@ -471,10 +471,10 @@ public class PathfinderManager {
      * @param end    the end point.
      * @return a new array list.
      */
-    public ArrayList<HeadingPoint> withHeading(ArrayList<Point> points,
-                                               HeadingPoint start,
-                                               HeadingPoint end) {
-        ArrayList<HeadingPoint> withHeading = new ArrayList<>();
+    public DynamicArray<HeadingPoint> withHeading(DynamicArray<Point> points,
+                                                  HeadingPoint start,
+                                                  HeadingPoint end) {
+        DynamicArray<HeadingPoint> withHeading = new DynamicArray<>();
 
         if (points.size() == 1) {
             withHeading.add(
@@ -485,25 +485,21 @@ public class PathfinderManager {
                     )
             );
         } else {
-            for (Point p : points) {
-                if (points.indexOf(p) == 0) {
-                    withHeading.add(
-                            new HeadingPoint(
-                                    p.getX(),
-                                    p.getY(),
-                                    start.getHeading()
-                            )
-                    );
+            points.itr().forEach(point -> {
+                if (points.itr().index() == 0) {
+                    withHeading.add(new HeadingPoint(
+                            point.getX(),
+                            point.getY(),
+                            start.getHeading()
+                    ));
                 } else {
-                    withHeading.add(
-                            new HeadingPoint(
-                                    p.getX(),
-                                    p.getY(),
-                                    end.getHeading()
-                            )
-                    );
+                    withHeading.add(new HeadingPoint(
+                            point.getX(),
+                            point.getY(),
+                            end.getHeading()
+                    ));
                 }
-            }
+            });
         }
 
         return withHeading;
@@ -540,7 +536,7 @@ public class PathfinderManager {
          * sake of my sanity, as well as code cleanliness, but for now, it
          * should get the job done.
          */
-        ArrayList<Point> path = generateAndQueueFollowers(
+        DynamicArray<Point> path = generateAndQueueFollowers(
                 config.getOdometry().getPos(),
                 end
         ).getPath();
@@ -573,10 +569,10 @@ public class PathfinderManager {
      *
      * @param points the waypoints that should be used in path generation.
      * @return a chainable PromisedFinder object.
-     * @see PathfinderManager#followPath(ArrayList)
+     * @see PathfinderManager#followPath(DynamicArray)
      */
     public PromisedFinder followPath(HeadingPoint... points) {
-        ArrayList<HeadingPoint> list = new ArrayList<>(Arrays.asList(points));
+        DynamicArray<HeadingPoint> list = new DynamicArray<>(points);
 
         return followPath(list);
     }
@@ -600,13 +596,13 @@ public class PathfinderManager {
      *
      * @param points the waypoints that should be used in path generation.
      * @return a chainable PromisedFinder object.
-     * @see PathfinderManager#getWaypointPath(ArrayList)
-     * @see PathfinderManager#generateFollowers(ArrayList) 
-     * @see PathfinderManager#queueFollowers(ArrayList) 
+     * @see PathfinderManager#getWaypointPath(DynamicArray)
+     * @see PathfinderManager#generateFollowers(DynamicArray)
+     * @see PathfinderManager#queueFollowers(DynamicArray)
      */
-    public PromisedFinder followPath(ArrayList<HeadingPoint> points) {
-        ArrayList<Point> path = getWaypointPath(points);
-        ArrayList<Follower> followers = generateFollowers(
+    public PromisedFinder followPath(DynamicArray<HeadingPoint> points) {
+        DynamicArray<Point> path = getWaypointPath(points);
+        DynamicArray<Follower> followers = generateFollowers(
                 withHeading(
                         path,
                         points.get(0),
@@ -646,8 +642,8 @@ public class PathfinderManager {
      * This type of code is known as blocking code, meaning that nothing on
      * the current thread can happen until a certain thing has happened.
      * </p>
-     * 
-     * @see FollowerExecutor#lock() 
+     *
+     * @see FollowerExecutor#lock()
      */
     public void lock() {
         exec.lock();

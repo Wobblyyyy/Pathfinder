@@ -63,18 +63,17 @@
     </orderEntry>
     <orderEntry type="module-library">
       <library>
-        <CLASSES />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/intra_utils.jar!/" />
+        </CLASSES>
         <JAVADOC />
-        <NATIVE>
-          <root url="file://$MODULE_DIR$/jnis/windows/windowsx86-64" />
-        </NATIVE>
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/intra_utils.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/edt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

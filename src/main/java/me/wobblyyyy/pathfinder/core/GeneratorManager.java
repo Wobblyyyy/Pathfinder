@@ -29,13 +29,15 @@
 
 package me.wobblyyyy.pathfinder.core;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.finders.LightningFinder;
 import me.wobblyyyy.pathfinder.finders.SpeedFinder;
 import me.wobblyyyy.pathfinder.finders.Xygum;
 import me.wobblyyyy.pathfinder.geometry.Point;
 
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Manager class used for controlling and manipulating different generators.
@@ -54,7 +56,7 @@ public class GeneratorManager {
     /**
      * A list of all of the currently enabled generators.
      */
-    private final ArrayList<Generator> gens = new ArrayList<>();
+    private final DynamicArray<Generator> gens = new DynamicArray<>();
 
     /**
      * Create a new generator manager and instantiate the generators that the
@@ -78,6 +80,7 @@ public class GeneratorManager {
      * @param index the index to add it at. The closer this number is to zero,
      *              the higher priority the generator has over other generators.
      */
+    @SuppressWarnings("unused")
     public void addGenerator(Generator g,
                              int index) {
         gens.add(index, g);
@@ -88,6 +91,7 @@ public class GeneratorManager {
      *
      * @param g the generator to add.
      */
+    @SuppressWarnings("unused")
     public void addGenerator(Generator g) {
         gens.add(g);
     }
@@ -97,7 +101,7 @@ public class GeneratorManager {
      *
      * @return the current in-use generators.
      */
-    public ArrayList<Generator> getGenerators() {
+    public DynamicArray<Generator> getGenerators() {
         return gens;
     }
 
@@ -122,8 +126,12 @@ public class GeneratorManager {
      * @param end   the end position.
      * @return a path to the point.
      */
-    public ArrayList<Point> getCoordinatePath(Point start,
-                                              Point end) {
+    public DynamicArray<Point> getCoordinatePath(Point start,
+                                                 Point end) {
+        AtomicReference<DynamicArray<Point>> toReturn =
+                new AtomicReference<>(new DynamicArray<>());
+        AtomicBoolean shouldGo = new AtomicBoolean(true);
+
         /*
          * For each generator:
          * - Generate a path between the two points.
@@ -132,15 +140,20 @@ public class GeneratorManager {
          * If no path has been found by the time all of the generators have
          * been exhausted, we simply return an empty array list.
          */
-        for (Generator g : gens) {
-            ArrayList<Point> generated = g.getCoordinatePath(
-                    start,
-                    end
-            );
+        gens.itr().forEach(generator -> {
+            if (shouldGo.get()) {
+                DynamicArray<Point> generated = generator.getCoordinatePath(
+                        start,
+                        end
+                );
 
-            if (generated.size() > 0) return generated;
-        }
+                if (generated.size() > 0) {
+                    toReturn.set(new DynamicArray<>(generated));
+                    shouldGo.set(false);
+                }
+            }
+        });
 
-        return new ArrayList<>();
+        return toReturn.get();
     }
 }

@@ -45,7 +45,7 @@ import me.wobblyyyy.pathfinder.util.Distance;
 import me.wobblyyyy.pathfinder.util.Jaci;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
-import java.util.ArrayList;
+import me.wobblyyyy.edt.DynamicArray;
 
 /**
  * An implementation of Jaci's distance follower.
@@ -251,7 +251,7 @@ public class SwerveFollower implements Follower {
      * @param gapX     wheelbase horizontal.
      * @param gapY     wheelbase vertical.
      */
-    public SwerveFollower(ArrayList<HeadingPoint> points,
+    public SwerveFollower(DynamicArray<HeadingPoint> points,
                           Odometry odometry,
                           Drive drive,
                           double gapX,
@@ -262,17 +262,13 @@ public class SwerveFollower implements Follower {
         if (!(drive instanceof Swerve)) throw new IllegalArgumentException(
                 "You didn't pass SwerveFollower a Swerve drivetrain!");
 
-        ArrayList<Waypoint> wps = new ArrayList<>();
+        DynamicArray<Waypoint> wps = new DynamicArray<>();
 
-        for (HeadingPoint p : points) {
-            wps.add(Jaci.getWaypoint(p));
-        }
+        points.itr().forEach(point -> wps.add(Jaci.getWaypoint(point)));
 
         waypoints = new Waypoint[wps.size()];
 
-        for (Waypoint w : wps) {
-            waypoints[wps.indexOf(w)] = w;
-        }
+        wps.itr().forEach(point -> waypoints[wps.itr().index()] = point);
 
         this.odometry = (Tracker) odometry;
         this.drive = (Swerve) drive;
