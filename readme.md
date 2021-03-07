@@ -36,16 +36,3 @@ its current state, is available from either of these two places.
 If you notice any documentation issues, or are struggling to understand the
 meaning of any documentation, please contact me (Colin) (wobblyyyy@gmail.com)
 and I'll try to get any issues sorted out as quickly as possible.
-  
-## Modules
-If you've noticed, this project has three sub-modules:
-- Pathfinder-frc
-- Pathfinder-ftc
-- Pathfinder-rlib
-
-Each of these has a different artifact that's available/released for different
-situations. For example, if you're writing code for an FRC challenge, you
-should use the Pathfinder-frc release, not the Pathfinder or the
-Pathfinder-ftc release. Pathfinder-rlib is the only one that doesn't seem to
-make much sense, however, I'd like to say - it's for a future library I'm
-working on designed to simplify the process of coding FRC and FTC robots.
