@@ -37,22 +37,46 @@ import me.wobblyyyy.pathfinder.util.Distance;
 
 /**
  * The most incredibly simple trajectory follower you could possible imagine.
- *
- * <p>
- * Unlike a follower such as the PIDFollower, the LinearFollower does nothing
- * fancy. It takes an input point and outputs some motor power to get there.
- * It ain't fast. It ain't pretty. It ain't cool. But it gets the job done.
- * </p>
+ * This follower works by linearly driving the drivetrain in a given direction.
+ * The follower's speed coefficient (how fast the robot moves out of a possible
+ * 100% power) can be modified on construction, allowing the follower to be
+ * either faster or slower. After the follower's execution has finished
+ * entirely, the follower should stop the robot by setting power to each of the
+ * drivetrain's motors to 0. Please note that this follower doesn't have any
+ * dynamic correction - if the robot is in the wrong place, the follower won't
+ * work, and your pathfinder will have a hard time... pathfinding.
  *
  * @author Colin Robertson
  * @version 1.0.0
  * @since 0.1.0
  */
 public class LinearFollower implements Follower {
+    /**
+     * A reference to the follower's drivetrain.
+     */
     private final Drive drive;
+
+    /**
+     * The follower's odometry system. This system is only used for determining
+     * if the follower is close to the target position.
+     */
     private final Odometry odometry;
+
+    /**
+     * The follower's start point.
+     */
     private final HeadingPoint start;
+
+    /**
+     * The follower's end/target point.
+     */
     private final HeadingPoint end;
+
+    /**
+     * The follower's speed multiplier. The higher this value is, the faster
+     * the {@code LinearFollower} will execute. This value can be changed
+     * through either configuration options or the {@code Factory} class.
+     */
     private final double coefficient;
 
     /**
@@ -78,7 +102,8 @@ public class LinearFollower implements Follower {
 
     /**
      * We don't need to do anything here, either - all of the driving that
-     * needs to get done is done through the drivetrain itself.
+     * needs to get done is done through the drivetrain itself. This method
+     * will do absolutely nothing, but it has to be called anyways.
      */
     @Override
     public void update() {
@@ -87,7 +112,9 @@ public class LinearFollower implements Follower {
 
     /**
      * In this case, we don't need to do anything - there are no calculations
-     * needed to drive the robot.
+     * needed to drive the robot. All of the translational calculations that
+     * are needed should be handled by the internal kinematics of the
+     * implemented drivetrain of choice.
      */
     @Override
     public void calculate() {
@@ -95,7 +122,10 @@ public class LinearFollower implements Follower {
     }
 
     /**
-     * Drive the robot.
+     * Drive the robot. This method attempts to power the robot by calling
+     * the drive method of the drivetrain. If the drivetrain hasn't implemented
+     * the {@link Drive#drive(HeadingPoint, HeadingPoint, double)} method,
+     * the robot can't effectively be driven.
      */
     @Override
     public void drive() {
@@ -107,12 +137,20 @@ public class LinearFollower implements Follower {
     }
 
     /**
-     * Has the follower finished yet?
+     * Has the follower finished yet? The follower's finish qualification is
+     * determined by whether or not the robot is close enough to the target
+     * position. This tolerance is, by default, 4 units - often inches.
      *
      * @return whether or not the follower has finished.
      */
     @Override
     public boolean isDone() {
+        /*
+         * If the robot's position and the target position are very nearly
+         * the same, we're done. We can now return true and set power to the
+         * motors. Power, of course, meaning 0 - the robot should stop at this
+         * point entirely.
+         */
         if (Distance.isNearPoint(
                 odometry.getPos(),
                 end,
@@ -121,6 +159,11 @@ public class LinearFollower implements Follower {
             drive.drive(0.0, 0.0);
             return true;
         }
+
+        /*
+         * If we aren't done, however, return false, indicating that the
+         * follower should continue its execution.
+         */
         return false;
     }
 }

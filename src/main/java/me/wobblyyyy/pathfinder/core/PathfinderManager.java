@@ -712,4 +712,21 @@ public class PathfinderManager {
     public PathfinderConfig getConfig() {
         return config;
     }
+
+    /**
+     * Finish this instance of the {@code PathfinderManager}'s execution. This
+     * will stop any of the threads that are still active, or at least try to
+     * do so. Threads spawned by followers can't be managed through here, but
+     * follower execution and general execution/odometry updating can be.
+     *
+     * <p>
+     * This method will close both the execution and general pathfinder threads.
+     * Before finishing using a pathfinder, remember to call the close methods.
+     * Otherwise, you might have dangling threads that can eat up a lot of CPU.
+     * </p>
+     */
+    public void close() {
+        exec.close();
+        thread.close();
+    }
 }

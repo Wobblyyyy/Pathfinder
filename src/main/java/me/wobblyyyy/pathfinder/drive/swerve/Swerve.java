@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.drive.swerve;
 
 import me.wobblyyyy.intra.ftc2.utils.math.Comparator;
+import me.wobblyyyy.intra.ftc2.utils.math.Math;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.robot.Encoder;
@@ -525,28 +526,20 @@ public class Swerve implements Drive {
     public void drive(HeadingPoint start,
                       HeadingPoint end,
                       double power) {
-        /*
-         * Check to see if we're close to the target and target heading.
-         *
-         * If we're close to the target, we can turn.
-         *
-         * If we're not close to the target, we should simply drive.
-         */
-        if (isNearTarget(end.getHeading())) {
+        double angle = HeadingPoint.angleOfDeg(start, end);
+
+        if (isNearTarget(angle)) {
             fr_drive.setPower(power, false);
             fl_drive.setPower(power, false);
             br_drive.setPower(power, false);
             bl_drive.setPower(power, false);
         } else {
-            /*
-             * Cool stuff!
-             */
             fr_drive.setPower(0, false);
             fl_drive.setPower(0, false);
             br_drive.setPower(0, false);
             bl_drive.setPower(0, false);
+            turnModules(angle);
         }
-        turnModules(end.getHeading());
     }
 
     /**

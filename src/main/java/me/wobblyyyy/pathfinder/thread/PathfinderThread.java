@@ -41,16 +41,23 @@ import java.util.ArrayList;
  * @since 0.1.0
  */
 public class PathfinderThread extends Thread {
+    private boolean shouldExecute = true;
     private final ArrayList<Odometry> odometryArrayList;
 
     @Override
     public void run() {
-        for (Odometry odometry : odometryArrayList) {
-            odometry.update();
+        while (shouldExecute) {
+            for (Odometry odometry : odometryArrayList) {
+                odometry.update();
+            }
         }
     }
 
     public PathfinderThread(ArrayList<Odometry> odometryArrayList) {
         this.odometryArrayList = odometryArrayList;
+    }
+
+    public void close() {
+        shouldExecute = false;
     }
 }

@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.api.Pathfinder;
 import me.wobblyyyy.pathfinder.config.SimpleConfig;
 import me.wobblyyyy.pathfinder.core.Followers;
@@ -73,8 +74,65 @@ public class BasicSwerveTest {
                 ));
             }
         }).start();
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        pathfinder.goToPosition(new HeadingPoint(10, 10, 10));
+            double start = 0;
+            double startTime = System.currentTimeMillis();
+            double target = 5000;
+            double targetTime = System.currentTimeMillis() + target;
+
+            while (System.currentTimeMillis() < targetTime) {
+                double current = System.currentTimeMillis() - startTime;
+                double percent = current / target * 10;
+                odometry.setPos(new HeadingPoint(
+                        percent + 10,
+                        percent + 10,
+                        percent + 10
+                ));
+            }
+
+            odometry.setPos(new HeadingPoint(
+                    20,
+                    20,
+                    20
+            ));
+        }).start();
+        new Thread(() -> {
+            try {
+                Thread.sleep(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            while (true) {
+                Thread.onSpinWait();
+                try {
+                    Thread.sleep(500);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Current pos: " +
+                        odometry.getPos().toString());
+            }
+        }).start();
+
+//        pathfinder.goToPosition(new HeadingPoint(10, 10, 10));
+//        pathfinder.lock();
+//        System.out.println("Finished path 1.");
+//
+//        pathfinder.goToPosition(new HeadingPoint(20, 20, 20));
+//        pathfinder.lock();
+//        System.out.println("Finished path 2.");
+
+        pathfinder.followPath(new DynamicArray<>(
+                new HeadingPoint(10, 10, 10),
+                new HeadingPoint(20, 20, 20)
+        ));
         pathfinder.lock();
     }
 }

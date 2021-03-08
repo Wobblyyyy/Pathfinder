@@ -351,19 +351,30 @@ public class FollowerExecutor {
         return () -> {
             try {
                 /*
-                 * Try removing the follower from the main follower list.
-                 */
-                followers.remove(followers.indexOf(f));
-
-                /*
-                 * Try removing the follower from the follower bank list.
+                 * Another nested try - I'm sorry, I'm sorry...
                  *
-                 * This list is more important than the other list - while
-                 * the first list has checking to ensure proper list sizes,
-                 * this one doesn't - we need to be precise about removing
-                 * followers from the list of followers.
+                 * This is done to avoid ArrayIndexOutOfBounds exceptions
+                 * thrown by the dynamic array class.
                  */
-                followerBank.remove(followerBank.indexOf(f));
+                try {
+                    /*
+                     * Try removing the follower from the main follower list.
+                     */
+                    followers.remove(followers.indexOf(f));
+                    /*
+                     * Try removing the follower from the follower bank list.
+                     *
+                     * This list is more important than the other list - while
+                     * the first list has checking to ensure proper list sizes,
+                     * this one doesn't - we need to be precise about removing
+                     * followers from the list of followers.
+                     */
+                    followerBank.remove(followerBank.indexOf(f));
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                    /*
+                     * Ignore the exception, it doesn't actually do anything.
+                     */
+                }
 
                 /*
                  * Add the next follower to the regular list of followers.
@@ -489,5 +500,16 @@ public class FollowerExecutor {
              */
             BcThread.spin();
         } while (!isEmpty());
+    }
+
+    /**
+     * Stop this {@code FollowerExecutor}'s execution, or at least attempt to
+     * do so. This method won't actually stop the execution of the thread -
+     * rather, it'll signal the thread's execution to come to a stop.
+     *
+     * @see #stop()
+     */
+    public void close() {
+        stop();
     }
 }

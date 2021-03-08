@@ -73,4 +73,11 @@ public class PathfinderThreadManager {
     public void stop() {
         thread.stop();
     }
+
+    /**
+     * Gently shut down the pathfinder thread.
+     */
+    public void close() {
+        thread.close();
+    }
 }

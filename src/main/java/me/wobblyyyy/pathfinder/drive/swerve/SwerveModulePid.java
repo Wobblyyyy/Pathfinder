@@ -46,9 +46,9 @@ public class SwerveModulePid {
      * had run at my own high school's robotics team.
      */
     private static final PidController controller = new PidController(
-            0.550,
-            0.000,
-            0.005
+            0.009599311,
+            0.000000000,
+            0.005000000
     );
 
     /**

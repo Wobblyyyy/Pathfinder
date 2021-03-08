@@ -166,6 +166,53 @@ public class HeadingPoint extends Point {
     }
 
     /**
+     * Subtract the value of point {@code B} from point {@code A} and get the
+     * difference between the two points.
+     *
+     * @param a the first of the two points - this is the point that will
+     *          be subtracted from.
+     * @param b the second of the two points - this is the point that will
+     *          get subtracted.
+     * @return the difference between the two points.
+     */
+    public static HeadingPoint subtract(HeadingPoint a,
+                                        HeadingPoint b) {
+        return add(a, scale(b, -1));
+    }
+
+    /**
+     * Get the angle from point A to point B. This method inversely subtracts
+     * the two points and uses the {@link Math#atan2(double, double)} method
+     * to determine the angle between them.
+     *
+     * @param a the first of the two points.
+     * @param b the second of the two points.
+     * @return the angle between the two points, notated in radians.
+     */
+    public static double angleOfRad(HeadingPoint a,
+                                    HeadingPoint b) {
+        /*
+         * Subtract in reverse order, B is final, A is initial.
+         */
+        HeadingPoint difference = subtract(b, a);
+        return Math.atan2(difference.getY(), difference.getX());
+    }
+
+    /**
+     * Get the angle from point A to point B. This method inversely subtracts
+     * the two points and uses the {@link Math#atan2(double, double)} method
+     * to determine the angle between them.
+     *
+     * @param a the first of the two points.
+     * @param b the second of the two points.
+     * @return the angle between the two points, notated in radians.
+     */
+    public static double angleOfDeg(HeadingPoint a,
+                                    HeadingPoint b) {
+        return Math.toDegrees(angleOfRad(a, b));
+    }
+
+    /**
      * Scale a point (heading included) by a certain factor.
      *
      * <p>
