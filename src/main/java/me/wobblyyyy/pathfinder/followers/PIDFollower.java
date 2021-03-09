@@ -85,7 +85,12 @@ import java.util.HashMap;
  * @author Colin Robertson
  * @version 1.0.0
  * @since 0.1.0
+ * @deprecated Name is misleading. This class would require too much effort to
+ * maintain right now, we're focusing on getting a stable release out before
+ * fine-tuning different types of followers. Consider using other followers,
+ * such as a two (or even three) PID follower.
  */
+@Deprecated(forRemoval = true)
 public class PIDFollower implements Follower {
     /**
      * All of the follower's motion plan.
