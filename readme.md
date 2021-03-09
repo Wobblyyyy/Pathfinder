@@ -25,6 +25,24 @@ to get to the online documentation!
 - Abstract and general codebase that can be implemented just about anywhere
   with a JVM.
   
+## Quickstart
+Please see the online quickstart, available [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html).
+
+## Building
+Pathfinder uses Gradle as a build system. Because Pathfinder is a library, the only task
+you'll really need to run is `jar` or `shadowJar`. `shadowJar` will produce a jar with all
+of the required dependencies bundled inside. This jar is about 300kb and includes all of
+the libraries Pathfinder needs to operate. `jar` produces a jar much closer to 100kb in size.
+It doesn't include any of the libraries Pathfinder needs to function - you'll need to add them
+manually.
+
+## Dependencies
+- OdometryCore
+- edt
+- intra_utils
+- Pathfinder-Java
+- PathfindingCore
+  
 ## Documentation
 Pathfinder strives to be a well-documented project - every method, class,
 field, interface, enum, etc - should all have documentation. Documentation, in
