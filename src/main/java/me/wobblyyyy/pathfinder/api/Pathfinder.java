@@ -35,7 +35,6 @@ import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.PathfinderManager;
 import me.wobblyyyy.pathfinder.core.PromisedFinder;
-import me.wobblyyyy.pathfinder.followers.PIDFollower;
 import me.wobblyyyy.pathfinder.followers.SwerveFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
@@ -78,7 +77,7 @@ import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
  * @since 0.1.0
  *
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("ALL")
 public class Pathfinder {
     /**
      * The pathfinder's configuration.
