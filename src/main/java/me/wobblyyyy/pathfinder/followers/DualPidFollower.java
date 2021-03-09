@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.followers;
 
 import me.wobblyyyy.intra.ftc2.utils.math.PidController;
+import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.core.Follower;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
@@ -74,6 +75,7 @@ public class DualPidFollower implements Follower {
      *                              being not moving at all. This can be changed
      *                              with {@link #setDriveSpeedCoefficient(double)}
      */
+    @Sync
     public DualPidFollower(Drive drive,
                            Odometry odometry,
                            HeadingPoint targetPosition,
@@ -84,6 +86,7 @@ public class DualPidFollower implements Follower {
         this.driveSpeedCoefficient = driveSpeedCoefficient;
     }
 
+    @Sync
     private HeadingPoint currentPosition() {
         return odometry.getPos();
     }
@@ -91,6 +94,7 @@ public class DualPidFollower implements Follower {
     /**
      * Update the follower's drive values.
      */
+    @Sync
     @Override
     public void update() {
         HeadingPoint currentPosition = currentPosition();
@@ -111,6 +115,7 @@ public class DualPidFollower implements Follower {
      * purpose of having a pre-planned route.
      * </p>
      */
+    @Sync
     @Override
     public void calculate() {
         HeadingPoint currentPosition = currentPosition();
@@ -137,6 +142,7 @@ public class DualPidFollower implements Follower {
      * robot within the follower is a shitty idea, and you shouldn't do it.
      * </p>
      */
+    @Sync
     @Override
     public void drive() {
         HeadingPoint currentPosition = currentPosition();
@@ -158,6 +164,7 @@ public class DualPidFollower implements Follower {
      *
      * @return whether or not the follower has finished its execution.
      */
+    @Sync
     @Override
     public boolean isDone() {
         return Distance.isNearPoint(
@@ -167,14 +174,17 @@ public class DualPidFollower implements Follower {
         );
     }
 
+    @Sync
     public HeadingPoint target() {
         return targetPosition;
     }
 
+    @Sync
     public HeadingPoint current() {
         return currentPosition();
     }
 
+    @Sync
     public void setDriveSpeedCoefficient(double driveSpeedCoefficient) {
         this.driveSpeedCoefficient = driveSpeedCoefficient;
     }

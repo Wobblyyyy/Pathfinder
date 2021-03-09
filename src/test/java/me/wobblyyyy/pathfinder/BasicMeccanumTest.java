@@ -53,6 +53,7 @@ public class BasicMeccanumTest {
         }};
 
         Pathfinder pathfinder = new Pathfinder(config);
+        pathfinder.open();
 
         new Thread(() -> {
             double start = 0;

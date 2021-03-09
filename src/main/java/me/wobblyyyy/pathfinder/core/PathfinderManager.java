@@ -30,6 +30,8 @@
 package me.wobblyyyy.pathfinder.core;
 
 import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.pathfinder.annotations.Async;
+import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.error.InvalidPathException;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
@@ -65,7 +67,7 @@ import me.wobblyyyy.pathfinder.util.Extra;
  * @version 1.0.0
  * @since 0.1.0
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class PathfinderManager {
     /**
      * The pathfinder's configuration.
@@ -99,17 +101,17 @@ public class PathfinderManager {
     /**
      * A reference to the pathfinding pathfinder.
      */
-    private final GeneratorManager finder;
+    private GeneratorManager finder;
 
     /**
      * The follower execution system.
      */
-    private final FollowerExecutor exec;
+    private FollowerExecutor exec;
 
     /**
      * Manager used for updating loaded odometry systems.
      */
-    private final PathfinderThreadManager thread;
+    private PathfinderThreadManager thread;
 
     /**
      * Create a new PathfinderManager.
@@ -122,6 +124,7 @@ public class PathfinderManager {
      *
      * @param config the pathfinder's configuration class.
      */
+    @Sync
     public PathfinderManager(PathfinderConfig config) {
         this.config = config;
 
@@ -130,11 +133,21 @@ public class PathfinderManager {
         this.specificity = config.getSpecificity();
         this.map = config.getMap();
 
+        Factory.init(config);
+    }
+
+    /**
+     * Open the {@code PathfinderManager}'s threads and make it start doing
+     * its thing. The {@code PathfinderManager} or {@code Pathfinder} MUST be
+     * opened before it can be used - not opening the {@code PathfinderManager}
+     * will result in {@link NullPointerException}s being thrown. And we all
+     * know those aren't very fun.
+     */
+    @Sync
+    public void open() {
         finder = new GeneratorManager(config);
         exec = new FollowerExecutor(config.getDrive());
         thread = new PathfinderThreadManager(config.getOdometry());
-
-        Factory.init(config);
 
         exec.start();
         thread.start();
@@ -154,6 +167,7 @@ public class PathfinderManager {
      * @return a merged array list of several different paths.
      * @see Extra#removeDuplicatePoints(DynamicArray)
      */
+    @Sync
     public final DynamicArray<Point> merge(DynamicArray<DynamicArray<Point>> paths) {
         DynamicArray<Point> merged = new DynamicArray<>();
 
@@ -186,6 +200,7 @@ public class PathfinderManager {
      * @return a path between two given points.
      * @see GeneratorManager#getCoordinatePath(Point, Point)
      */
+    @Sync
     public DynamicArray<Point> getPath(HeadingPoint start,
                                        HeadingPoint end) {
         if (HeadingPoint.isSame(start, end)) {
@@ -225,6 +240,7 @@ public class PathfinderManager {
      * @return an extended path based off of waypoints.
      * @see PathfinderManager#getPath(HeadingPoint, HeadingPoint)
      */
+    @Sync
     public DynamicArray<Point> getWaypointPath(DynamicArray<HeadingPoint> points) {
         if (points.size() < 2) {
             try {
@@ -262,6 +278,7 @@ public class PathfinderManager {
      * @return a list of followers to follow that path.
      * @see PathfinderConfig#getFollowerType()
      */
+    @Sync
     public DynamicArray<Follower> generateFollowers(
             DynamicArray<HeadingPoint> path) {
         DynamicArray<Follower> followers = new DynamicArray<>();
@@ -322,20 +339,6 @@ public class PathfinderManager {
     }
 
     /**
-     * Get the next follower in line.
-     *
-     * @param list            current list of followers.
-     * @param currentFollower current follower.
-     * @return next follower.
-     * @deprecated Archaic and stupid. Don't use it.
-     */
-    @Deprecated(forRemoval = true)
-    public Follower getNextFollower(DynamicArray<Follower> list,
-                                    Follower currentFollower) {
-        return list.get(list.indexOf(currentFollower) + 1);
-    }
-
-    /**
      * Find a path, generate followers, and queue those followers.
      *
      * <p>
@@ -351,6 +354,7 @@ public class PathfinderManager {
      * @see PathfinderManager#generateFollowers(DynamicArray)
      * @see FollowerExecutor#queueFollower(Follower)
      */
+    @Sync
     public PromisedFinder generateAndQueueFollowers(HeadingPoint start,
                                                     HeadingPoint end) {
         DynamicArray<Point> path = getPath(start, end);
@@ -385,6 +389,7 @@ public class PathfinderManager {
      * @param followers followers to be queued.
      * @see FollowerExecutor#queueFollower(Follower)
      */
+    @Sync
     public void queueFollowers(DynamicArray<Follower> followers) {
         exec.queueFollowers(followers);
     }
@@ -408,6 +413,7 @@ public class PathfinderManager {
      * @param end    the end point.
      * @return a new array list.
      */
+    @Sync
     public DynamicArray<HeadingPoint> withHeading(DynamicArray<Point> points,
                                                   HeadingPoint start,
                                                   HeadingPoint end) {
@@ -455,6 +461,7 @@ public class PathfinderManager {
      * @return a chainable PromisedFinder object.
      * @see PathfinderManager#generateAndQueueFollowers(HeadingPoint, HeadingPoint)
      */
+    @Async
     public PromisedFinder goToPosition(HeadingPoint end) {
         /*
          * A bit confusing here - but what happens...
@@ -508,6 +515,7 @@ public class PathfinderManager {
      * @return a chainable PromisedFinder object.
      * @see PathfinderManager#followPath(DynamicArray)
      */
+    @Async
     public PromisedFinder followPath(HeadingPoint... points) {
         DynamicArray<HeadingPoint> list = new DynamicArray<>(points);
 
@@ -537,6 +545,7 @@ public class PathfinderManager {
      * @see PathfinderManager#generateFollowers(DynamicArray)
      * @see PathfinderManager#queueFollowers(DynamicArray)
      */
+    @Async
     public PromisedFinder followPath(DynamicArray<HeadingPoint> points) {
         DynamicArray<Point> path = getWaypointPath(points);
         DynamicArray<Follower> followers = generateFollowers(
@@ -582,6 +591,7 @@ public class PathfinderManager {
      *
      * @see FollowerExecutor#lock()
      */
+    @Sync
     public void lock() {
         exec.lock();
     }
@@ -596,6 +606,7 @@ public class PathfinderManager {
      * unpause it. Lovely, right?
      * </p>
      */
+    @Sync
     public void pauseOdometry() {
         thread.stop();
     }
@@ -610,6 +621,7 @@ public class PathfinderManager {
      * unpause it. Lovely, right?
      * </p>
      */
+    @Async
     public void unpauseOdometry() {
         thread.start();
     }
@@ -619,6 +631,7 @@ public class PathfinderManager {
      *
      * @return the robot's width.
      */
+    @Sync
     public int getWidth() {
         return width;
     }
@@ -628,6 +641,7 @@ public class PathfinderManager {
      *
      * @return the robot's height.
      */
+    @Sync
     public int getHeight() {
         return height;
     }
@@ -637,6 +651,7 @@ public class PathfinderManager {
      *
      * @return the field's specificity.
      */
+    @Sync
     public int getSpecificity() {
         return config.getSpecificity();
     }
@@ -646,6 +661,7 @@ public class PathfinderManager {
      *
      * @return the pathfinder's configuration.
      */
+    @Sync
     public PathfinderConfig getConfig() {
         return config;
     }
@@ -662,6 +678,7 @@ public class PathfinderManager {
      * Otherwise, you might have dangling threads that can eat up a lot of CPU.
      * </p>
      */
+    @Sync
     public void close() {
         exec.close();
         thread.close();

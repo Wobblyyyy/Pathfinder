@@ -128,13 +128,16 @@ public class BasicSwerveTest {
 //        pathfinder.goToPosition(new HeadingPoint(20, 20, 20));
 //        pathfinder.lock();
 //        System.out.println("Finished path 2.");
-
+            pathfinder.open();
+            pathfinder.close();
+            pathfinder.open();
             pathfinder.followPath(new DynamicArray<>(
                     new HeadingPoint(10, 10, 10),
                     new HeadingPoint(20, 20, 20)
 //                    new HeadingPoint(20, 20, 20)
             ));
             pathfinder.lock();
+            pathfinder.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

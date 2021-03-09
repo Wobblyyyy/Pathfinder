@@ -30,6 +30,8 @@
 package me.wobblyyyy.pathfinder.api;
 
 import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.pathfinder.annotations.Async;
+import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.PathfinderManager;
 import me.wobblyyyy.pathfinder.core.PromisedFinder;
@@ -111,6 +113,7 @@ public class Pathfinder {
      *               class if you're at all confused about what each of these
      *               configuration options do.
      */
+    @Sync
     public Pathfinder(PathfinderConfig config) {
         /*
          * Set variables that are initialized in the constructor.
@@ -135,6 +138,7 @@ public class Pathfinder {
      *
      * @return the robot's position.
      */
+    @Sync
     public HeadingPoint getPosition() {
         /*
          * Get the odometry subsystem from the Pathfinder configuration, and
@@ -194,6 +198,7 @@ public class Pathfinder {
      * @return a chainable PromisedFinder object.
      * @see PathfinderManager#goToPosition(HeadingPoint)
      */
+    @Async
     public PromisedFinder goToPosition(HeadingPoint target) {
         /*
          * As a wrapper class, Pathfinder doesn't do very much.
@@ -240,6 +245,7 @@ public class Pathfinder {
      * @return a chainable PromisedFinder object.
      * @see PathfinderManager#followPath(HeadingPoint...)
      */
+    @Async
     public PromisedFinder followPath(DynamicArray<HeadingPoint> points) {
         /*
          * As a wrapper class, Pathfinder provides very little functionality.
@@ -279,6 +285,7 @@ public class Pathfinder {
      * @see PathfinderManager#lock()
      * @see FollowerExecutor#lock()
      */
+    @Sync
     public void lock() {
         /*
          * Lock the current thread until the pathfinder's execution has
@@ -289,6 +296,18 @@ public class Pathfinder {
          * use Pathfinder in the future.
          */
         getManager().lock();
+    }
+
+    /**
+     * Open the {@code PathfinderManager}'s threads and make it start doing
+     * its thing. The {@code PathfinderManager} or {@code Pathfinder} MUST be
+     * opened before it can be used - not opening the {@code PathfinderManager}
+     * will result in {@link NullPointerException}s being thrown. And we all
+     * know those aren't very fun.
+     */
+    @Sync
+    public void open() {
+        pathfinderManager.open();
     }
 
     /**
@@ -303,6 +322,7 @@ public class Pathfinder {
      * Otherwise, you might have dangling threads that can eat up a lot of CPU.
      * </p>
      */
+    @Sync
     public void close() {
         pathfinderManager.close();
     }
@@ -317,6 +337,7 @@ public class Pathfinder {
      *
      * @return this instance of Pathfinder's manager class.
      */
+    @Sync
     public PathfinderManager getManager() {
         return pathfinderManager;
     }

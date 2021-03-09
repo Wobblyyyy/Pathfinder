@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.followers;
 
 import me.wobblyyyy.intra.ftc2.utils.math.PidController;
+import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.robot.Odometry;
@@ -53,6 +54,7 @@ import me.wobblyyyy.pathfinder.util.Distance;
 public class TriPidFollower extends DualPidFollower {
     private PidController speedController;
 
+    @Sync
     public TriPidFollower(Drive drive,
                           Odometry odometry,
                           HeadingPoint targetPosition,
@@ -70,6 +72,7 @@ public class TriPidFollower extends DualPidFollower {
     /**
      * Update the follower's drive values.
      */
+    @Sync
     @Override
     public void update() {
         double calculatedPower = speedController
@@ -90,6 +93,7 @@ public class TriPidFollower extends DualPidFollower {
      * purpose of having a pre-planned route.
      * </p>
      */
+    @Sync
     @Override
     public void calculate() {
         double distanceFromTarget = distanceFromTarget();
@@ -110,6 +114,7 @@ public class TriPidFollower extends DualPidFollower {
      * robot within the follower is a shitty idea, and you shouldn't do it.
      * </p>
      */
+    @Sync
     @Override
     public void drive() {
         super.drive();
