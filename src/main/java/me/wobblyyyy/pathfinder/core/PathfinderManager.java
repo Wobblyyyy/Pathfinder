@@ -265,6 +265,7 @@ public class PathfinderManager {
      * @return a PID follower for those two points.
      * @deprecated Use the Factory class to generate and create new followers.
      */
+    @Deprecated(forRemoval = true)
     public PIDFollower getPIDFollower(HeadingPoint start,
                                       HeadingPoint end) {
         return new PIDFollower(
@@ -289,6 +290,7 @@ public class PathfinderManager {
      * @return a new linear follower.
      * @deprecated Use the Factory class to generate and create new followers.
      */
+    @Deprecated(forRemoval = true)
     public LinearFollower getLinearFollower(HeadingPoint start,
                                             HeadingPoint end) {
         return new LinearFollower(
@@ -314,6 +316,7 @@ public class PathfinderManager {
      * @return a new swerve follower.
      * @deprecated Use the Factory class to generate and create new followers.
      */
+    @Deprecated(forRemoval = true)
     public SwerveFollower getSwerveFollower(DynamicArray<HeadingPoint> points) {
         return new SwerveFollower(
                 points,
@@ -393,6 +396,7 @@ public class PathfinderManager {
      * @return next follower.
      * @deprecated Archaic and stupid. Don't use it.
      */
+    @Deprecated(forRemoval = true)
     public Follower getNextFollower(DynamicArray<Follower> list,
                                     Follower currentFollower) {
         return list.get(list.indexOf(currentFollower) + 1);
