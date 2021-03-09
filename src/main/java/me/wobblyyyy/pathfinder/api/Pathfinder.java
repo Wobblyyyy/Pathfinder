@@ -32,12 +32,11 @@ package me.wobblyyyy.pathfinder.api;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.annotations.Async;
 import me.wobblyyyy.pathfinder.annotations.Sync;
+import me.wobblyyyy.pathfinder.annotations.Wait;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.PathfinderManager;
 import me.wobblyyyy.pathfinder.core.PromisedFinder;
-import me.wobblyyyy.pathfinder.followers.SwerveFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
 
 /**
  * The highest-level Pathfinder available.
@@ -75,7 +74,6 @@ import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
  * @version 1.0.1
  * @see PathfinderManager
  * @since 0.1.0
- *
  */
 @SuppressWarnings("ALL")
 public class Pathfinder {
@@ -257,6 +255,41 @@ public class Pathfinder {
     }
 
     /**
+     * Wait for a path to finish being followed before continuing. In addition
+     * to waiting for the path's completion, this method will halt the robot's
+     * drivetrain after the path has been completed.
+     *
+     * @param path the path that will be waited for. If there was an issue with
+     *             generating the path itself, this method will do nothing,
+     *             and, instead of waiting, will immediately return.
+     */
+    @Sync
+    @Wait
+    public void waitFor(PromisedFinder path) {
+        if (path.getPath().size() > 0) {
+            lock();
+        }
+    }
+
+    /**
+     * Wait for a path's completion, stop the robot, and then continue. This
+     * method can best be described as a fusion of these two methods:
+     * {@link #lock()} and {@link #stopRobot()}. The robot's drivetrain will
+     * be stopped after the path has finished execution or after the path's
+     * generation fails.
+     *
+     * @param path the path that should be waited for. That didn't really make
+     *             sense, but yeah - the promised result of a path that should
+     *             be waited for.
+     */
+    @Sync
+    @Wait
+    public void waitForAndStop(PromisedFinder path) {
+        waitFor(path);
+        stopRobot();
+    }
+
+    /**
      * Lock the current thread and prevent it from progressing until the
      * pathfinder's execution thread is idle.
      *
@@ -285,6 +318,7 @@ public class Pathfinder {
      * @see FollowerExecutor#lock()
      */
     @Sync
+    @Wait
     public void lock() {
         /*
          * Lock the current thread until the pathfinder's execution has
@@ -295,6 +329,16 @@ public class Pathfinder {
          * use Pathfinder in the future.
          */
         getManager().lock();
+    }
+
+    /**
+     * Stop the robot's drivetrain from moving. This doesn't stop anything
+     * other than the robot's drivetrain - Pathfinder's threads will still
+     * be just as active as ever.
+     */
+    @Sync
+    public void stopRobot() {
+        getManager().stopRobot();
     }
 
     /**

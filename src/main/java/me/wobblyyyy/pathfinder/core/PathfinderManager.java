@@ -32,6 +32,7 @@ package me.wobblyyyy.pathfinder.core;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.annotations.Async;
 import me.wobblyyyy.pathfinder.annotations.Sync;
+import me.wobblyyyy.pathfinder.annotations.Wait;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.error.InvalidPathException;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
@@ -592,8 +593,19 @@ public class PathfinderManager {
      * @see FollowerExecutor#lock()
      */
     @Sync
+    @Wait
     public void lock() {
         exec.lock();
+    }
+
+    /**
+     * Stop the robot's drivetrain. This is useful when you're trying to
+     * make sure the robot stops at a target point - ie, if you don't stop
+     * the robot at that target point, it'll miss the point entirely.
+     */
+    @Sync
+    public void stopRobot() {
+        config.getDrive().drive(0, 0);
     }
 
     /**
