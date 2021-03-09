@@ -2,3 +2,14 @@
 .gitignore
 .gradle/6.5/vcsMetadata-1/
 bin/
+build/
+.gradle/6.5/executionHistory/
+.gradle/6.5/fileChanges/
+.gradle/6.5/fileContent/
+.gradle/6.5/fileHashes/
+.gradle/6.5/gc.properties
+.gradle/6.5/javaCompile/
+.gradle/buildOutputCleanup/
+.gradle/checksums/
+.gradle/vcs-1/
+.idea/workspace.xml
