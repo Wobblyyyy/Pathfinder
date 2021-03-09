@@ -93,11 +93,11 @@ It doesn't include any of the libraries Pathfinder needs to function - you'll ne
 manually.
 
 ## Dependencies
-- OdometryCore
-- edt
-- intra_utils
-- Pathfinder-Java
-- PathfindingCore
+- [OdometryCore](https://github.com/tmthecoder/OdometryCore)
+- [EDT](https://github.com/Wobblyyyy/edt)
+- [intra_utils](https://github.com/Wobblyyyy/intra_utils)
+- [Pathfinder-Java](https://github.com/JaciBrunning/Pathfinder)
+- [PathfindingCore](https://github.com/Wobblyyyy/PathfindingCore)
   
 ## Documentation
 Pathfinder strives to be a well-documented project - every method, class,
