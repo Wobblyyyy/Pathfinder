@@ -623,6 +623,15 @@ public class PathfinderConfig {
     }
 
     /**
+     * Set the speed that linear followers will be executed at.
+     *
+     * @param speed the speed that linear followers will be executed at.
+     */
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    /**
      * Get the speed that linear followers should run at.
      *
      * @return the speed linear followers should run at.

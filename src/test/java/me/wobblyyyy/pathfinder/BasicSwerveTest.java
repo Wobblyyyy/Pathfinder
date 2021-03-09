@@ -31,6 +31,7 @@ package me.wobblyyyy.pathfinder;
 
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.api.Pathfinder;
+import me.wobblyyyy.pathfinder.config.PathfinderOptions;
 import me.wobblyyyy.pathfinder.config.SimpleConfig;
 import me.wobblyyyy.pathfinder.core.Followers;
 import me.wobblyyyy.pathfinder.drive.Drive;
@@ -55,6 +56,16 @@ public class BasicSwerveTest {
                 setRobotY(10);
                 setFollower(Followers.TRI_PID);
                 setProfile(new RobotProfile(1, 1, 15, 15, 5, 1));
+            }};
+
+            PathfinderOptions options = new PathfinderOptions() {{
+                setDrive(drive);
+                setMap(map);
+                setOdometry(odometry);
+                setRobotX(10);
+                setRobotY(10);
+                setFollowerType(Followers.TRI_PID);
+                setRobotProfile(new RobotProfile(1, 1, 15, 15, 5, 1));
             }};
 
             Pathfinder pathfinder = new Pathfinder(config);
@@ -131,11 +142,11 @@ public class BasicSwerveTest {
             pathfinder.open();
             pathfinder.close();
             pathfinder.open();
-            pathfinder.followPath(new DynamicArray<>(
+            pathfinder.waitFor(pathfinder.followPath(new DynamicArray<>(
                     new HeadingPoint(10, 10, 10),
                     new HeadingPoint(20, 20, 20)
 //                    new HeadingPoint(20, 20, 20)
-            ));
+            )));
             pathfinder.lock();
             pathfinder.close();
         } catch (Exception e) {

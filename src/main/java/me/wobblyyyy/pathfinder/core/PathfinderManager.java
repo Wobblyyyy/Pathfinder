@@ -133,8 +133,6 @@ public class PathfinderManager {
         this.height = config.getFieldHeight();
         this.specificity = config.getSpecificity();
         this.map = config.getMap();
-
-        Factory.init(config);
     }
 
     /**
