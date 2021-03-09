@@ -32,9 +32,6 @@ package me.wobblyyyy.pathfinder.core;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.error.InvalidPathException;
-import me.wobblyyyy.pathfinder.followers.LinearFollower;
-import me.wobblyyyy.pathfinder.followers.PIDFollower;
-import me.wobblyyyy.pathfinder.followers.SwerveFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.map.Map;
@@ -252,83 +249,6 @@ public class PathfinderManager {
     }
 
     /**
-     * Get a single PID follower for a route between two points.
-     *
-     * <p>
-     * Remember, our PID followers only follow straight lines - if you're
-     * trying to call this method without having verified that your path
-     * won't cause any collisions, you're... making a little bit of a mistake.
-     * </p>
-     *
-     * @param start the starting point.
-     * @param end   the ending point.
-     * @return a PID follower for those two points.
-     * @deprecated Use the Factory class to generate and create new followers.
-     */
-    @Deprecated(forRemoval = true)
-    public PIDFollower getPIDFollower(HeadingPoint start,
-                                      HeadingPoint end) {
-        return new PIDFollower(
-                config.getDrive(),
-                config.getProfile(),
-                start,
-                end
-        );
-    }
-
-    /**
-     * Get a new linear follower.
-     *
-     * <p>
-     * Linear followers have absolutely no optimization applied to them -
-     * they simply drive in one direction at one speed until they reach
-     * their target position.
-     * </p>
-     *
-     * @param start start position.
-     * @param end   end position.
-     * @return a new linear follower.
-     * @deprecated Use the Factory class to generate and create new followers.
-     */
-    @Deprecated(forRemoval = true)
-    public LinearFollower getLinearFollower(HeadingPoint start,
-                                            HeadingPoint end) {
-        return new LinearFollower(
-                config.getDrive(),
-                config.getOdometry(),
-                start,
-                end,
-                0.75
-        );
-    }
-
-    /**
-     * Get a swerve follower. PLEASE READ!
-     *
-     * <p>
-     * Unlike every other type of follower, the Jaci implementations only
-     * require a single Follower trajectory rather than multiple per leg.
-     * This type of follower is capable of swerving around at light speed,
-     * meaning you don't have to stop between points. Thus, it's the fastest.
-     * </p>
-     *
-     * @param points the defined waypoints to follow.
-     * @return a new swerve follower.
-     * @deprecated Use the Factory class to generate and create new followers.
-     */
-    @Deprecated(forRemoval = true)
-    public SwerveFollower getSwerveFollower(DynamicArray<HeadingPoint> points) {
-        return new SwerveFollower(
-                points,
-                config.getOdometry(),
-                config.getDrive(),
-                config.getGapX(),
-                config.getGapY(),
-                config.getProfile()
-        );
-    }
-
-    /**
      * Generate a list of followers to complete a given path.
      *
      * <p>
@@ -340,50 +260,63 @@ public class PathfinderManager {
      *
      * @param path a list of points, comprising a path.
      * @return a list of followers to follow that path.
-     * @see Factory
      * @see PathfinderConfig#getFollowerType()
-     * @see Factory.PID
-     * @see Factory.Linear
-     * @see Factory.Swerve
      */
-    public DynamicArray<Follower> generateFollowers(DynamicArray<HeadingPoint> path) {
+    public DynamicArray<Follower> generateFollowers(
+            DynamicArray<HeadingPoint> path) {
         DynamicArray<Follower> followers = new DynamicArray<>();
 
-        switch (config.getFollowerType()) {
-            case PID:
-                path.itr().forEach(point -> {
-                    try {
-                        HeadingPoint next = path.itr().next();
-                        if (next != null)
-                            followers.add(Factory.pid.build(
-                                    new DynamicArray<>() {{
-                                        add(point);
-                                        add(next);
-                                    }}));
-                    } catch (Exception ignored) {
-                    }
-                });
-                break;
-            case PROPORTIONAL:
-                // TODO add a proportional follower!
-            case LINEAR:
-                path.itr().forEach(point -> {
-                    try {
-                        HeadingPoint next = path.itr().next();
-                        if (next != null)
-                            followers.add(Factory.linear.build(
-                                    new DynamicArray<>() {{
-                                        add(point);
-                                        add(next);
-                                    }}));
-                    } catch (Exception ignored) {
-                    }
-                });
-                break;
-            case SWERVE:
-                followers.add(Factory.swerve.build(path));
-                break;
+        Followers followerType = config.getFollowerType();
+
+        if (followerType != Followers.LINEAR &&
+                followerType != Followers.DUAL_PID &&
+                followerType != Followers.TRI_PID) {
+            throw new UnsupportedOperationException(
+                    "Follower type " + followerType.toString() + " " +
+                            "is not yet supported!"
+            );
         }
+
+        path.add(0, config.getOdometry().getPos());
+
+        path.itr().forEach(point -> {
+            try {
+                HeadingPoint nextPoint = path.itr().next();
+
+                if (nextPoint != null) {
+                    DynamicArray<HeadingPoint> points = new DynamicArray<>(
+                            point, nextPoint
+                    );
+
+                    switch (config.getFollowerType()) {
+                        case LINEAR:
+                            followers.add(
+                                    FollowerFactory.linear(
+                                            config, points
+                                    )
+                            );
+                            break;
+                        case DUAL_PID:
+                            followers.add(
+                                    FollowerFactory.dualPid(
+                                            config, points
+                                    )
+                            );
+                            break;
+                        case TRI_PID:
+                            followers.add(
+                                    FollowerFactory.triPid(
+                                            config, points
+                                    )
+                            );
+                            break;
+                        default:
+                    }
+                }
+            } catch (Exception ignored) {
+
+            }
+        });
 
         return followers;
     }

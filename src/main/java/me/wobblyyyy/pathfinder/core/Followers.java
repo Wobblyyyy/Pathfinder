@@ -134,5 +134,21 @@ public enum Followers {
      * the generated trajectory, however, doing so can be slow.
      * </p>
      */
-    SWERVE
+    SWERVE,
+
+    /**
+     * A follower based on an X and Y PID controller. These controllers
+     * attempt to get the X and Y positions of the robot to the target
+     * positions. This type of controller moves at a constant speed that is
+     * set upon the follower's construction.
+     */
+    DUAL_PID,
+
+    /**
+     * A follower based on an X, Y, and SPEED PID controller. This type of
+     * follower is an extension of the {@link #DUAL_PID} follower and seeks
+     * to optimize precise movement by using an additional PID controller to
+     * control the speed of the robot.
+     */
+    TRI_PID
 }

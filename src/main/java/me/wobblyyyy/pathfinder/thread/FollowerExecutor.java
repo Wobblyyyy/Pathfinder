@@ -35,6 +35,8 @@ import me.wobblyyyy.pathfinder.core.Follower;
 import me.wobblyyyy.pathfinder.drive.Drive;
 import me.wobblyyyy.pathfinder.util.BcThread;
 
+import java.util.ArrayList;
+
 /**
  * Execute a given follower among several different threads.
  *
@@ -62,22 +64,9 @@ public class FollowerExecutor {
     private final Thread executor;
 
     /**
-     * A "bank" of all of the followers that need to be queued.
+     * The currently-executed followers.
      */
-    private final DynamicArray<Follower> followerBank = new DynamicArray<>();
-
-    /**
-     * The currently-executed follower(s?).
-     *
-     * <p>
-     * This list currently serves as a single element only - the size of
-     * this list should always either be 0 or 1. It would be a good idea to
-     * seek refactoring in the near future - using a single element, rather
-     * than a list of elements (that serves as a single element) would be
-     * a pretty hecking cool optimization.
-     * </p>
-     */
-    private final DynamicArray<Follower> followers = new DynamicArray<>();
+    private final ArrayList<Follower> followers = new ArrayList<>();
 
     /**
      * A list of all of the followers that have run their calculation
@@ -244,7 +233,6 @@ public class FollowerExecutor {
      */
     @SuppressWarnings("unused")
     public synchronized void clear() {
-        followerBank.clear();
         followers.clear();
     }
 
@@ -264,72 +252,78 @@ public class FollowerExecutor {
     public StaticArray<Runnable> generateRunnables() {
         DynamicArray<Runnable> runnables = new DynamicArray<>();
 
-        followers.itr().forEach(f -> {
-            if (!f.isDone()) {
-                /*
-                 * If the follower hasn't had its calculations executed yet,
-                 * we need to make sure it does that.
-                 *
-                 * Add the follower to a list of followers that have already
-                 * had their values calculated so we don't need to worry about
-                 * it any longer.
-                 */
-                if (!hasCalculated.contains(f)) {
+        try {
+            Follower f = followers.get(0);
+
+            if (f != null) {
+                if (!f.isDone()) {
+                    /*
+                     * If the follower hasn't had its calculations executed yet,
+                     * we need to make sure it does that.
+                     *
+                     * Add the follower to a list of followers that have already
+                     * had their values calculated so we don't need to worry about
+                     * it any longer.
+                     */
+                    if (!hasCalculated.contains(f)) {
+                        runnables.add(
+                                f::calculate
+                        );
+                        hasCalculated.add(f);
+                    }
+
+                    /*
+                     * Make sure to disable the user's control over the robot so
+                     * they don't cause any issues with the motors.
+                     */
                     runnables.add(
-                            f::calculate
+                            drive::disableUserControl
                     );
-                    hasCalculated.add(f);
+
+                    /*
+                     * Update the follower's power values.
+                     */
+                    runnables.add(
+                            f::update
+                    );
+
+                    /*
+                     * Make the follower drive around. Yay!
+                     *
+                     * If user control hasn't been disabled by this point, we may
+                     * see some issues with the motors having seemingly random
+                     * spasms.
+                     */
+                    runnables.add(
+                            f::drive
+                    );
+                } else {
+                    /*
+                     * If the follower has finished its execution, we resume to
+                     * normal.
+                     *
+                     * First and foremost, the user needs to re-gain control over
+                     * their drivetrain.
+                     *
+                     * After giving the user their control back, we can focus on
+                     * moving to the next follower.
+                     *
+                     * The user might only have control for a fraction of a second
+                     * before any other queued followers are activated, but who
+                     * cares - sucks to suck I guess.
+                     */
+                    runnables.add(
+                            drive::enableUserControl
+                    );
+
+                    runnables.add(
+                            moveUp(f)
+                    );
                 }
-
-                /*
-                 * Make sure to disable the user's control over the robot so
-                 * they don't cause any issues with the motors.
-                 */
-                runnables.add(
-                        drive::disableUserControl
-                );
-
-                /*
-                 * Update the follower's power values.
-                 */
-                runnables.add(
-                        f::update
-                );
-
-                /*
-                 * Make the follower drive around. Yay!
-                 *
-                 * If user control hasn't been disabled by this point, we may
-                 * see some issues with the motors having seemingly random
-                 * spasms.
-                 */
-                runnables.add(
-                        f::drive
-                );
-            } else {
-                /*
-                 * If the follower has finished its execution, we resume to
-                 * normal.
-                 *
-                 * First and foremost, the user needs to re-gain control over
-                 * their drivetrain.
-                 *
-                 * After giving the user their control back, we can focus on
-                 * moving to the next follower.
-                 *
-                 * The user might only have control for a fraction of a second
-                 * before any other queued followers are activated, but who
-                 * cares - sucks to suck I guess.
-                 */
-                runnables.add(
-                        drive::enableUserControl
-                );
-
-                runnables.add(
-                        moveUp(f)
-                );
             }
-        });
+        } catch (IndexOutOfBoundsException ignored) {
+
+        }
 
         /*
          * Return a list of all of the Runnable items that need to be ran.
@@ -360,33 +354,12 @@ public class FollowerExecutor {
                     /*
                      * Try removing the follower from the main follower list.
                      */
-                    followers.remove(followers.indexOf(f));
-                    /*
-                     * Try removing the follower from the follower bank list.
-                     *
-                     * This list is more important than the other list - while
-                     * the first list has checking to ensure proper list sizes,
-                     * this one doesn't - we need to be precise about removing
-                     * followers from the list of followers.
-                     */
-                    followerBank.remove(followerBank.indexOf(f));
+                    followers.remove(f);
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                     /*
                      * Ignore the exception, it doesn't actually do anything.
                      */
                 }
-
-                /*
-                 * Add the next follower to the regular list of followers.
-                 *
-                 * This essentially sets the next follower.
-                 *
-                 * This code will also throw errors - if the follower bank
-                 * is empty, meaning there aren't any more follower instances
-                 * that need to be followed, we get a null pointer
-                 * exception, which needs to be caught.
-                 */
-                followers.add(followerBank.get(0));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -419,12 +392,7 @@ public class FollowerExecutor {
          * Especially useful when calculations are performed on a secondary
          * thread, as they often are.
          */
-        f.calculate();
-
-        /*
-         * Add the follower to the bank of followers.
-         */
-        followerBank.add(f);
+//        f.calculate();
 
         /*
          * Add the follower to the regular followers list.
@@ -467,7 +435,7 @@ public class FollowerExecutor {
         /*
          * Check whether both the follower bank and the followers list is empty.
          */
-        return followerBank.isEmpty() && followers.isEmpty();
+        return followers.isEmpty();
     }
 
     /**

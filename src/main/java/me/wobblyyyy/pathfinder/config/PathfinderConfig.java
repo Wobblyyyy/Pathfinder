@@ -327,6 +327,11 @@ public class PathfinderConfig {
     private boolean usesThetaStar;
 
     /**
+     * The speed that certain types of linear followers should run at.
+     */
+    private double speed = 0.5;
+
+    /**
      * Create a new {@code PathfinderConfig} without any configuration elements
      * set.
      */
@@ -378,6 +383,7 @@ public class PathfinderConfig {
      *                      a game field with all your different obstacles and
      *                      what not.
      * @param follower      what type of follower the pathfinder uses.
+     * @param speed         the speed that linear followers should run at.
      * @param usesLightning see: {@link PathfinderConfig#usesLightning}
      * @param usesFast      see: {@link PathfinderConfig#usesFast}
      * @param usesThetaStar see: {@link PathfinderConfig#usesThetaStar}
@@ -394,6 +400,7 @@ public class PathfinderConfig {
                             Drive drive,
                             Map map,
                             Followers follower,
+                            double speed,
                             boolean usesLightning,
                             boolean usesFast,
                             boolean usesThetaStar) {
@@ -409,6 +416,7 @@ public class PathfinderConfig {
         this.drive = drive;
         this.map = map;
         this.follower = follower;
+        this.speed = speed;
         this.usesLightning = usesLightning;
         this.usesFast = usesFast;
         this.usesThetaStar = usesThetaStar;
@@ -612,6 +620,15 @@ public class PathfinderConfig {
      */
     public Followers getFollowerType() {
         return follower;
+    }
+
+    /**
+     * Get the speed that linear followers should run at.
+     *
+     * @return the speed linear followers should run at.
+     */
+    public double getSpeed() {
+        return speed;
     }
 
     /**

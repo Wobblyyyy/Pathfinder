@@ -26,6 +26,7 @@ public class CoolConfig extends PathfinderConfig {
                 ),
                 new CoolMap(),
                 Followers.LINEAR,
+                0.5,
                 true, true, true);
     }
 }

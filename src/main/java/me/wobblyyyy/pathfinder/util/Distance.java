@@ -94,6 +94,38 @@ public class Distance {
     }
 
     /**
+     * Get the distance between two points along a singular axis. This method
+     * does not make use of the distance formula, meaning only a single axis
+     * is factored into these calculations.
+     *
+     * @param a the initial point.
+     * @param b the target point.
+     * @return the distance between the two points. If the target point is
+     * smaller than the initial point, this value will be negative. Otherwise,
+     * it will be positive.
+     */
+    public static double distanceX(Point a,
+                                   Point b) {
+        return b.getX() - a.getX();
+    }
+
+    /**
+     * Get the distance between two points along a singular axis. This method
+     * does not make use of the distance formula, meaning only a single axis
+     * is factored into these calculations.
+     *
+     * @param a the initial point.
+     * @param b the target point.
+     * @return the distance between the two points. If the target point is
+     * smaller than the initial point, this value will be negative. Otherwise,
+     * it will be positive.
+     */
+    public static double distanceY(Point a,
+                                   Point b) {
+        return b.getY() - a.getY();
+    }
+
+    /**
      * Create a new HeadingPoint a certain distance away from a direction.
      *
      * <p>

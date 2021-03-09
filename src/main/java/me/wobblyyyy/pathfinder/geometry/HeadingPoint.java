@@ -185,17 +185,25 @@ public class HeadingPoint extends Point {
      * the two points and uses the {@link Math#atan2(double, double)} method
      * to determine the angle between them.
      *
+     * <p>
+     * The angle between two points is defined as follows:
+     * <code>
+     * atan2(y2 - y1, x2 - x1)
+     * </code>
+     * </p>
+     *
      * @param a the first of the two points.
      * @param b the second of the two points.
      * @return the angle between the two points, notated in radians.
      */
     public static double angleOfRad(HeadingPoint a,
                                     HeadingPoint b) {
-        /*
-         * Subtract in reverse order, B is final, A is initial.
-         */
-        HeadingPoint difference = subtract(b, a);
-        return Math.atan2(difference.getY(), difference.getX());
+        double angleInRadians = Math.atan2(
+                b.getY() - a.getY(),
+                b.getX() - a.getX()
+        );
+
+        return Angle.fixRad(angleInRadians);
     }
 
     /**

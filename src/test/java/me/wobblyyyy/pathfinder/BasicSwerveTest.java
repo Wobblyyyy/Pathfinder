@@ -46,80 +46,80 @@ public class BasicSwerveTest {
 
     @Test
     public void testSwerveDriving() {
-        SimpleConfig config = new SimpleConfig() {{
-            setDrive(drive);
-            setMap(map);
-            setOdometry(odometry);
-            setRobotX(10);
-            setRobotY(10);
-            setFollower(Followers.LINEAR);
-            setProfile(new RobotProfile(1, 1, 15, 15, 5, 1));
-        }};
+        try {
+            SimpleConfig config = new SimpleConfig() {{
+                setDrive(drive);
+                setMap(map);
+                setOdometry(odometry);
+                setRobotX(10);
+                setRobotY(10);
+                setFollower(Followers.TRI_PID);
+                setProfile(new RobotProfile(1, 1, 15, 15, 5, 1));
+            }};
 
-        Pathfinder pathfinder = new Pathfinder(config);
+            Pathfinder pathfinder = new Pathfinder(config);
 
-        new Thread(() -> {
-            double start = 0;
-            double startTime = System.currentTimeMillis();
-            double target = 5000;
-            double targetTime = System.currentTimeMillis() + target;
+            new Thread(() -> {
+                double start = 0;
+                double startTime = System.currentTimeMillis();
+                double target = 5000;
+                double targetTime = System.currentTimeMillis() + target;
 
-            while (System.currentTimeMillis() < targetTime) {
-                double current = System.currentTimeMillis() - startTime;
-                double percent = current / target * 10;
-                odometry.setPos(new HeadingPoint(
-                        percent,
-                        percent,
-                        percent
-                ));
-            }
-        }).start();
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            double start = 0;
-            double startTime = System.currentTimeMillis();
-            double target = 5000;
-            double targetTime = System.currentTimeMillis() + target;
-
-            while (System.currentTimeMillis() < targetTime) {
-                double current = System.currentTimeMillis() - startTime;
-                double percent = current / target * 10;
-                odometry.setPos(new HeadingPoint(
-                        percent + 10,
-                        percent + 10,
-                        percent + 10
-                ));
-            }
-
-            odometry.setPos(new HeadingPoint(
-                    20,
-                    20,
-                    20
-            ));
-        }).start();
-        new Thread(() -> {
-            try {
-                Thread.sleep(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            while (true) {
-                Thread.onSpinWait();
+                while (System.currentTimeMillis() < targetTime) {
+                    double current = System.currentTimeMillis() - startTime;
+                    double percent = current / target * 10;
+                    odometry.setPos(new HeadingPoint(
+                            percent,
+                            percent,
+                            percent
+                    ));
+                }
+            }).start();
+            new Thread(() -> {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(5000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println("Current pos: " +
-                        odometry.getPos().toString());
-            }
-        }).start();
+
+                double start = 0;
+                double startTime = System.currentTimeMillis();
+                double target = 5000;
+                double targetTime = System.currentTimeMillis() + target;
+
+                while (System.currentTimeMillis() < targetTime) {
+                    double current = System.currentTimeMillis() - startTime;
+                    double percent = current / target * 10;
+                    odometry.setPos(new HeadingPoint(
+                            percent + 10,
+                            percent + 10,
+                            percent + 10
+                    ));
+                }
+
+                odometry.setPos(new HeadingPoint(
+                        20,
+                        20,
+                        20
+                ));
+            }).start();
+            new Thread(() -> {
+                try {
+                    Thread.sleep(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                while (true) {
+                    System.out.println("Current pos: " +
+                            odometry.getPos().toString());
+                    try {
+                        Thread.sleep(500);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 
 //        pathfinder.goToPosition(new HeadingPoint(10, 10, 10));
 //        pathfinder.lock();
@@ -129,10 +129,14 @@ public class BasicSwerveTest {
 //        pathfinder.lock();
 //        System.out.println("Finished path 2.");
 
-        pathfinder.followPath(new DynamicArray<>(
-                new HeadingPoint(10, 10, 10),
-                new HeadingPoint(20, 20, 20)
-        ));
-        pathfinder.lock();
+            pathfinder.followPath(new DynamicArray<>(
+                    new HeadingPoint(10, 10, 10),
+                    new HeadingPoint(20, 20, 20)
+//                    new HeadingPoint(20, 20, 20)
+            ));
+            pathfinder.lock();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

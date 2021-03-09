@@ -119,6 +119,7 @@ public class SimpleSwerve extends PathfinderConfig {
                 drive,
                 map,
                 FOLLOWER,
+                0.5,
                 LIGHTNING,
                 FAST,
                 THETA
