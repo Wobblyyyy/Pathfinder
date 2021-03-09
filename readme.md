@@ -43,27 +43,31 @@ Pathfinder is designed to be as close to a drag-and-drop solution as possible. S
 
 ### Going to a target point
 ```java
-PathfinderConfig config = new PathfinderConfig(/* parameters go here */);
-Pathfinder pathfinder = new Pathfinder(config);
-pathfinder.open();
-pathfinder.goToPosition(new HeadingPoint(10, 10, 0));
-pathfinder.wait();
-pathfinder.close();
+public class GoToPoint {
+  PathfinderConfig config = new PathfinderConfig(/* parameters go here */);
+  Pathfinder pathfinder = new Pathfinder(config);
+  pathfinder.open();
+  pathfinder.goToPosition(new HeadingPoint(10, 10, 0));
+  pathfinder.wait();
+  pathfinder.close();
+}
 ```
 
 ### Following a set of waypoints
 ```java
-DynamicArray<HeadingPoint> path = new DynamicArray<>(
-  new HeadingPoint(10, 10, 0),
-  new HeadingPoint(20, 10, 0),
-  new HeadingPoint(30, 30, 0)
-);
-PathfinderConfig config = new PathfinderConfig(/* parameters go here */);
-Pathfinder pathfinder = new Pathfinder(config);
-pathfinder.open();
-pathfinder.followPath(path);
-pathfinder.wait();
-pathfinder.close();
+public class FollowWaypoints {
+  DynamicArray<HeadingPoint> path = new DynamicArray<>(
+    new HeadingPoint(10, 10, 0),
+    new HeadingPoint(20, 10, 0),
+    new HeadingPoint(30, 30, 0)
+  );
+  PathfinderConfig config = new PathfinderConfig(/* parameters go here */);
+  Pathfinder pathfinder = new Pathfinder(config);
+  pathfinder.open();
+  pathfinder.followPath(path);
+  pathfinder.wait();
+  pathfinder.close();
+}
 ```
 
 ## Issues and Bugs
