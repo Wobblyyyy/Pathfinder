@@ -38,37 +38,12 @@ to get to the online documentation!
 ## Quickstart
 Please see the online quickstart, available [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html).
 
-## Usage
-Pathfinder is designed to be as close to a drag-and-drop solution as possible. Such...
-
-### Going to a target point
-```java
-public class GoToPoint {
-  PathfinderConfig config = new PathfinderConfig(/* parameters go here */);
-  Pathfinder pathfinder = new Pathfinder(config);
-  pathfinder.open();
-  pathfinder.goToPosition(new HeadingPoint(10, 10, 0));
-  pathfinder.wait();
-  pathfinder.close();
-}
-```
-
-### Following a set of waypoints
-```java
-public class FollowWaypoints {
-  DynamicArray<HeadingPoint> path = new DynamicArray<>(
-    new HeadingPoint(10, 10, 0),
-    new HeadingPoint(20, 10, 0),
-    new HeadingPoint(30, 30, 0)
-  );
-  PathfinderConfig config = new PathfinderConfig(/* parameters go here */);
-  Pathfinder pathfinder = new Pathfinder(config);
-  pathfinder.open();
-  pathfinder.followPath(path);
-  pathfinder.wait();
-  pathfinder.close();
-}
-```
+## Using Pathfinder to its Maximum Potential
+Pathfinder is a rather expansive library designed for a wide variety of pathfinding situations.
+As a result, it can be pretty challenging to document every single feature and option contained
+in the library. It's a lot easier to provide guides on how to make use of specific features
+in video form, as they take a lot less time to create and are generally easier to understand.
+Please see [this link](https://wobblyyyy.github.io/docs/pathfinder/videos.html) to learn more.
 
 ## Issues and Bugs
 If you notice an issue or bug with Pathfinder, please report it on the issue tracker and send me
