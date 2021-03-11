@@ -38,6 +38,8 @@ to get to the online documentation!
 ## Quickstart
 Please see the online quickstart, available [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html).
 
+![Pathfinder Control Flow](control_flow.png)
+
 ## Using Pathfinder to its Maximum Potential
 Pathfinder is a rather expansive library designed for a wide variety of pathfinding situations.
 As a result, it can be pretty challenging to document every single feature and option contained
