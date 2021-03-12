@@ -35,7 +35,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface RelativePath {
+@Target(ElementType.FIELD)
+public @interface Path {
     String name() default "";
 }

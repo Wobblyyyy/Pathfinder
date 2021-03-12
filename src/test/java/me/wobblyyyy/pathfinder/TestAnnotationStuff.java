@@ -27,23 +27,8 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.annotations;
+package me.wobblyyyy.pathfinder;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class TestAnnotationStuff {
 
-/**
- * Interface that should be included before any classes that contain instances
- * of the {@link AbsolutePath} or {@link RelativePath} annotated element. If
- * this annotation isn't included, the class that should have had this
- * annotation on it will be ignored by the annotation processor.
- *
- * @author Colin Robertson
- * @since 0.3.0
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Paths {
 }

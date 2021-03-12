@@ -39,6 +39,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.tmthecoder:OdometryCore:1.0.0'
+    implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
 
     implementation files('libs/edt.jar')
     implementation files('libs/intra_utils.jar')

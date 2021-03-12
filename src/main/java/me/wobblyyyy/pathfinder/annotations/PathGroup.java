@@ -36,6 +36,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface AbsolutePath {
-    String name() default "";
+public @interface PathGroup {
+    String group() default "all";
 }
