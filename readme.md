@@ -12,7 +12,7 @@ Odometry-dependent library for robotics-based competitions and challenges.
 Click right [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html) 
 to get to the online documentation!
 
-## Features
+![##Features](img/features.png)
 - Fully virtualized Euclidian geometry, allowing for collision detection, prevention, and
   advanced robot navigation. Create circles, rectangles, or circular rectangles (...?)
   and make your robot avoid them.
