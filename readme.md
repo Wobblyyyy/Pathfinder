@@ -1,4 +1,4 @@
-![Pathfinder Logo](logo.png)
+![Pathfinder Logo](img/logo.png)
 
 ![GPL-3.0](https://img.shields.io/github/license/Wobblyyyy/Pathfinder)
 ![Top Language](https://img.shields.io/github/languages/top/wobblyyyy/Pathfinder)
@@ -40,7 +40,7 @@ to get to the online documentation!
 
 Please see the online quickstart, available [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html).
 
-![Pathfinder Control Flow](control_flow.png)
+![Pathfinder Control Flow](img/control_flow.png)
 
 ![Goals](img/goals.png)
 
