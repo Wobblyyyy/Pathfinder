@@ -332,6 +332,21 @@ public class PathfinderConfig {
     private double speed = 0.5;
 
     /**
+     * Should the pathfinder swap X and Y pairs?
+     */
+    private boolean swapXY = false;
+
+    /**
+     * Should X values be inverted?
+     */
+    private boolean invertX = false;
+
+    /**
+     * Should Y values be inverted?
+     */
+    private boolean invertY = false;
+
+    /**
      * Create a new {@code PathfinderConfig} without any configuration elements
      * set.
      */
@@ -665,5 +680,49 @@ public class PathfinderConfig {
      */
     public boolean doesUseThetaStar() {
         return usesThetaStar;
+    }
+
+    /**
+     * Swap the X and Y coordinate inputs.
+     */
+    public void swapXY(boolean xy) {
+        this.swapXY = xy;
+    }
+
+    /**
+     * Set the X coordinates to be inverted or not.
+     * True = inverted, false = normal.
+     */
+    public void invertX(boolean invert) {
+        this.invertX = invert;
+    }
+
+    /**
+     * Set the Y coordinates to be inverted or not.
+     * True = inverted, false = normal.
+     */
+    public void invertY(boolean invert) {
+        this.invertY = invert;
+    }
+
+    /**
+     * Are the X and Y coordinates swapped?
+     */
+    public boolean swapXY() {
+        return swapXY;
+    }
+
+    /**
+     * Is the X coordinate inverted?
+     */
+    public boolean invertX() {
+        return invertX;
+    }
+
+    /**
+     * Is the Y coordinate inverted?
+     */
+    public boolean invertY() {
+        return invertY;
     }
 }
