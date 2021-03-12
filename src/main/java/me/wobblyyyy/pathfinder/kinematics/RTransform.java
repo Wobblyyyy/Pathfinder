@@ -27,56 +27,58 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.geometry;
+package me.wobblyyyy.pathfinder.kinematics;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+import me.wobblyyyy.pathfinder.geometry.Angle;
+import me.wobblyyyy.pathfinder.geometry.Point;
+import me.wobblyyyy.pathfinder.util.Distance;
 
-public class Angle {
-    private final double angleDegrees;
-    private final double angleRadians;
+public class RTransform {
+    private final Point start;
+    private final Point stop;
+    private final Angle turn;
 
-    public Angle(double angleDegrees) {
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Math.toRadians(angleDegrees);
+    private final double x;
+    private final double y;
+
+    public RTransform(Point start,
+                      Point stop,
+                      Angle turn) {
+        this.start = start;
+        this.stop = stop;
+        this.turn = turn;
+
+        this.x = Distance.distanceX(start, stop);
+        this.y = Distance.distanceY(start, stop);
     }
 
-    public static Angle fromDegrees(double degrees) {
-        return new Angle(degrees);
+    public RTransform(double x,
+                      double y,
+                      Angle turn) {
+        this(
+                new Point(0, 0),
+                new Point(x, y),
+                turn
+        );
     }
 
-    public static Angle fromRadians(double radians) {
-        return new Angle(Math.toDegrees(radians));
+    public Point getStart() {
+        return start;
     }
 
-    public double getDegrees() {
-        return angleDegrees;
+    public Point getStop() {
+        return stop;
     }
 
-    public double getRadians() {
-        return angleRadians;
+    public Angle getTurn() {
+        return turn;
     }
 
-    public double getCos() {
-        return Math.cos(angleRadians);
+    public double getX() {
+        return x;
     }
 
-    public double getSin() {
-        return Math.sin(angleRadians);
-    }
-
-    public double getTan() {
-        return Math.tan(angleRadians);
-    }
-
-    public double getSec() {
-        return 1 / getCos();
-    }
-
-    public double getCsc() {
-        return 1 / getSin();
-    }
-
-    public double getCot() {
-        return 1 / getTan();
+    public double getY() {
+        return y;
     }
 }

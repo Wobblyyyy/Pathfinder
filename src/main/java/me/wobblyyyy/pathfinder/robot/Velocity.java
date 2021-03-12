@@ -27,56 +27,54 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.geometry;
+package me.wobblyyyy.pathfinder.robot;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+import java.util.function.Supplier;
 
-public class Angle {
-    private final double angleDegrees;
-    private final double angleRadians;
+public class Velocity {
+    private final Supplier<Double> velocitySupplier;
+    private final Type velocityType;
 
-    public Angle(double angleDegrees) {
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Math.toRadians(angleDegrees);
+    public Velocity(Supplier<Double> velocitySupplier,
+                    Type velocityType) {
+        this.velocitySupplier = velocitySupplier;
+        this.velocityType = velocityType;
     }
 
-    public static Angle fromDegrees(double degrees) {
-        return new Angle(degrees);
+    public static double perSecondToPerMinute(double perSecond) {
+        return perSecond * 60;
     }
 
-    public static Angle fromRadians(double radians) {
-        return new Angle(Math.toDegrees(radians));
+    public static double perMinuteToPerSecond(double perMinute) {
+        return perMinute / 60;
     }
 
-    public double getDegrees() {
-        return angleDegrees;
+    private double raw() {
+        return velocitySupplier.get();
     }
 
-    public double getRadians() {
-        return angleRadians;
+    public double get(Type type) {
+        if (velocityType == type) {
+            return raw();
+        } else {
+            if (velocityType == Type.ROTATIONS_PER_MINUTE) {
+                return perMinuteToPerSecond(raw());
+            } else {
+                return perSecondToPerMinute(raw());
+            }
+        }
     }
 
-    public double getCos() {
-        return Math.cos(angleRadians);
+    public double getRotationsPerSecond() {
+        return get(Type.ROTATIONS_PER_SECOND);
     }
 
-    public double getSin() {
-        return Math.sin(angleRadians);
+    public double getRotationsPerMinute() {
+        return get(Type.ROTATIONS_PER_MINUTE);
     }
 
-    public double getTan() {
-        return Math.tan(angleRadians);
-    }
-
-    public double getSec() {
-        return 1 / getCos();
-    }
-
-    public double getCsc() {
-        return 1 / getSin();
-    }
-
-    public double getCot() {
-        return 1 / getTan();
+    public enum Type {
+        ROTATIONS_PER_SECOND,
+        ROTATIONS_PER_MINUTE
     }
 }

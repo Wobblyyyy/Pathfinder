@@ -203,7 +203,7 @@ public class HeadingPoint extends Point {
                 b.getX() - a.getX()
         );
 
-        return Angle.fixRad(angleInRadians);
+        return AngleUtils.fixRad(angleInRadians);
     }
 
     /**

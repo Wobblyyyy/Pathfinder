@@ -27,56 +27,20 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.geometry;
+package me.wobblyyyy.pathfinder.kinematics;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+public class ModuleState {
+    private final double power;
 
-public class Angle {
-    private final double angleDegrees;
-    private final double angleRadians;
-
-    public Angle(double angleDegrees) {
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Math.toRadians(angleDegrees);
+    public ModuleState() {
+        this(0.0);
     }
 
-    public static Angle fromDegrees(double degrees) {
-        return new Angle(degrees);
+    public ModuleState(double power) {
+        this.power = power;
     }
 
-    public static Angle fromRadians(double radians) {
-        return new Angle(Math.toDegrees(radians));
-    }
-
-    public double getDegrees() {
-        return angleDegrees;
-    }
-
-    public double getRadians() {
-        return angleRadians;
-    }
-
-    public double getCos() {
-        return Math.cos(angleRadians);
-    }
-
-    public double getSin() {
-        return Math.sin(angleRadians);
-    }
-
-    public double getTan() {
-        return Math.tan(angleRadians);
-    }
-
-    public double getSec() {
-        return 1 / getCos();
-    }
-
-    public double getCsc() {
-        return 1 / getSin();
-    }
-
-    public double getCot() {
-        return 1 / getTan();
+    public double getPower() {
+        return power;
     }
 }

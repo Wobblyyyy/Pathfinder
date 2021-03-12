@@ -27,56 +27,28 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.geometry;
+package me.wobblyyyy.pathfinder.kinematics;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+import me.wobblyyyy.pathfinder.geometry.Angle;
 
-public class Angle {
-    private final double angleDegrees;
-    private final double angleRadians;
+public class SwerveModuleState extends ModuleState {
+    private final Angle turnAngle;
 
-    public Angle(double angleDegrees) {
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Math.toRadians(angleDegrees);
+    public SwerveModuleState(double power, Angle turnAngle) {
+        super(power);
+
+        this.turnAngle = turnAngle;
     }
 
-    public static Angle fromDegrees(double degrees) {
-        return new Angle(degrees);
-    }
-
-    public static Angle fromRadians(double radians) {
-        return new Angle(Math.toDegrees(radians));
+    public Angle getTurnAngle() {
+        return turnAngle;
     }
 
     public double getDegrees() {
-        return angleDegrees;
+        return turnAngle.getDegrees();
     }
 
     public double getRadians() {
-        return angleRadians;
-    }
-
-    public double getCos() {
-        return Math.cos(angleRadians);
-    }
-
-    public double getSin() {
-        return Math.sin(angleRadians);
-    }
-
-    public double getTan() {
-        return Math.tan(angleRadians);
-    }
-
-    public double getSec() {
-        return 1 / getCos();
-    }
-
-    public double getCsc() {
-        return 1 / getSin();
-    }
-
-    public double getCot() {
-        return 1 / getTan();
+        return turnAngle.getRadians();
     }
 }

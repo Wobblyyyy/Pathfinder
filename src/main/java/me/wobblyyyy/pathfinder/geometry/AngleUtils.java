@@ -29,54 +29,45 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+/**
+ * Utility class for dealing with angles in both radians and degrees.
+ *
+ * @author Colin Robertson
+ * @since 0.3.0
+ */
+public class AngleUtils {
+    public static final double ZERO = 0;
+    public static final double PI = Math.PI;
+    public static final double PI_TIMES_2 = PI * 2;
+    public static final double PI_OVER_2 = PI / 2;
+    public static final double PI_OVER_3 = PI / 3;
+    public static final double PI_OVER_4 = PI / 4;
+    public static final double PI_OVER_5 = PI / 5;
+    public static final double PI_OVER_6 = PI / 6;
+    public static final double PI_OVER_7 = PI / 7;
+    public static final double PI_OVER_8 = PI / 8;
 
-public class Angle {
-    private final double angleDegrees;
-    private final double angleRadians;
+    private AngleUtils() {
 
-    public Angle(double angleDegrees) {
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Math.toRadians(angleDegrees);
     }
 
-    public static Angle fromDegrees(double degrees) {
-        return new Angle(degrees);
+    public static double toPiRads(double radsWithoutPi) {
+        return radsWithoutPi * PI;
     }
 
-    public static Angle fromRadians(double radians) {
-        return new Angle(Math.toDegrees(radians));
+    public static double toPiRads2(double radsWithoutPi) {
+        return toPiRads(radsWithoutPi) * 2;
     }
 
-    public double getDegrees() {
-        return angleDegrees;
+    public static double fixRad(double rad) {
+        while (rad < toPiRads(0)) rad += toPiRads(2);
+        while (rad > toPiRads(2)) rad -= toPiRads(2);
+        return rad;
     }
 
-    public double getRadians() {
-        return angleRadians;
-    }
-
-    public double getCos() {
-        return Math.cos(angleRadians);
-    }
-
-    public double getSin() {
-        return Math.sin(angleRadians);
-    }
-
-    public double getTan() {
-        return Math.tan(angleRadians);
-    }
-
-    public double getSec() {
-        return 1 / getCos();
-    }
-
-    public double getCsc() {
-        return 1 / getSin();
-    }
-
-    public double getCot() {
-        return 1 / getTan();
+    public static double fixDeg(double deg) {
+        while (deg < 0) deg += 360;
+        while (deg > 360) deg -= 360;
+        return deg;
     }
 }
