@@ -12,7 +12,8 @@ Odometry-dependent library for robotics-based competitions and challenges.
 Click right [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html) 
 to get to the online documentation!
 
-![##Features](img/features.png)
+![Features](img/features.png)
+
 - Fully virtualized Euclidian geometry, allowing for collision detection, prevention, and
   advanced robot navigation. Create circles, rectangles, or circular rectangles (...?)
   and make your robot avoid them.
@@ -35,12 +36,14 @@ to get to the online documentation!
 - Officially endorsed by NASA! Not really. Please don't sue me, actually. But it's cool,
   right? Very cool.
   
-## Quickstart
+![Quickstart](img/quickstart.png)
+
 Please see the online quickstart, available [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html).
 
 ![Pathfinder Control Flow](control_flow.png)
 
-## Project Goals
+![Goals](img/goals.png)
+
 Pathfinder began development around the end of November, 2020. Pathfinder was/is designed to be a
 full-featured solution to path planning and following for wheeled mobile robots.
 - Provide a simple interface for interacting with paths, following paths, and doing whatever else
@@ -80,14 +83,16 @@ full-featured solution to path planning and following for wheeled mobile robots.
 - Be really epic. Yes, I do mean really epic - like... REALLY epic. Cool guys don't look at explosions.
   Cool robotics libraries are named "Pathfinder."
 
-## Using Pathfinder to its Maximum Potential
+![Full Usage](img/full.png)
+
 Pathfinder is a rather expansive library designed for a wide variety of pathfinding situations.
 As a result, it can be pretty challenging to document every single feature and option contained
 in the library. It's a lot easier to provide guides on how to make use of specific features
 in video form, as they take a lot less time to create and are generally easier to understand.
 Please see [this link](https://wobblyyyy.github.io/docs/pathfinder/videos.html) to learn more.
 
-## Issues and Bugs
+![Issues, Bugs, Features](img/issues.png)
+
 If you notice an issue or bug with Pathfinder, please report it on the issue tracker and send me
 an email. It's more important that you submit an issue report so the issue is documented
 in a public fashion. Issues or bugs will be resolved as quickly as possible whenever possible. 
@@ -125,7 +130,8 @@ manually.
   Actual path finding code - given point A and B and obstacles {X, Y, Z}, find a path between
   A and B that doesn't intersect with obstacles {X, Y, Z}.
   
-## Documentation
+![Documentation](img/documentation.png)
+
 Pathfinder strives to be a well-documented project - every method, class,
 field, interface, enum, etc - should all have documentation. Documentation, in
 its current state, is available from either of these two places.
