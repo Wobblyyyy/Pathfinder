@@ -286,7 +286,8 @@ public class PathfinderManager {
 
         if (followerType != Followers.LINEAR &&
                 followerType != Followers.DUAL_PID &&
-                followerType != Followers.TRI_PID) {
+                followerType != Followers.TRI_PID &&
+                followerType != Followers.PID) {
             throw new UnsupportedOperationException(
                     "Follower type " + followerType.toString() + " " +
                             "is not yet supported!"
@@ -312,6 +313,12 @@ public class PathfinderManager {
                                     )
                             );
                             break;
+                        case PID:
+                            followers.add(
+                                    FollowerFactory.pid(
+                                            config, points
+                                    )
+                            );
                         case DUAL_PID:
                             followers.add(
                                     FollowerFactory.dualPid(

@@ -4,10 +4,22 @@ import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.followers.DualPidFollower;
 import me.wobblyyyy.pathfinder.followers.LinearFollower;
+import me.wobblyyyy.pathfinder.followers.PidFollower;
 import me.wobblyyyy.pathfinder.followers.TriPidFollower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 
 public class FollowerFactory {
+    public static PidFollower pid(PathfinderConfig config,
+                                  DynamicArray<HeadingPoint> points) {
+        return new PidFollower(
+                config.getDrive(),
+                config.getOdometry(),
+                config.getOdometry().getPos(),
+                points.get(1),
+                config.getSpeed()
+        );
+    }
+
     public static DualPidFollower dualPid(PathfinderConfig config,
                                           DynamicArray<HeadingPoint> points) {
         return new DualPidFollower(

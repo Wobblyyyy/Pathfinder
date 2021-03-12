@@ -54,7 +54,7 @@ public class BasicSwerveTest {
                 setOdometry(odometry);
                 setRobotX(10);
                 setRobotY(10);
-                setFollower(Followers.TRI_PID);
+                setFollower(Followers.PID);
                 setProfile(new RobotProfile(1, 1, 15, 15, 5, 1));
             }};
 
