@@ -107,7 +107,7 @@ functionality. Examples include:
 - New following systems (new way to follow paths)
 - New path generation system alternatives (new generator classes)
 
-![Building](img/building)
+![Building](img/building.png)
 
 Pathfinder uses Gradle as a build system. Because Pathfinder is a library, the only task
 you'll really need to run is `jar` or `shadowJar`. `shadowJar` will produce a jar with all
