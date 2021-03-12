@@ -97,7 +97,8 @@ If you notice an issue or bug with Pathfinder, please report it on the issue tra
 an email. It's more important that you submit an issue report so the issue is documented
 in a public fashion. Issues or bugs will be resolved as quickly as possible whenever possible. 
 
-## Contributing to Pathfinder
+![Contributing](img/contributing.png)
+
 Pathfinder is a fairly large project, and, as such, we always welcome contributors. If you notice
 any bugs with Pathfinder, or would like to add any functionality, feel free to submit a pull
 request. You can always feel free to add new features that don't detract from Pathfinder's
@@ -106,7 +107,8 @@ functionality. Examples include:
 - New following systems (new way to follow paths)
 - New path generation system alternatives (new generator classes)
 
-## Building
+![Building](img/building)
+
 Pathfinder uses Gradle as a build system. Because Pathfinder is a library, the only task
 you'll really need to run is `jar` or `shadowJar`. `shadowJar` will produce a jar with all
 of the required dependencies bundled inside. This jar is about 300kb and includes all of
@@ -114,7 +116,8 @@ the libraries Pathfinder needs to operate. `jar` produces a jar much closer to 1
 It doesn't include any of the libraries Pathfinder needs to function - you'll need to add them
 manually.
 
-## Dependencies
+![Dependencies](img/dependencies.png)
+
 - [OdometryCore](https://github.com/tmthecoder/OdometryCore)
   Used for three wheel positional tracking. This library is very lightweight, so including
   it even when it isn't used shouldn't harm anyone.
