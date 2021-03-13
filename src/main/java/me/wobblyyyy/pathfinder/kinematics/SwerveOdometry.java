@@ -44,14 +44,14 @@ import me.wobblyyyy.pathfinder.util.Time;
  * Unfortunately, this class doesn't handle EVERYTHING for you. You'll need to
  * convert between swerve module states that indicate percent output power and
  * swerve module states that indicate actual velocity vectors.
- * 
+ *
  * <p>
  * It's strongly suggested that you make use of the {@code SpeedConverter}
  * class to handle conversion between motor percent output and actual velocity.
  * This conversion system utilizes motor encoders and velocities to determine
  * the actual velocity of the robot.
  * </p>
- * 
+ *
  * <p>
  * This class is pretty confusing, I can't lie. Don't be discouraged if you
  * don't understand this at all - none of us do, let's be honest. However, if
@@ -59,7 +59,7 @@ import me.wobblyyyy.pathfinder.util.Time;
  * documentation for Pathfinder, shoot me an email, or post something on a
  * forum maybe? Up to you. Good luck!
  * </p>
- 
+ *
  * @author Colin Robertson
  * @since 0.3.0
  */
@@ -75,7 +75,7 @@ public class SwerveOdometry {
      * Create a new {@code SwerveOdometry} tracker based on a kinematic
      * representation of the swerve chassis, an angle offset, and the current
      * or initial position of the robot.
-     * 
+     *
      * @param kinematics      a kinematic representation of the robot's swerve drive
      *                        chassis. See the SwerveKinematics class to learn more.
      * @param gyroOffset      the offset that should be applied to the angle.
@@ -90,14 +90,27 @@ public class SwerveOdometry {
     }
 
     /**
-     * Get the current reported position of the tracker. This position 
+     * Create a new {@code SwerveOdometry} instance without using an angle
+     * offset or a positional offset. This means that whatever angle the gyro
+     * reports at the time of initialization is the "base" angle, and the
+     * robot's starting position is set to (0, 0).
+     *
+     * @param kinematics a kinematic representation of the robot's swerve drive
+     *                   chassis. See the SwerveKinematics to learn more.
+     */
+    public SwerveOdometry(SwerveKinematics kinematics) {
+        this(kinematics, new Angle(0), new HeadingPoint(0, 0, 0));
+    }
+
+    /**
+     * Get the current reported position of the tracker. This position
      * is represented in whatever units you're using natively - meters,
      * inches, feet, miles, whatever you want, really?
      *
      * @return the robot's reported position. This position is based on
      * a series of inverse kinematic operations that are performed on a
      * constantly-transformed internal position. Please note that this
-     * position value will be very inaccurate if your timining isn't at
+     * position value will be very inaccurate if your timing isn't at
      * least relatively consistent and small.
      */
     public HeadingPoint getPosition() {
@@ -120,20 +133,20 @@ public class SwerveOdometry {
     }
 
     private RTransform getChassisStateFromStates(
-            StaticArray<SwerveModuleState> states) {
+            StaticArray<SwerveState> states) {
         return kinematics.getTransform(states);
     }
 
     private double deltaX(RTransform transformation, double time) {
-        return transformation.getY() * time - position.getX();
+        return (transformation.getX() * time);
     }
 
     private double deltaY(RTransform transformation, double time) {
-        return transformation.getY() * time - position.getY();
+        return (transformation.getY() * time);
     }
 
     private double deltaTheta(RTransform transformation) {
-        return transformation.getTurn().getDegrees() - position.getHeading();
+        return transformation.getTurn().getDegrees();
     }
 
     private HeadingPoint transformCurrentPosition(double time,
@@ -153,7 +166,7 @@ public class SwerveOdometry {
      * a speed conversion system prior to this method's invocation. Regular
      * swerve module states use a (-1, 1) range for power - NOT actual movement
      * velocity, meaning that positional tracking is rendered inaccurate.
-     * 
+     *
      * <p>
      * On these states: in most cases, the swerve module states that are set to your
      * robot are within the range of (-1, 1) for power. These values are set to the
@@ -166,7 +179,7 @@ public class SwerveOdometry {
      * position instead of the robot's theoretical position - check out the online
      * documentation or shoot me an email if you're confused or need any help.
      * </p>
-     * 
+     *
      * @param currentSeconds the current time, in seconds. This time can be fetched
      *                       using the Time.relativeTime() method. Using this method
      *                       will ensure the best degree of accuracy.
@@ -177,7 +190,7 @@ public class SwerveOdometry {
      */
     public HeadingPoint update(double currentSeconds,
                                Angle gyroAngle,
-                               StaticArray<SwerveModuleState> states) {
+                               StaticArray<SwerveState> states) {
         double timeSinceLastUpdate = getGapAndUpdateTime(currentSeconds);
         Angle angle = applyAngleOffset(gyroAngle);
         RTransform transformation = getChassisStateFromStates(states);
@@ -196,7 +209,7 @@ public class SwerveOdometry {
      * a speed conversion system prior to this method's invocation. Regular
      * swerve module states use a (-1, 1) range for power - NOT actual movement
      * velocity, meaning that positional tracking is rendered inaccurate.
-     * 
+     *
      * <p>
      * On these states: in most cases, the swerve module states that are set to your
      * robot are within the range of (-1, 1) for power. These values are set to the
@@ -209,7 +222,7 @@ public class SwerveOdometry {
      * position instead of the robot's theoretical position - check out the online
      * documentation or shoot me an email if you're confused or need any help.
      * </p>
-     * 
+     *
      * <p>
      * This method works by multiplying the amount of time since the last update by
      * the robot's current velocity vector, denoted as d(vX), d(vY), d(vT), where
@@ -219,7 +232,7 @@ public class SwerveOdometry {
      * amount. Such, it's very important to call this method as frequently as possible,
      * thus ensuring the odometry's accuracy.
      * </p>
-     * 
+     *
      * <p>
      * Just as a side note: this method is an overloaded method for the other update
      * method. In almost all cases, you should use THIS method, and not the other
@@ -227,17 +240,14 @@ public class SwerveOdometry {
      * cause confusing results, as time measurements might not be as accurate as
      * this method ensures.
      * </p>
-     * 
-     * @param currentSeconds the current time, in seconds. This time can be fetched
-     *                       using the Time.relativeTime() method. Using this method
-     *                       will ensure the best degree of accuracy.
+     *
      * @param gyroAngle      the angle of the gyroscope. This angle should come right
      *                       from the gyroscope without any intervention.
      * @param states         swerve module states that represent the robot's current
      *                       movement vector.
      */
     public HeadingPoint update(Angle gyroAngle,
-                               StaticArray<SwerveModuleState> states) {
+                               StaticArray<SwerveState> states) {
         return update(
                 Time.relativeTime(),
                 gyroAngle,

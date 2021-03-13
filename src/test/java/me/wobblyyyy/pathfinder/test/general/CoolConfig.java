@@ -27,28 +27,35 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.kinematics;
+package me.wobblyyyy.pathfinder.test.general;
 
-import me.wobblyyyy.pathfinder.geometry.Angle;
+import me.wobblyyyy.pathfinder.config.PathfinderConfig;
+import me.wobblyyyy.pathfinder.core.Followers;
+import me.wobblyyyy.pathfinder.util.RobotProfile;
 
-public class SwerveModuleState extends ModuleState {
-    private final Angle turnAngle;
+public class CoolConfig extends PathfinderConfig {
+    static CoolMotor m = new CoolMotor();
 
-    public SwerveModuleState(double power, Angle turnAngle) {
-        super(power);
-
-        this.turnAngle = turnAngle;
-    }
-
-    public Angle getTurnAngle() {
-        return turnAngle;
-    }
-
-    public double getDegrees() {
-        return turnAngle.getDegrees();
-    }
-
-    public double getRadians() {
-        return turnAngle.getRadians();
+    public CoolConfig() {
+        super(
+                new CoolOdometry(),
+                323,
+                629,
+                2,
+                10,
+                10,
+                5,
+                5,
+                new RobotProfile(1, 1, 15, 15, 5, 1),
+                new CoolDrive(
+                        m, m, m, m,
+                        m, m, m, m,
+                        m, m, m, m,
+                        m, m, m, m
+                ),
+                new CoolMap(),
+                Followers.LINEAR,
+                0.5,
+                true, true, true);
     }
 }

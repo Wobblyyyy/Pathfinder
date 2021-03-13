@@ -177,8 +177,8 @@ public class SpeedConverter {
      * based on the velocity of each of the wheels. This is significantly more
      * accurate than the alternatives.
      */
-    public static StaticArray<SwerveModuleState> getSwerveModuleStates(
-            StaticArray<SwerveModuleState> originalStates,
+    public static StaticArray<SwerveState> getSwerveModuleStates(
+            StaticArray<SwerveState> originalStates,
             StaticArray<SpeedConverter> speedConverters) {
         if (originalStates.size() != speedConverters.size()) {
             throw new IllegalArgumentException(
@@ -186,13 +186,13 @@ public class SpeedConverter {
             );
         }
 
-        StaticArray<SwerveModuleState> newStates =
+        StaticArray<SwerveState> newStates =
                 new StaticArray<>(originalStates.size());
 
         originalStates.itr().forEach(state -> {
             int index = originalStates.itr().index();
 
-            newStates.set(index, new SwerveModuleState(
+            newStates.set(index, new SwerveState(
                     speedConverters.get(index).inchesPerSecond(),
                     state.getTurnAngle()
             ));

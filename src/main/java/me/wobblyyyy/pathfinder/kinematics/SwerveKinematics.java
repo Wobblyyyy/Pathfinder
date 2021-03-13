@@ -37,8 +37,8 @@ import me.wobblyyyy.pathfinder.geometry.Point;
 import org.ejml.simple.SimpleMatrix;
 
 /**
- * A variety of mathemtical functionality related to kinematics for a swerve
- * chassis. Both forwarads and backwards (inverse) kinematic utilities are
+ * A variety of mathematical functionality related to kinematics for a swerve
+ * chassis. Both forwards and backwards (inverse) kinematic utilities are
  * provided here, allowing for translation from desired translation to
  * desired swerve module states as well as translation from desired swerve
  * module states. The math behind this class is largely based upon the
@@ -57,9 +57,9 @@ public class SwerveKinematics {
      * Forwards kinematics - used for getting module states from a translation.
      */
     private final SimpleMatrix kinematicsForwards;
-    
+
     /**
-     *  Inverse kinematics - used for odometry purposes.
+     * Inverse kinematics - used for odometry purposes.
      */
     private final SimpleMatrix kinematicsBackwards;
 
@@ -103,6 +103,14 @@ public class SwerveKinematics {
         kinematicsForwards = kinematicsBackwards.pseudoInverse();
     }
 
+    private RTransform swapXY(RTransform original) {
+        return new RTransform(
+                original.getY(),
+                original.getX(),
+                original.getTurn()
+        );
+    }
+
     private SimpleMatrix getTransformationVector(RTransform transform) {
         return new SimpleMatrix(3, 1) {{
             setColumn(
@@ -120,9 +128,10 @@ public class SwerveKinematics {
     }
 
     @SuppressWarnings("PointlessArithmeticExpression")
-    private StaticArray<SwerveModuleState> getSwerveModuleStates(
+    private StaticArray<SwerveState> getSwerveModuleStates(
             SimpleMatrix moduleMatrix) {
-        StaticArray<SwerveModuleState> states = new StaticArray<>();
+        StaticArray<SwerveState> states =
+                new StaticArray<>(wheelPositions.size());
 
         wheelPositions.itr().forEach(position -> {
             int i = wheelPositions.itr().index();
@@ -132,7 +141,7 @@ public class SwerveKinematics {
             double speed = Math.hypot(x, y);
             Angle angle = Angle.fromRadians(Math.atan2(y, x));
 
-            states.set(i, new SwerveModuleState(speed, angle));
+            states.set(i, new SwerveState(speed, angle));
         });
 
         return states;
@@ -152,7 +161,8 @@ public class SwerveKinematics {
      * the desired translation. These module states are returned in the same order as
      * the wheel positions that were inputted upon this instance's construction.
      */
-    public StaticArray<SwerveModuleState> getStates(RTransform transform) {
+    public StaticArray<SwerveState> getStates(RTransform transform) {
+//        transform = swapXY(transform);
         SimpleMatrix transformationVector = getTransformationVector(transform);
         SimpleMatrix moduleMatrix = getModuleMatrix(transformationVector);
         return getSwerveModuleStates(moduleMatrix);
@@ -160,7 +170,7 @@ public class SwerveKinematics {
 
     @SuppressWarnings("PointlessArithmeticExpression")
     private SimpleMatrix getModuleStateMatrix(
-            StaticArray<SwerveModuleState> states) {
+            StaticArray<SwerveState> states) {
         return new SimpleMatrix(wheelPositions.size() * 2, 1) {{
             states.itr().forEach(state -> {
                 int i = states.itr().index();
@@ -188,14 +198,14 @@ public class SwerveKinematics {
      * If the size of the provided state array doesn't match the size of the
      * internally-stored array of wheel positions, an exception will be thrown,
      * indicating that no transformation could be generated as the size of the
-     * arrays did not match. 
+     * arrays did not match.
      *
      * @param states a {@code StaticArray} of swerve module states. This array
      *               should be the same size as the internal array of wheel
      *               positions or an exception will be thrown on this method's
      *               invocation. Not cool.
      */
-    public RTransform getTransform(StaticArray<SwerveModuleState> states) {
+    public RTransform getTransform(StaticArray<SwerveState> states) {
         if (states.size() != wheelPositions.size()) {
             throw new IllegalArgumentException(
                     "Error while attempting to get RTransform from a set of " +

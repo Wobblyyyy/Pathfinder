@@ -27,8 +27,14 @@
  *
  */
 
-package me.wobblyyyy.pathfinder;
+package me.wobblyyyy.pathfinder.test.general;
 
-public class TestAnnotationStuff {
+import me.wobblyyyy.pathfinder.api.Pathfinder;
+import org.junit.jupiter.api.Test;
 
+public class JaciTest {
+    @Test
+    public void runTest() {
+        Pathfinder pathfinder = new Pathfinder(new CoolConfig());
+    }
 }
