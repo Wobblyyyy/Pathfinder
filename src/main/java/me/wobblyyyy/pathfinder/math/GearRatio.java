@@ -127,6 +127,26 @@ public class GearRatio {
     }
 
     /**
+     * Get the ratio between input and output rotations. This ratio can best
+     * be expressed as output divided by input.
+     *
+     * @return the ratio of input rotations to output rotations.
+     */
+    public double getInputToOutputRatio() {
+        return inputToOutput;
+    }
+
+    /**
+     * Get the ratio between output and input rotations. This ratio can best
+     * be expressed as input divided by output.
+     *
+     * @return the ratio of output rotations to input rotations.
+     */
+    public double getOutputToInputRatio() {
+        return outputToInput;
+    }
+
+    /**
      * How many output rotations is the specified input rotation worth? If you
      * have a gear ratio of 2:1, and you fed this method 1, this method would
      * return the following value: 0.5.
