@@ -103,6 +103,12 @@ public class SwerveKinematics {
         kinematicsForwards = kinematicsBackwards.pseudoInverse();
     }
 
+    /**
+     * Swap X and Y values of a translation.
+     *
+     * @param original the original translation.
+     * @return a translation with swapped X and Y values.
+     */
     private RTransform swapXY(RTransform original) {
         return new RTransform(
                 original.getY(),
@@ -111,6 +117,13 @@ public class SwerveKinematics {
         );
     }
 
+    /**
+     * Get a transformation vector based on a robot transformation.
+     *
+     * @param transform the desired robot transformation.
+     * @return a transformation matrix/vector based on the desired robot
+     * transformation - once again, my favorite!
+     */
     private SimpleMatrix getTransformationVector(RTransform transform) {
         return new SimpleMatrix(3, 1) {{
             setColumn(
@@ -123,10 +136,26 @@ public class SwerveKinematics {
         }};
     }
 
+    /**
+     * Get a matrix of swerve module states based on a transformation vector
+     * generated elsewhere.
+     *
+     * @param transformationVector the transformation vector to base the matrix
+     *                             of states upon.
+     * @return a matrix of swerve module state information based on the
+     * requested transformation vector.
+     */
     private SimpleMatrix getModuleMatrix(SimpleMatrix transformationVector) {
         return kinematicsBackwards.mult(transformationVector);
     }
 
+    /**
+     * Get an array of swerve module states based on a matrix of swerve module
+     * states.
+     *
+     * @param moduleMatrix the matrix of swerve module state information.
+     * @return an array of swerve module states.
+     */
     @SuppressWarnings("PointlessArithmeticExpression")
     private StaticArray<SwerveState> getSwerveModuleStates(
             SimpleMatrix moduleMatrix) {
@@ -151,15 +180,16 @@ public class SwerveKinematics {
      * Get swerve module states based on the desired transformation and the
      * wheel positions passed to this instance of {@code SwerveKinematics} on
      * construction. These states are outputted in the SAME order as the wheels
-     * are inputted in upon construction. For example, if you created this instance
-     * of swerve kinematics with the order of FR/FL/BR/BL, the outputted states
+     * are inputted in upon construction. For example, if you created this
+     * swerve kinematics with the order of FR/FL/BR/BL, the outputted states
      * will be outputted in the same order.
      *
      * @param transform the robot's desired transformation. In most cases, this
      *                  transformation should fit within the range of (-1, 1).
-     * @return a {@code StaticArray} of each of the module states that would represent
-     * the desired translation. These module states are returned in the same order as
-     * the wheel positions that were inputted upon this instance's construction.
+     * @return a {@code StaticArray} of each of the module states that would
+     * represent the desired translation. These module states are returned in
+     * the same order as the wheel positions that were inputted upon this
+     * instance's construction.
      */
     public StaticArray<SwerveState> getStates(RTransform transform) {
 //        transform = swapXY(transform);
@@ -168,6 +198,14 @@ public class SwerveKinematics {
         return getSwerveModuleStates(moduleMatrix);
     }
 
+    /**
+     * Get a matrix of swerve module states based on an array of swerve module
+     * states.
+     *
+     * @param states the module states to generate a matrix with.
+     * @return a matrix of swerve module states based on an array of swerve
+     * module states.
+     */
     @SuppressWarnings("PointlessArithmeticExpression")
     private SimpleMatrix getModuleStateMatrix(
             StaticArray<SwerveState> states) {
@@ -178,17 +216,25 @@ public class SwerveKinematics {
                 set(
                         i * 2 + 0,
                         0,
-                        state.getPower() * state.getTurnAngle().getCos()
+                        state.getPower() * state.getTurnAngle().cos()
                 );
                 set(
                         i * 2 + 1,
                         0,
-                        state.getPower() * state.getTurnAngle().getSin()
+                        state.getPower() * state.getTurnAngle().sin()
                 );
             });
         }};
     }
 
+    /**
+     * Get a transformation vector based on a matrix of swerve states.
+     *
+     * @param stateMatrix the swerve state matrix to base the newly created
+     *                    transformation vector on.
+     * @return a chassis transformation vector based on a matrix of swerve
+     * states - my favorite!
+     */
     private SimpleMatrix getChassisTransformVector(SimpleMatrix stateMatrix) {
         return kinematicsForwards.mult(stateMatrix);
     }

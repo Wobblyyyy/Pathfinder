@@ -56,28 +56,28 @@ public class Angle {
         return angleRadians;
     }
 
-    public double getCos() {
+    public double cos() {
         return Math.cos(angleRadians);
     }
 
-    public double getSin() {
+    public double sin() {
         return Math.sin(angleRadians);
     }
 
-    public double getTan() {
+    public double tan() {
         return Math.tan(angleRadians);
     }
 
-    public double getSec() {
-        return 1 / getCos();
+    public double sec() {
+        return 1 / cos();
     }
 
-    public double getCsc() {
-        return 1 / getSin();
+    public double csc() {
+        return 1 / sin();
     }
 
-    public double getCot() {
-        return 1 / getTan();
+    public double cot() {
+        return 1 / tan();
     }
 
     public Angle plus(Angle angle) {
