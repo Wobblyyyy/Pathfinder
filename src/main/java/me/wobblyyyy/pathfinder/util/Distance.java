@@ -252,4 +252,12 @@ public class Distance {
     public static double metersToInches(double meters) {
         return meters * METERS_TO_INCHES;
     }
+
+    public static double feetToMeters(double feet) {
+        return inchesToMeters(feet / 12);
+    }
+
+    public static double metersToFeet(double meters) {
+        return metersToInches(meters) / 12;
+    }
 }

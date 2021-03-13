@@ -79,4 +79,40 @@ public class Angle {
     public double getCot() {
         return 1 / getTan();
     }
+
+    public Angle plus(Angle angle) {
+        return plus(this, angle);
+    }
+
+    public Angle minus(Angle angle) {
+        return minus(this, angle);
+    }
+
+    public Angle times(Angle angle) {
+        return times(this, angle);
+    }
+
+    public Angle divide(Angle angle) {
+        return divide(this, angle);
+    }
+
+    public static Angle plus(Angle angle1,
+                             Angle angle2) {
+        return Angle.fromDegrees(angle1.getDegrees() + angle2.getDegrees());
+    }
+
+    public static Angle minus(Angle angle1,
+                              Angle angle2) {
+        return Angle.fromDegrees(angle1.getDegrees() - angle2.getDegrees());
+    }
+
+    public static Angle times(Angle angle1,
+                              Angle angle2) {
+        return Angle.fromDegrees(angle1.getDegrees() * angle2.getDegrees());
+    }
+
+    public static Angle divide(Angle angle1,
+                               Angle angle2) {
+        return Angle.fromDegrees(angle1.getDegrees() / angle2.getDegrees());
+    }
 }

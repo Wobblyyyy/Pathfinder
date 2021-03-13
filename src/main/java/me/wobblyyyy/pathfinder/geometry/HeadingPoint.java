@@ -52,11 +52,17 @@ import me.wobblyyyy.intra.ftc2.utils.math.Math;
  * @version 1.0.0
  * @since 0.1.0
  */
+@SuppressWarnings("unused")
 public class HeadingPoint extends Point {
     /**
      * The point's heading.
      */
     private final double heading;
+
+    /**
+     * The point's {@link Angle}.
+     */
+    private final Angle angle;
 
     /**
      * Create a new heading point.
@@ -94,15 +100,105 @@ public class HeadingPoint extends Point {
          * Assign the heading value so we're all good.
          */
         this.heading = heading;
+
+        /*
+         * Assign the angle based on the heading.
+         */
+        this.angle = Angle.fromDegrees(heading);
+    }
+
+    /**
+     * Create a new {@code HeadingPoint}.
+     *
+     * @param x     the point's X value.
+     * @param y     the point's Y value.
+     * @param angle the point's angle.
+     */
+    public HeadingPoint(double x,
+                        double y,
+                        Angle angle) {
+        this(x, y, angle.getDegrees());
+    }
+
+    /**
+     * Create a new HeadingPoint based on a point. Note that this constructor
+     * will set the heading point's heading to 0.
+     *
+     * @param point the point to base the new heading point on.
+     */
+    public HeadingPoint(Point point) {
+        this(point.getX(), point.getY(), 0);
+    }
+
+    /**
+     * Create a new HeadingPoint based on a point.
+     *
+     * @param point   the point that the heading point should be based on.
+     * @param heading the point's heading. All headings, at least all of the
+     *                headings that I've written, are notated in DEGREES. It
+     *                would be a FANTASTIC idea to do the same, so you don't
+     *                end up forgetting and messing something up. Just a
+     *                suggestion or something.
+     */
+    public HeadingPoint(Point point,
+                        double heading) {
+        this(point.getX(), point.getY(), heading);
+    }
+
+    /**
+     * Create a new HeadingPoint based on a point.
+     *
+     * @param point the point that the heading point should be based on.
+     * @param angle the point's heading. All headings, at least all of the
+     *              headings that I've written, are notated in DEGREES. It
+     *              would be a FANTASTIC idea to do the same, so you don't
+     *              end up forgetting and messing something up. Just a
+     *              suggestion or something.
+     */
+    public HeadingPoint(Point point,
+                        Angle angle) {
+        this(point.getX(), point.getY(), angle.getDegrees());
+    }
+
+    /**
+     * Create a new {@code HeadingPoint} based off the current point and a
+     * desired translation.
+     *
+     * @param deltaX     the difference in X value.
+     * @param deltaY     the difference in Y value.
+     * @param deltaTheta the difference in angle. NOT the current angle, not
+     *                   the new angle - the DIFFERENCE in angle.
+     * @return a newly created {@code HeadingPoint} based off the calling point
+     * and the given delta values.
+     */
+    public HeadingPoint transform(double deltaX,
+                                  double deltaY,
+                                  Angle deltaTheta) {
+        return new HeadingPoint(
+                this.getX() + deltaX,
+                this.getY() + deltaY,
+                this.getAngle().plus(deltaTheta)
+        );
     }
 
     /**
      * Get the heading of the point.
      *
      * @return the point's heading.
+     * @see #getAngle()
      */
     public double getHeading() {
         return heading;
+    }
+
+    /**
+     * Get the point's angle.
+     *
+     * @return the point's angle.
+     * @see #getHeading()
+     */
+    public Angle getAngle() {
+        return angle;
     }
 
     /**
