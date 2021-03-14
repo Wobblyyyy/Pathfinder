@@ -37,8 +37,6 @@ public class SegmentInterpolator {
 
     private final double minX;
     private final double minY;
-    private final double maxX;
-    private final double maxY;
 
     private final double sizeX;
     private final double sizeY;
@@ -51,8 +49,8 @@ public class SegmentInterpolator {
 
         minX = segment.minimum().getX();
         minY = segment.minimum().getY();
-        maxX = segment.maximum().getX();
-        maxY = segment.maximum().getY();
+        double maxX = segment.maximum().getX();
+        double maxY = segment.maximum().getY();
 
         sizeX = maxX - minX;
         sizeY = maxY - minY;

@@ -311,7 +311,7 @@ public class Point {
         Point t = new Point(0, 0);
 
         for (Point p : points) {
-            add(t, p);
+            t = add(t, p);
         }
 
         return scale(t, 1.0 / points.length);
@@ -369,6 +369,15 @@ public class Point {
     }
 
     /**
+     * Get a clone of this point with a heading of 0 degrees.
+     *
+     * @return a clone of this point with a heading of 0 degrees.
+     */
+    public HeadingPoint withHeading() {
+        return withHeading(0);
+    }
+
+    /**
      * Get a clone of this instanced point with a new heading.
      *
      * @param heading the new heading to add.
@@ -398,5 +407,45 @@ public class Point {
                 this.getX(),
                 this.getY()
         );
+    }
+
+    /**
+     * Get the angle from point A to point B. This method inversely subtracts
+     * the two points and uses the {@link Math#atan2(double, double)} method
+     * to determine the angle between them.
+     *
+     * <p>
+     * The angle between two points is defined as follows:
+     * <code>
+     * atan2(y2 - y1, x2 - x1)
+     * </code>
+     * </p>
+     *
+     * @param a the first of the two points.
+     * @param b the second of the two points.
+     * @return the angle between the two points, notated in radians.
+     */
+    public static double angleOfRad(HeadingPoint a,
+                                    HeadingPoint b) {
+        double angleInRadians = Math.atan2(
+                b.getY() - a.getY(),
+                b.getX() - a.getX()
+        );
+
+        return AngleUtils.fixRad(angleInRadians);
+    }
+
+    /**
+     * Get the angle from point A to point B. This method inversely subtracts
+     * the two points and uses the {@link Math#atan2(double, double)} method
+     * to determine the angle between them.
+     *
+     * @param a the first of the two points.
+     * @param b the second of the two points.
+     * @return the angle between the two points, notated in radians.
+     */
+    public static double angleOfDeg(HeadingPoint a,
+                                    HeadingPoint b) {
+        return Math.toDegrees(angleOfRad(a, b));
     }
 }
