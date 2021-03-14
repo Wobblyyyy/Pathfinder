@@ -127,4 +127,20 @@ public interface Segment {
      * on raw X and Y coordinates, not interpolatable coordinates.
      */
     Point maximum();
+
+    /**
+     * Get the point where the segment starts. This is defined as the position
+     * that represents 0 percent of the segment's completion.
+     *
+     * @return the point at which the segment begins.
+     */
+    Point start();
+
+    /**
+     * Get the point where the segment ends. This is defined as the position
+     * that represents 100 percent of the segment's completion.
+     *
+     * @return the point at which the segment ends.
+     */
+    Point end();
 }

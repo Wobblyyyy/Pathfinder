@@ -320,4 +320,26 @@ public class Spline implements Segment {
     public String toString() {
         return interpolator.toString();
     }
+
+    /**
+     * Get the point where the segment starts. This is defined as the position
+     * that represents 0 percent of the segment's completion.
+     *
+     * @return the point at which the segment begins.
+     */
+    @Override
+    public Point start() {
+        return points.get(0);
+    }
+
+    /**
+     * Get the point where the segment ends. This is defined as the position
+     * that represents 100 percent of the segment's completion.
+     *
+     * @return the point at which the segment ends.
+     */
+    @Override
+    public Point end() {
+        return points.get(points.size() - 1);
+    }
 }
