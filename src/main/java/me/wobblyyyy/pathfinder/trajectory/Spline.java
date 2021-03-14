@@ -39,16 +39,87 @@ import me.wobblyyyy.pathfinder.geometry.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Ahh... splines. Basically gay lines. I swear I'm not homophobic, I like men
+ * too. Anyways. Straight lines are very linear and very boring. Splines, on
+ * the other hand, are basically straight lines that aren't at all straight -
+ * rather, they curve. Splines are incredibly useful in making complex movement
+ * trajectories and profiles. Unlike regular lines, splines, as you know, have
+ * an element of curvature. This element of curvature allows for your robot to
+ * continually move without ever having to come to a stop or a hard direction
+ * change. Splines themselves are representations of a concept, not fully
+ * fledged implementations of a trajectory following algorithm.
+ *
+ * <p>
+ * Splines, or at least these splines, make use of the Fritsch-Carlson method
+ * for computing internal spline parameters. This method isn't incredibly
+ * computationally expensive, but as a best practice, it's suggested that you
+ * do as little runtime execution of spline initialization.
+ * </p>
+ *
+ * <p>
+ * Interpolation is handled by yet another rather complex algorithm that nobody
+ * quite understands - including me, probably. Anyways, if you really are quite
+ * sincerely interested in learning how spline interpolation works, you can
+ * go check out the {@link SplineInterpolator} class - that has all the cool
+ * and sexy math you might want to look at.
+ * </p>
+ *
+ * @author Colin Robertson
+ * @since 0.3.0
+ */
 public class Spline implements Segment {
+    /**
+     * The internal spline interpolator. All of the hard math behind splines
+     * is handled in a separate class as to reduce code clutter and make the
+     * {@code Spline} class a bit more readable, especially for those without
+     * much experience in building splines.
+     */
     private final SplineInterpolator interpolator;
+
+    /**
+     * A set of each of the points that the spline should hit. This is used
+     * mostly for metadata about the spline.
+     */
     private final StaticArray<HeadingPoint> points;
+
+    /**
+     * An array of all of the angles contained on the spline's path.
+     * TODO implement angles
+     */
     private final DynamicArray<Angle> angles;
 
+    /**
+     * The minimum X value of the spline.
+     */
     private double xMinimum;
+
+    /**
+     * The minimum Y value of the spline.
+     */
     private double yMinimum;
+
+    /**
+     * The maximum X value of the spline.
+     */
     private double xMaximum;
+
+    /**
+     * The maximum Y value of the spline.
+     */
     private double yMaximum;
 
+    /**
+     * Create a new {@code Spline} that will hit each of the required points.
+     * Splines are created so that they hit each and every one of the target
+     * points, meaning that if you tell the robot to pass through (10, 10),
+     * the robot will pass through (10, 10) no matter what.
+     *
+     * @param points a container that contains each of the required points.
+     *               Each and every one of these points will be passed through
+     *               directly by the spline computational system, meaning that
+     *               the robot will go exactly where you tell it to go.
+     */
     public Spline(Arrayable<HeadingPoint> points) {
         this.points = new StaticArray<>(points);
 
@@ -188,6 +259,12 @@ public class Spline implements Segment {
         );
     }
 
+    /**
+     * Convert the spline to a string representation of the spline.
+     *
+     * @return the interpolator's representation of the spline in the very
+     * readable String form.
+     */
     @Override
     public String toString() {
         return interpolator.toString();

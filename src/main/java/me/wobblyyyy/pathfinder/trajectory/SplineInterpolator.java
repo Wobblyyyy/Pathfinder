@@ -31,6 +31,15 @@ package me.wobblyyyy.pathfinder.trajectory;
 
 import java.util.List;
 
+/**
+ * Interpolate splines by using the Fritsch-Carlson computational method for
+ * determining control points for a spline. This class isn't really all that
+ * useful on its own - rather, you should go check out the much more usable
+ * {@link Spline} class - that'll get what you need done.
+ *
+ * @author Colin Robertson
+ * @since 0.3.0
+ */
 @SuppressWarnings("DuplicatedCode")
 public class SplineInterpolator {
     private final List<Double> xValues;
@@ -45,6 +54,14 @@ public class SplineInterpolator {
         mValues = m;
     }
 
+    /**
+     * Create a new monotone cubic spline.
+     *
+     * @param x the X components of the spline.
+     * @param y the Y components of the spline.
+     * @return a newly-created spline that passes through each of the provided
+     * X/Y control points - very cool, I know.
+     */
     public static SplineInterpolator monotoneCubic(List<Double> x,
                                                    List<Double> y) {
         final int n = x.size();
