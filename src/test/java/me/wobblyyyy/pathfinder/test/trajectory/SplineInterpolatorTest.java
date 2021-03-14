@@ -76,4 +76,22 @@ public class SplineInterpolatorTest {
 
         System.out.println("t: " + t.toString());
     }
+
+    @Test
+    public void testInvertedSplineInterpolation() {
+        SplineInterpolator spline = SplineInterpolator.invertedMonotoneCubic(
+                xControl,
+                yControl
+        );
+
+        System.out.println(spline.toString());
+
+        double yFromX = spline.interpolateFromX(logicalTangent.getX());
+        double xFromY = spline.interpolateFromY(logicalTangent.getY());
+
+        System.out.println("Y from X: " + yFromX);
+        System.out.println("X from Y: " + xFromY);
+
+        System.out.println("t: " + t.toString());
+    }
 }

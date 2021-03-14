@@ -110,6 +110,11 @@ public class Spline implements Segment {
     private double yMaximum;
 
     /**
+     * Is the spline's internal interpolator inverted?
+     */
+    private boolean isInverted = false;
+
+    /**
      * Create a new {@code Spline} that will hit each of the required points.
      * Splines are created so that they hit each and every one of the target
      * points, meaning that if you tell the robot to pass through (10, 10),
@@ -134,6 +139,12 @@ public class Spline implements Segment {
         xMaximum = xMinimum;
         yMaximum = yMinimum;
 
+        /*
+         * For each of the values contained in the arrays of points, check
+         * to see if those values are technically new minimums or maximums.
+         *
+         * If they're either of those, re-assign the min and max values.
+         */
         points.itr().forEach(point -> {
             double x = point.getX();
             double y = point.getY();
@@ -151,12 +162,48 @@ public class Spline implements Segment {
         ArrayList<Double> xList = fromDynamicArray(xValues);
         ArrayList<Double> yList = fromDynamicArray(yValues);
 
-        interpolator = SplineInterpolator.monotoneCubic(
-                xList,
-                yList
-        );
+        /*
+         * Inline conditional assignment, I'm sorry. Oh well.
+         *
+         * isInverted is set to INVERSE of onlyIncreasing (x values)
+         *
+         * if isInverted is false:
+         *   create a new monotone cubic spline
+         * if isInverted is true:
+         *   create a new inverted monotone cubic spline
+         */
+        interpolator = !(isInverted = !onlyIncreasing(xList)) ?
+                SplineInterpolator.monotoneCubic(xList, yList) :
+                SplineInterpolator.invertedMonotoneCubic(xList, yList);
     }
 
+    /**
+     * Check to see if an {@code ArrayList} only has a sequence of increasing
+     * values - used for spline inversion.
+     *
+     * @param values the values to check.
+     * @return whether or not the values exclusively sequentially increase.
+     */
+    private static boolean onlyIncreasing(ArrayList<Double> values) {
+        double lastValue = values.get(0);
+
+        for (double value : values) {
+            if (value != lastValue) {
+                if (!(value > lastValue)) return false;
+            }
+
+            lastValue = value;
+        }
+
+        return true;
+    }
+
+    /**
+     * Convert an {@code DynamicArray} into an {@code ArrayList}.
+     *
+     * @param array the {@code DynamicArray} to convert.
+     * @return the {@code ArrayList} that's been created.
+     */
     private ArrayList<Double> fromDynamicArray(DynamicArray<Double> array) {
         Double[] doubleArray = array.toDoubleArray();
 
@@ -180,7 +227,9 @@ public class Spline implements Segment {
     public Point interpolateFromX(double xValue) {
         return new Point(
                 xValue,
-                interpolator.interpolateFromX(xValue)
+                interpolator.interpolateFromX(!isInverted ?
+                        xValue :
+                        (Math.abs(xMaximum - xValue)) + xMaximum)
         );
     }
 
@@ -200,7 +249,9 @@ public class Spline implements Segment {
     @Override
     public Point interpolateFromY(double yValue) {
         return new Point(
-                interpolator.interpolateFromY(yValue),
+                interpolator.interpolateFromY(!isInverted ?
+                        yValue :
+                        (Math.abs(yMaximum - yValue)) + yMaximum),
                 yValue
         );
     }

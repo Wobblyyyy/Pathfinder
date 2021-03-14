@@ -99,6 +99,13 @@ public class SplineTest {
 
     public Spline coolSpline = new Spline(coolPoints);
 
+    StaticArray<HeadingPoint> leftPoints = new StaticArray<>(
+            new HeadingPoint(0, 0, 0),
+            new HeadingPoint(-10, -10, 0)
+    );
+
+    public Spline leftSpline = new Spline(leftPoints);
+
     @Test
     public void printSplines() {
         System.out.println("Spline 1: " + spline1.toString());
@@ -148,6 +155,30 @@ public class SplineTest {
         panel.setLayout(new FlowLayout());
 
         DrawableSpline drawable = new DrawableSpline(coolSpline);
+        PlottableSpline plottable = new PlottableSpline(drawable);
+
+        frame.setLayout(new BorderLayout());
+        frame.add(plottable);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+
+        try {
+            Thread.sleep(10000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void drawLeftSpline() {
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new FlowLayout());
+
+        DrawableSpline drawable = new DrawableSpline(leftSpline);
         PlottableSpline plottable = new PlottableSpline(drawable);
 
         frame.setLayout(new BorderLayout());

@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.trajectory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,12 +47,35 @@ public class SplineInterpolator {
     private final List<Double> yValues;
     private final double[] mValues;
 
-    private SplineInterpolator(List<Double> x,
-                               List<Double> y,
-                               double[] m) {
+    protected SplineInterpolator(List<Double> x,
+                                 List<Double> y,
+                                 double[] m) {
         xValues = x;
         yValues = y;
         mValues = m;
+    }
+
+    /**
+     * Create a new inverted monotone cubic spline.
+     *
+     * @param xList the X components of the spline.
+     * @param yList the Y components of the spline.
+     * @return a newly-created inverted spline that passes through each of the
+     * provided points.
+     */
+    public static SplineInterpolator invertedMonotoneCubic(
+            List<Double> xList,
+            List<Double> yList) {
+        ArrayList<Double> reflectedX = new ArrayList<>();
+        double centerX = xList.get(0);
+
+        for (double x : xList) {
+            double distanceFromCenter = Math.abs(centerX - x);
+
+            reflectedX.add(distanceFromCenter + centerX);
+        }
+
+        return monotoneCubic(reflectedX, yList);
     }
 
     /**
