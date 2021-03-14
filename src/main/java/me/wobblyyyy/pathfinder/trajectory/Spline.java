@@ -43,6 +43,7 @@ public class Spline implements Segment {
     private final SplineInterpolator interpolator;
     private final StaticArray<HeadingPoint> points;
     private final DynamicArray<Angle> angles;
+
     private double xMinimum;
     private double yMinimum;
     private double xMaximum;
@@ -72,8 +73,8 @@ public class Spline implements Segment {
 
             xMinimum = Math.min(xMinimum, x);
             yMinimum = Math.min(yMinimum, y);
-            xMaximum = Math.min(xMaximum, x);
-            yMaximum = Math.min(yMaximum, y);
+            xMaximum = Math.max(xMaximum, x);
+            yMaximum = Math.max(yMaximum, y);
         });
 
         ArrayList<Double> xList = fromDynamicArray(xValues);
@@ -182,8 +183,8 @@ public class Spline implements Segment {
     @Override
     public Point maximum() {
         return new Point(
-                xMinimum,
-                yMinimum
+                xMaximum,
+                yMaximum
         );
     }
 

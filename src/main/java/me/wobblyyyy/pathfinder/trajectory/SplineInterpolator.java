@@ -98,7 +98,7 @@ public class SplineInterpolator {
         }
 
         double h = xValues.get(i + 1) - xValues.get(i);
-        double t = (x - yValues.get(i)) / h;
+        double t = (x - xValues.get(i)) / h;
 
         return (yValues.get(i) * (1 + 2 * t) + h * mValues[i] * t) *
                 (1 - t) *
@@ -125,7 +125,7 @@ public class SplineInterpolator {
         }
 
         double h = yValues.get(i + 1) - yValues.get(i);
-        double t = (y - xValues.get(i)) / h;
+        double t = (y - yValues.get(i)) / h;
 
         return (xValues.get(i) * (1 + 2 * t) + h * mValues[i] * t) *
                 (1 - t) *

@@ -314,7 +314,7 @@ public class Point {
             add(t, p);
         }
 
-        return scale(t, points.length);
+        return scale(t, 1.0 / points.length);
     }
 
     /**

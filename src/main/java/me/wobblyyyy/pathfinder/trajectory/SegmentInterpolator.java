@@ -29,10 +29,89 @@
 
 package me.wobblyyyy.pathfinder.trajectory;
 
+import me.wobblyyyy.intra.ftc2.utils.math.Range;
+import me.wobblyyyy.pathfinder.geometry.Point;
+
 public class SegmentInterpolator {
     private final Segment segment;
 
+    private final double minX;
+    private final double minY;
+    private final double maxX;
+    private final double maxY;
+
+    private final double sizeX;
+    private final double sizeY;
+
+    private final Range xRange;
+    private final Range yRange;
+
     public SegmentInterpolator(Segment segment) {
         this.segment = segment;
+
+        minX = segment.minimum().getX();
+        minY = segment.minimum().getY();
+        maxX = segment.maximum().getX();
+        maxY = segment.maximum().getY();
+
+        sizeX = maxX - minX;
+        sizeY = maxY - minY;
+
+        xRange = new Range(minX, maxX);
+        yRange = new Range(minY, maxY);
+    }
+
+    public boolean validX(double x) {
+        return xRange.inRange(x);
+    }
+
+    public boolean validY(double y) {
+        return yRange.inRange(y);
+    }
+
+    public boolean valid(Point point) {
+        return validX(point.getX()) && validY(point.getY());
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public double percentX(double x) {
+        if (!validX(x)) return -1;
+
+        double withoutMin = x - minX;
+        double percentOf = withoutMin / sizeX;
+
+        return percentOf;
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public double percentY(double y) {
+        if (!validY(y)) return -1;
+
+        double withoutMin = y - minY;
+        double percentOf = withoutMin / sizeY;
+
+        return percentOf;
+    }
+
+    public Point atPercentX(double percentX) {
+        double realX = (percentX * sizeX) + minX;
+
+        return segment.interpolateFromX(realX);
+    }
+
+    public Point atPercentY(double percentY) {
+        double realY = (percentY * sizeY) + minY;
+
+        return segment.interpolateFromY(realY);
+    }
+
+    public Point atPercent(double percent) {
+        Point basedOnX = atPercentX(percent);
+        Point basedOnY = atPercentY(percent);
+
+        return new Point(
+                ((basedOnX.getX() + basedOnY.getX()) / 2),
+                ((basedOnX.getY() + basedOnY.getY()) / 2)
+        );
     }
 }

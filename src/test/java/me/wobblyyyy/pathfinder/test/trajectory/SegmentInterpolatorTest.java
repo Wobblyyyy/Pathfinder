@@ -27,53 +27,38 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.test.spline;
+package me.wobblyyyy.pathfinder.test.trajectory;
 
-import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.trajectory.SplineInterpolator;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.edt.StaticArray;
+import me.wobblyyyy.pathfinder.trajectory.SegmentInterpolator;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+public class SegmentInterpolatorTest extends SplineTest {
+    SegmentInterpolator segment1 = new SegmentInterpolator(spline1);
+    SegmentInterpolator segment2 = new SegmentInterpolator(spline2);
+    SegmentInterpolator segment3 = new SegmentInterpolator(spline3);
+    SegmentInterpolator segment4 = new SegmentInterpolator(spline4);
 
-public class SplineInterpolatorTest {
-    ArrayList<Double> xControl = new ArrayList<>() {{
-        add(0.0);
-        add(10.0);
-        add(20.0);
-    }};
-    ArrayList<Double> yControl = new ArrayList<>() {{
-        add(0.0);
-        add(10.0);
-        add(20.0);
-    }};
-    Point splineCenter = new Point(0, 20);
-    Point logicalTangent = Distance.inDirection(
-            splineCenter,
-            -45,
-            20
-    );
-    Point t = Distance.inDirection(
-            splineCenter,
-            -90,
-            20
+    StaticArray<Double> targetPercents = new StaticArray<>(
+            0.000 / 100,
+            25.00 / 100,
+            50.00 / 100,
+            75.00 / 100,
+            100.0 / 100
     );
 
     @Test
-    public void testSplineInterpolation() {
-        SplineInterpolator spline = SplineInterpolator.monotoneCubic(
-                xControl,
-                yControl
-        );
-
-        System.out.println(spline.toString());
-
-        double yFromX = spline.interpolateFromX(logicalTangent.getX());
-        double xFromY = spline.interpolateFromY(logicalTangent.getY());
-
-        System.out.println("Y from X: " + yFromX);
-        System.out.println("X from Y: " + xFromY);
-
-        System.out.println("t: " + t.toString());
+    public void testSegmentInterpolation() {
+        targetPercents.itr().forEach(percent -> {
+            System.out.println("Segment 1 at " +
+                    percent + " x: " +
+                    segment1.atPercentX(percent).toString());
+            System.out.println("Segment 1 at " +
+                    percent + " y: " +
+                    segment1.atPercentY(percent).toString());
+            System.out.println("Segment 1 at " +
+                    percent + ": " +
+                    segment1.atPercent(percent).toString());
+        });
     }
 }

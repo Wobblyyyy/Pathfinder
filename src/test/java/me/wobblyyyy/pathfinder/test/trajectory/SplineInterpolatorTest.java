@@ -27,68 +27,53 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.test.spline;
+package me.wobblyyyy.pathfinder.test.trajectory;
 
-import me.wobblyyyy.edt.StaticArray;
-import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.trajectory.Spline;
+import me.wobblyyyy.pathfinder.trajectory.SplineInterpolator;
 import me.wobblyyyy.pathfinder.util.Distance;
 import org.junit.jupiter.api.Test;
 
-public class SplineTest {
-    /*
-     * Four points here:
-     * TOP
-     * RIGHT
-     * BOTTOM
-     * LEFT
-     */
+import java.util.ArrayList;
 
-    final double radius = 10;
-
-    Point center = new Point(0, 0);
-    Point top = new Point(0, radius);
-    Point right = new Point(radius, 0);
-    Point bottom = new Point(0, -radius);
-    Point left = new Point(-radius, 0);
-
-    Point topToRight = Distance.inDirection(center, 45, radius);
-    Point rightToBottom = Distance.inDirection(center, -45, radius);
-    Point bottomToLeft = Distance.inDirection(center, -135, radius);
-    Point leftToTop = Distance.inDirection(center, 135, radius);
-
-    StaticArray<HeadingPoint> arrayQuad1 = new StaticArray<>(
-            top.withHeading(0),
-            topToRight.withHeading(0),
-            right.withHeading(0)
+public class SplineInterpolatorTest {
+    ArrayList<Double> xControl = new ArrayList<>() {{
+        add(0.0);
+        add(10.0);
+        add(20.0);
+    }};
+    ArrayList<Double> yControl = new ArrayList<>() {{
+        add(0.0);
+        add(10.0);
+        add(20.0);
+    }};
+    Point splineCenter = new Point(0, 20);
+    Point logicalTangent = Distance.inDirection(
+            splineCenter,
+            -45,
+            20
     );
-    StaticArray<HeadingPoint> arrayQuad4 = new StaticArray<>(
-            right.withHeading(0),
-            rightToBottom.withHeading(0),
-            bottom.withHeading(0)
+    Point t = Distance.inDirection(
+            splineCenter,
+            -90,
+            20
     );
-    StaticArray<HeadingPoint> arrayQuad3 = new StaticArray<>(
-            bottom.withHeading(0),
-            bottomToLeft.withHeading(0),
-            left.withHeading(0)
-    );
-    StaticArray<HeadingPoint> arrayQuad2 = new StaticArray<>(
-            left.withHeading(0),
-            leftToTop.withHeading(0),
-            top.withHeading(0)
-    );
-
-    Spline spline1 = new Spline(arrayQuad1);
-    Spline spline2 = new Spline(arrayQuad2);
-    Spline spline3 = new Spline(arrayQuad3);
-    Spline spline4 = new Spline(arrayQuad4);
 
     @Test
-    public void printSplines() {
-        System.out.println("Spline 1: " + spline1.toString());
-        System.out.println("Spline 2: " + spline2.toString());
-        System.out.println("Spline 3: " + spline3.toString());
-        System.out.println("Spline 4: " + spline4.toString());
+    public void testSplineInterpolation() {
+        SplineInterpolator spline = SplineInterpolator.monotoneCubic(
+                xControl,
+                yControl
+        );
+
+        System.out.println(spline.toString());
+
+        double yFromX = spline.interpolateFromX(logicalTangent.getX());
+        double xFromY = spline.interpolateFromY(logicalTangent.getY());
+
+        System.out.println("Y from X: " + yFromX);
+        System.out.println("X from Y: " + xFromY);
+
+        System.out.println("t: " + t.toString());
     }
 }
