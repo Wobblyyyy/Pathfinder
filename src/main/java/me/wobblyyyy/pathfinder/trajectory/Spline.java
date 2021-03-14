@@ -112,7 +112,7 @@ public class Spline implements Segment {
     /**
      * Is the spline's internal interpolator inverted?
      */
-    private boolean isInverted = false;
+    private final boolean isInverted;
 
     /**
      * Create a new {@code Spline} that will hit each of the required points.
