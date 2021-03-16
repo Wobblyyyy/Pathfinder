@@ -14,27 +14,18 @@ to get to the online documentation!
 
 ![Features](img/features.png)
 
-- Fully virtualized Euclidian geometry, allowing for collision detection, prevention, and
-  advanced robot navigation. Create circles, rectangles, or circular rectangles (...?)
-  and make your robot avoid them.
-- Out-of-box support for different drivetrains, including swerve drive, meccanum drive, 
-  tank drive, and any other form of holonomic drivetrain. Unsupported drivetrains can
-  be added manually and will work exactly as intended.
-- Efficient and optimized path finding and generation. Pathfinding planes in which there
-  are no obstacles make use of accelerated path planning, allowing for on-the-fly path
-  generation and following. As in: tell your robot to follow a path during Tele-Op, and
-  it will do exactly that - no delay, no lag - just driving.
-- A variety of different path following systems, including two, three, and four PID
-  controller based path following systems.
-- Plan trajectories using splines. Save them locally, record robot movement, and play
-  back robot paths and trajectories. Optimize your drivetrain as effectively as possible,
-  allowing for the fastest path following of your life.
-- Abstract and general codebase that can be used anywhere with a JVM. Officially supported
-  environments include...
-  - FIRST Robotics Competition (on roboRIO)
-  - FIRST Tech Challenge (on Android phones / control hub)
-- Officially endorsed by NASA! Not really. Please don't sue me, actually. But it's cool,
-  right? Very cool.
+- Virtual Euclidian geometry - prevent collisions and autonomously navigate around complex paths.
+- Out-of-box support for most drivetrain types, including...
+  - Meccanum drive
+  - Tank drive
+  - Swerve drive
+- Abstract and re-usable codebase that can be implemented anywhere. Offically supported environments include:
+  - FIRST Robotics Competition
+  - FIRST Tech Challenge
+- Easy-to-use and expansive API.
+- Tons of customizability and configuration options.
+- Well-documented and in active development.
+- Officially endorsed by NASA! Not really. Please don't sue me. Please.
   
 ![Quickstart](img/quickstart.png)
 
