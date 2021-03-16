@@ -37,15 +37,60 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+/*
+ * Each dependency should be annotated with a breif comment explaining
+ * what the dependency is needed for and how long it's been included in
+ * Pathfinder. This just helps to keep everything on the same page.
+ */
 dependencies {
+    /*
+     * Name:    OdometryCore
+     * Version: +1.0.0
+     * Since:   0.1.0
+     * For:     Three-wheel positional tracking.
+     */
     implementation 'com.github.tmthecoder:OdometryCore:1.0.0'
+    
+    /*
+     * Name:    Reflections
+     * Version: +0.9.12
+     * Since:   0.4.0
+     * For:     Runtime annotation scanning.
+     */
     implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
+    
+    /*
+     * Name:    Efficient Java Matrix Library.
+     * Version: +0.4.0
+     * Since:   0.3.0
+     * For:     Forwards and inverse kinematics for drivetrains.
+     */
     implementation group: 'org.ejml', name: 'ejml-all', version: '0.40'
 
+    /*
+     * Name:    Extended Data Types
+     * Version: +1.4.0
+     * Since:   0.3.0
+     * For:     Extra data types for storing data internally.
+     */
     implementation files('libs/edt.jar')
+    
+    /*
+     * Name:    intra_utils
+     * Version: +1.0.0
+     * Since:   0.3.0
+     * For:     Random utilities, mostly mathematical.
+     *
+     * Ideally, we can remove this depend.
+     */
     implementation files('libs/intra_utils.jar')
-    implementation files('libs/JNILoader-1.0.1.jar')
-    implementation files('libs/Pathfinder-Java-Main.jar')
+    
+    /*
+     * Name:    Pathfinding Core
+     * Version: +1.0.0
+     * Since:   0.1.0
+     * For:     Path planning and object avoidance. 
+     */
     implementation files('libs/PathfindingCore.jar')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
@@ -55,6 +100,10 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.1")
 }
 
+/*
+ * Use JUnit for unit testing - who doesn't love testing units?
+ * And unit testing? I know I love unit testing and testing units.
+ */ 
 test {
     useJUnitPlatform()
 }
