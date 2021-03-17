@@ -29,6 +29,22 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
+/**
+ * Represent the state of a single drive motor module. The power values
+ * stored in this module state correspond to 1 being full speed forwards,
+ * negative 1 being full speed backwards, 0 being no speed at all, and
+ * anything in between representing a combination of two of those values.
+ * 
+ * <p>
+ * Please note that these module states ARE NOT adjusted for motors on one
+ * side of the robot spinning in the opposite direction as the other side of
+ * the robot. You have to handle this manually, preferably through whatever
+ * motor implementation you've chosen to make.
+ * </p>
+ *
+ * @author Colin Robertson
+ * @since 0.3.0
+ */
 public class ModuleState {
     private final double power;
 
@@ -40,6 +56,16 @@ public class ModuleState {
         this.power = power;
     }
 
+    /**
+     * Get the module's suggested power.
+     *
+     * @return the motor's power value. This value is within the range of
+     * -1 to 1, with -1 being full speed BACKWARDS and +1 being full speed
+     * FORWARDS. A power value of 0 represents that the motor shouldn't be
+     * spinning at all. These power values are relative to the center of
+     * the robot. If every wheel is set to 1.0 power, the robot should move
+     * forwards in a straight line.
+     */
     public double getPower() {
         return power;
     }
