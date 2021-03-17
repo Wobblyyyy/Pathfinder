@@ -8,9 +8,9 @@
 ![Latest Release (Bleeding)](https://img.shields.io/github/v/release/wobblyyyy/Pathfinder?include_prereleases)
 ![Latest Release](https://img.shields.io/github/v/release/wobblyyyy/Pathfinder)
 
-Odometry-dependent library for robotics-based competitions and challenges.
-Click right [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html) 
-to get to the online documentation!
+A feature-packed and thoroughly implemented library for autonomous navigation
+designed for wheeled mobile robots. Click right [here](https://wobblyyyy.github.io/docs/pathfinder/quickstart.html) 
+to get to Pathfinder's online documentation, or keep reading to learn more.
 
 ![Features](img/features.png)
 
@@ -118,8 +118,6 @@ manually.
 - [intra_utils](https://github.com/Wobblyyyy/intra_utils)
   A variety of utilities used by Pathfinder internally - intra_utils is really just a collection
   of random code I've found I've needed in many projects.
-- [Pathfinder-Java](https://github.com/JaciBrunning/Pathfinder)
-  This is being deprecated very soon!
 - [PathfindingCore](https://github.com/Wobblyyyy/PathfindingCore)
   Actual path finding code - given point A and B and obstacles {X, Y, Z}, find a path between
   A and B that doesn't intersect with obstacles {X, Y, Z}.
