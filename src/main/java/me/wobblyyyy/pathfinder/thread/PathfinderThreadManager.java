@@ -64,15 +64,19 @@ public class PathfinderThreadManager {
      * Start the pathfinder thread.
      */
     public void start() {
-        thread.start();
+//        thread.start();
+    }
+
+    public void tick() {
+        thread.run();
     }
 
     /**
      * Stop the pathfinder thread.
      */
-    @SuppressWarnings("deprecation")
+//    @SuppressWarnings("deprecation")
     public void stop() {
-        thread.stop();
+//        thread.stop();
     }
 
     /**

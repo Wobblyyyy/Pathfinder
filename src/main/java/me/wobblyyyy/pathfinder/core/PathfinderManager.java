@@ -133,6 +133,7 @@ public class PathfinderManager {
         this.height = config.getFieldHeight();
         this.specificity = config.getSpecificity();
         this.map = config.getMap();
+        finder = new GeneratorManager(config);
     }
 
     /**
@@ -141,15 +142,17 @@ public class PathfinderManager {
      * opened before it can be used - not opening the {@code PathfinderManager}
      * will result in {@link NullPointerException}s being thrown. And we all
      * know those aren't very fun.
+     *
+     * @deprecated Use {@link #tick()} for now.
      */
     @Sync
+    @Deprecated
     public void open() {
-        finder = new GeneratorManager(config);
-        exec = new FollowerExecutor(config.getDrive());
-        thread = new PathfinderThreadManager(config.getOdometry());
+//        exec = new FollowerExecutor(config.getDrive());
+//        thread = new PathfinderThreadManager(config.getOdometry());
 
-        exec.start();
-        thread.start();
+//        exec.start();
+//        thread.start();
     }
 
     /**
@@ -625,7 +628,7 @@ public class PathfinderManager {
      */
     @Sync
     public void pauseOdometry() {
-        thread.stop();
+//        thread.stop();
     }
 
     /**
@@ -640,7 +643,7 @@ public class PathfinderManager {
      */
     @Async
     public void unpauseOdometry() {
-        thread.start();
+//        thread.start();
     }
 
     /**
@@ -694,10 +697,24 @@ public class PathfinderManager {
      * Before finishing using a pathfinder, remember to call the close methods.
      * Otherwise, you might have dangling threads that can eat up a lot of CPU.
      * </p>
+     *
+     * @deprecated Use ticking for now.
      */
     @Sync
+    @Deprecated
     public void close() {
-        exec.close();
-        thread.close();
+//        exec.close();
+//        thread.close();
+    }
+
+    /**
+     * Tick the Pathfinder once. Ticking it will execute all of the code
+     * contained in the {@link FollowerExecutor} as well as odometry update
+     * runnable once. You should call this as often as needed while Pathfinder
+     * is active.
+     */
+    public void tick() {
+        exec.tick();
+        thread.tick();
     }
 }

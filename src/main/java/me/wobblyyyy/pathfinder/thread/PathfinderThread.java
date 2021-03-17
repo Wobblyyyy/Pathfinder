@@ -40,7 +40,7 @@ import java.util.ArrayList;
  * @version 1.0.0
  * @since 0.1.0
  */
-public class PathfinderThread extends Thread {
+public class PathfinderThread implements Runnable {
     private boolean shouldExecute = true;
     private final ArrayList<Odometry> odometryArrayList;
 

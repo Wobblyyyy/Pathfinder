@@ -61,7 +61,7 @@ public class FollowerExecutor {
     /**
      * Execution thread.
      */
-    private final Thread executor;
+    private final Runnable executor;
 
     /**
      * The currently-executed followers.
@@ -125,52 +125,49 @@ public class FollowerExecutor {
      * @param drive the robot's drivetrain.
      */
     public FollowerExecutor(Drive drive) {
-        executor = new Thread(
-                () -> {
-                    /*
-                     * The thread should almost always be active - if it isn't,
-                     * the thread will stop, and, well, that wouldn't be cool.
-                     */
-                    while (shouldRun) {
-                        /*
-                         * Tell the CPU that this is a busy-wait and it doesn't
-                         * exactly matter how much CPU time the execution of
-                         * this has, so long as it's still executed.
-                         *
-                         * This should improve performance by freeing up some
-                         * processing time.
-                         */
-                        BcThread.spin();
+        executor = () -> {
+            /*
+             * The thread should almost always be active - if it isn't,
+             * the thread will stop, and, well, that wouldn't be cool.
+             */
+            while (shouldRun) {
+                /*
+                 * Tell the CPU that this is a busy-wait and it doesn't
+                 * exactly matter how much CPU time the execution of
+                 * this has, so long as it's still executed.
+                 *
+                 * This should improve performance by freeing up some
+                 * processing time.
+                 */
+                BcThread.spin();
 
-                        /*
-                         * Thread-safe way to add a list of actions.
-                         */
-                        addActions();
+                /*
+                 * Thread-safe way to add a list of actions.
+                 */
+                addActions();
 
-                        /*
-                         * For each of the Runnable elements that need to be
-                         * executed, we need to... well, actually run them.
-                         *
-                         * Note that any thrown exceptions here are ignored.
-                         * If you need to debug this code, or code behind
-                         * one of the generated Runnable elements, you need to
-                         * make sure that you no longer ignore the exception.
-                         */
-                        getActions().itr().forEach(runnable -> {
-                            try {
-                                runnable.run();
-                            } catch (Exception ignored) {
-                            }
-                        });
-
-                        /*
-                         * Clear all of the actions - until next time!
-                         */
-                        clearActions();
+                /*
+                 * For each of the Runnable elements that need to be
+                 * executed, we need to... well, actually run them.
+                 *
+                 * Note that any thrown exceptions here are ignored.
+                 * If you need to debug this code, or code behind
+                 * one of the generated Runnable elements, you need to
+                 * make sure that you no longer ignore the exception.
+                 */
+                getActions().itr().forEach(runnable -> {
+                    try {
+                        runnable.run();
+                    } catch (Exception ignored) {
                     }
-                },
-                "FollowerExecutor"
-        );
+                });
+
+                /*
+                 * Clear all of the actions - until next time!
+                 */
+                clearActions();
+            }
+        };
 
         this.drive = drive;
     }
@@ -183,7 +180,14 @@ public class FollowerExecutor {
      * </p>
      */
     public void start() {
-        executor.start();
+//        executor.start();
+    }
+
+    /**
+     * Run the follower executor once.
+     */
+    public void tick() {
+        executor.run();
     }
 
     /**
