@@ -140,8 +140,8 @@ public class BasicSwerveTest {
 //        pathfinder.lock();
 //        System.out.println("Finished path 2.");
             pathfinder.open();
-            pathfinder.close();
-            pathfinder.open();
+//            pathfinder.close();
+//            pathfinder.open();
             pathfinder.waitFor(pathfinder.followPath(new DynamicArray<>(
                     new HeadingPoint(10, 10, 10),
                     new HeadingPoint(20, 20, 20)

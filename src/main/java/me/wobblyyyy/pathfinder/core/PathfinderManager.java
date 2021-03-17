@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.core;
 
 import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.annotations.Async;
 import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.annotations.Wait;
@@ -39,6 +40,7 @@ import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
+import me.wobblyyyy.pathfinder.thread.MainThread;
 import me.wobblyyyy.pathfinder.thread.PathfinderThreadManager;
 import me.wobblyyyy.pathfinder.util.Extra;
 
@@ -102,7 +104,7 @@ public class PathfinderManager {
     /**
      * A reference to the pathfinding pathfinder.
      */
-    private GeneratorManager finder;
+    private final GeneratorManager finder;
 
     /**
      * The follower execution system.
@@ -113,6 +115,11 @@ public class PathfinderManager {
      * Manager used for updating loaded odometry systems.
      */
     private PathfinderThreadManager thread;
+
+    /**
+     * Main Pathfinder thread - optionally used.
+     */
+    private final MainThread mainThread;
 
     /**
      * Create a new PathfinderManager.
@@ -134,6 +141,12 @@ public class PathfinderManager {
         this.specificity = config.getSpecificity();
         this.map = config.getMap();
         finder = new GeneratorManager(config);
+        exec = new FollowerExecutor(config.getDrive());
+        thread = new PathfinderThreadManager(config.getOdometry());
+        mainThread = new MainThread(new StaticArray<>(
+                exec::tick,
+                thread::tick
+        ));
     }
 
     /**
@@ -142,17 +155,15 @@ public class PathfinderManager {
      * opened before it can be used - not opening the {@code PathfinderManager}
      * will result in {@link NullPointerException}s being thrown. And we all
      * know those aren't very fun.
-     *
-     * @deprecated Use {@link #tick()} for now.
      */
     @Sync
-    @Deprecated
     public void open() {
 //        exec = new FollowerExecutor(config.getDrive());
 //        thread = new PathfinderThreadManager(config.getOdometry());
 
 //        exec.start();
 //        thread.start();
+        mainThread.open();
     }
 
     /**
@@ -701,10 +712,10 @@ public class PathfinderManager {
      * @deprecated Use ticking for now.
      */
     @Sync
-    @Deprecated
     public void close() {
 //        exec.close();
 //        thread.close();
+        mainThread.close();
     }
 
     /**
