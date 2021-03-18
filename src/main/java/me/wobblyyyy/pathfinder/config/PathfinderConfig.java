@@ -34,6 +34,7 @@ import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.error.NoFindersException;
 import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.robot.Odometry;
+import me.wobblyyyy.pathfinder.robot.wrappers.OdometryWrapper;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
 /**
@@ -60,6 +61,7 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
  * @version 1.0.0
  * @since 0.1.0
  */
+@SuppressWarnings("UnusedReturnValue")
 public class PathfinderConfig {
     /**
      * The odometry subsystem that the robot uses.
@@ -72,6 +74,13 @@ public class PathfinderConfig {
      * </p>
      */
     private Odometry odometry;
+
+    /**
+     * A wrapper that surrounds the inputted odometry system. This field
+     * is automatically created on initialization of a configuration class
+     * and you don't have to worry about it.
+     */
+    private OdometryWrapper wrappedOdometry;
 
     /**
      * The height of the field.
@@ -420,6 +429,7 @@ public class PathfinderConfig {
                             boolean usesFast,
                             boolean usesThetaStar) {
         this.odometry = odometry;
+        this.wrappedOdometry = new OdometryWrapper(odometry, false, false, false);
         this.fieldHeight = fieldHeight;
         this.fieldWidth = fieldWidth;
         this.specificity = specificity;
@@ -572,16 +582,22 @@ public class PathfinderConfig {
         return this;
     }
 
+    public Odometry getRawOdometry() {
+        return odometry;
+    }
+
     /**
      * Get the odometry system.
      *
      * @return the odometry system.
      */
     public Odometry getOdometry() {
-        return odometry;
+        return wrappedOdometry;
     }
 
     public PathfinderConfig setOdometry(Odometry odometry) {
+        this.wrappedOdometry =
+                new OdometryWrapper(odometry, swapXY, invertX, invertY);
         this.odometry = odometry;
         return this;
     }
@@ -686,6 +702,8 @@ public class PathfinderConfig {
      * Swap the X and Y coordinate inputs.
      */
     public void swapXY(boolean xy) {
+        this.wrappedOdometry =
+                new OdometryWrapper(odometry, swapXY, invertX, invertY);
         this.swapXY = xy;
     }
 
@@ -694,6 +712,8 @@ public class PathfinderConfig {
      * True = inverted, false = normal.
      */
     public void invertX(boolean invert) {
+        this.wrappedOdometry =
+                new OdometryWrapper(odometry, swapXY, invertX, invertY);
         this.invertX = invert;
     }
 
@@ -702,6 +722,8 @@ public class PathfinderConfig {
      * True = inverted, false = normal.
      */
     public void invertY(boolean invert) {
+        this.wrappedOdometry =
+                new OdometryWrapper(odometry, swapXY, invertX, invertY);
         this.invertY = invert;
     }
 
