@@ -708,8 +708,6 @@ public class PathfinderManager {
      * Before finishing using a pathfinder, remember to call the close methods.
      * Otherwise, you might have dangling threads that can eat up a lot of CPU.
      * </p>
-     *
-     * @deprecated Use ticking for now.
      */
     @Sync
     public void close() {

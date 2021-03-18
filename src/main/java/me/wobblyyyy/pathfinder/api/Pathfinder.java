@@ -371,6 +371,18 @@ public class Pathfinder {
     }
 
     /**
+     * "Tick" the Pathfinder once. A tick is an update of both the follower
+     * queue and the odometry systems. This method is an alternative to the
+     * multithreading Pathfinder can also use. If you'd prefer to have all
+     * of our pathfinding related adventures operated in a sync fashion,
+     * this method right here is your guy.
+     */
+    @Sync
+    public void tick() {
+        pathfinderManager.tick();
+    }
+
+    /**
      * Get the PathfinderManager that Pathfinder uses.
      *
      * <p>
