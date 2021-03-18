@@ -32,7 +32,7 @@ package me.wobblyyyy.pathfinder.thread;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.core.Follower;
-import me.wobblyyyy.pathfinder.drive.Drive;
+import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.util.BcThread;
 
 import java.util.ArrayList;

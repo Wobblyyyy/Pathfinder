@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.drive.meccanum;
 
-import me.wobblyyyy.pathfinder.drive.Drive;
+import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.robot.Motor;
 

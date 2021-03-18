@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder.test.general;
 
 import me.wobblyyyy.pathfinder.api.Pathfinder;
 import me.wobblyyyy.pathfinder.config.SimpleConfig;
-import me.wobblyyyy.pathfinder.drive.Drive;
+import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.map.Map;
 import org.junit.jupiter.api.Test;
