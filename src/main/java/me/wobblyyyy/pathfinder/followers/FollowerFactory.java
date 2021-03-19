@@ -32,16 +32,26 @@ package me.wobblyyyy.pathfinder.followers;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 
 public class FollowerFactory {
     public static LinearFollower linear(PathfinderConfig config,
                                         DynamicArray<HeadingPoint> points) {
         return new LinearFollower(
                 config.getDrive(),
-                config.getOdometry(),
+                config.getRawOdometry(),
                 points.get(0),
                 points.get(1),
                 config.getSpeed()
+        );
+    }
+
+    public static TrajectoryFollower trajectory(PathfinderConfig config,
+                                                Trajectory trajectory) {
+        return new TrajectoryFollower(
+                trajectory,
+                config.getRawOdometry(),
+                config.getDrive()
         );
     }
 }

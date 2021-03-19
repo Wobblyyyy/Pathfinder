@@ -146,7 +146,7 @@ public class PathfinderManager {
         this.map = config.getMap();
         finder = new GeneratorManager(config);
         exec = new FollowerExecutor(config.getDrive());
-        thread = new PathfinderThreadManager(config.getOdometry());
+        thread = new PathfinderThreadManager(config.getRawOdometry());
         mainThread = new MainThread(new StaticArray<>(
                 exec::tick,
                 thread::tick
@@ -163,7 +163,7 @@ public class PathfinderManager {
     @Sync
     public void open() {
 //        exec = new FollowerExecutor(config.getDrive());
-//        thread = new PathfinderThreadManager(config.getOdometry());
+//        thread = new PathfinderThreadManager(config.getRawOdometry());
 
 //        exec.start();
 //        thread.start();
@@ -312,7 +312,7 @@ public class PathfinderManager {
             );
         }
 
-        path.add(0, config.getOdometry().getPos());
+        path.add(0, config.getRawOdometry().getPos());
 
         path.itr().forEach(point -> {
             try {
@@ -506,7 +506,7 @@ public class PathfinderManager {
          * should get the job done.
          */
         DynamicArray<Point> path = generateAndQueueFollowers(
-                config.getOdometry().getPos(),
+                config.getRawOdometry().getPos(),
                 end
         ).getPath();
 

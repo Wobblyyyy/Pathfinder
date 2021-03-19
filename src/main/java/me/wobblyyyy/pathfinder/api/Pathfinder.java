@@ -142,7 +142,7 @@ public class Pathfinder {
          * determine the robot's position by asking the odometry system "hey,
          * where am I?"
          */
-        return config.getOdometry().getPos();
+        return config.getRawOdometry().getPos();
     }
 
     /**

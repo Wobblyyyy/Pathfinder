@@ -34,6 +34,7 @@ import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.error.NoFindersException;
 import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.robot.Odometry;
+import me.wobblyyyy.pathfinder.robot.wrappers.DriveWrapper;
 import me.wobblyyyy.pathfinder.robot.wrappers.OdometryWrapper;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
@@ -52,9 +53,7 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
  * Hey! You! Yes, you. If you're reading this, trying to figure out what the
  * hell is going wrong, you can feel free to shoot me an email on what's
  * missing documentation. This project is designed to help people, not
- * fry their brain like a large McDonald's fry. I'll try to respond as
- * quickly as possible and update documentation here to clarify on what
- * you were confused about.
+ * fry their brain.
  * </p>
  *
  * @author Colin Robertson
@@ -64,19 +63,19 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
 @SuppressWarnings("UnusedReturnValue")
 public class PathfinderConfig {
     /**
-     * The odometry subsystem that the robot uses.
+     * The rawOdometry subsystem that the robot uses.
      *
      * <p>
      * Obviously, this is pretty necessary for a pathfinder. If you don't
-     * have any odometry, you can't keep track of where the robot is. And if
+     * have any rawOdometry, you can't keep track of where the robot is. And if
      * you can't keep track of where the robot is, then how are you supposed
      * to actually navigate anywhere?
      * </p>
      */
-    private Odometry odometry;
+    private Odometry rawOdometry;
 
     /**
-     * A wrapper that surrounds the inputted odometry system. This field
+     * A wrapper that surrounds the inputted rawOdometry system. This field
      * is automatically created on initialization of a configuration class
      * and you don't have to worry about it.
      */
@@ -266,18 +265,13 @@ public class PathfinderConfig {
      * robot and its movement, we have to give the pathfinder some interface
      * to control the motors. This is that interface.
      * </p>
-     *
-     * <p>
-     * Don't create a new drive interface, that would be... really stupid.
-     * Rather, you can (and should) use any of these drivetrains:
-     * <ul>
-     *     <li>me.wobblyyyy.pathfinder.drive.meccanum.Meccanum</li>
-     *     <li>me.wobblyyyy.pathfinder.drive.swerve.Swerve</li>
-     *     <li>me.wobblyyyy.pathfinder.drive.tank.Tank</li>
-     * </ul>
-     * </p>
      */
-    private Drive drive;
+    private Drive rawDrive;
+
+    /**
+     * Wrapper surrounding the robot's drive interface.
+     */
+    private Drive wrappedDrive;
 
     /**
      * The field's map.
@@ -343,17 +337,32 @@ public class PathfinderConfig {
     /**
      * Should the pathfinder swap X and Y pairs?
      */
-    private boolean swapXY = false;
+    private boolean odometrySwapXY = false;
 
     /**
      * Should X values be inverted?
      */
-    private boolean invertX = false;
+    private boolean odometryInvertX = false;
 
     /**
      * Should Y values be inverted?
      */
-    private boolean invertY = false;
+    private boolean odometryInvertY = false;
+
+    /**
+     * Should the pathfinder swap X and Y pairs?
+     */
+    private boolean driveSwapXY = false;
+
+    /**
+     * Should the X values be inverted?
+     */
+    private boolean driveInvertX = false;
+
+    /**
+     * Should the Y values be inverted?
+     */
+    private boolean driveInvertY = false;
 
     /**
      * Create a new {@code PathfinderConfig} without any configuration elements
@@ -373,8 +382,8 @@ public class PathfinderConfig {
      * much confusion about what's going on.
      * </p>
      *
-     * @param odometry      the odometry subsystem that's used by the pathfinder
-     *                      in determining the robot's position. This odometry
+     * @param rawOdometry      the rawOdometry subsystem that's used by the pathfinder
+     *                      in determining the robot's position. This rawOdometry
      *                      system should be as accurate as possible and maintain
      *                      contact with the ground at all times.
      * @param fieldWidth    the fieldWidth of the field, in whatever units you'd like.
@@ -401,8 +410,8 @@ public class PathfinderConfig {
      * @param profile       the robot's motion profiling profile. This profile
      *                      should provide (at least somewhat accurate) info
      *                      on the robot's motion in real life.
-     * @param drive         the robot's drivetrain. The drivetrain is (rather
-     *                      obviously) used to actually drive the robot.
+     * @param rawDrive         the robot's drivetrain. The drivetrain is (rather
+     *                      obviously) used to actually rawDrive the robot.
      * @param map           a virtual map of something. In most cases, this is
      *                      a game field with all your different obstacles and
      *                      what not.
@@ -412,7 +421,7 @@ public class PathfinderConfig {
      * @param usesFast      see: {@link PathfinderConfig#usesFast}
      * @param usesThetaStar see: {@link PathfinderConfig#usesThetaStar}
      */
-    public PathfinderConfig(Odometry odometry,
+    public PathfinderConfig(Odometry rawOdometry,
                             int fieldWidth,
                             int fieldHeight,
                             int specificity,
@@ -421,15 +430,15 @@ public class PathfinderConfig {
                             double gapX,
                             double gapY,
                             RobotProfile profile,
-                            Drive drive,
+                            Drive rawDrive,
                             Map map,
                             Followers follower,
                             double speed,
                             boolean usesLightning,
                             boolean usesFast,
                             boolean usesThetaStar) {
-        this.odometry = odometry;
-        this.wrappedOdometry = new OdometryWrapper(odometry, false, false, false);
+        this.rawOdometry = rawOdometry;
+        this.wrappedOdometry = new OdometryWrapper(rawOdometry, false, false, false);
         this.fieldHeight = fieldHeight;
         this.fieldWidth = fieldWidth;
         this.specificity = specificity;
@@ -438,7 +447,8 @@ public class PathfinderConfig {
         this.gapX = gapX;
         this.gapY = gapY;
         this.profile = profile;
-        this.drive = drive;
+        this.rawDrive = rawDrive;
+        this.wrappedDrive = new DriveWrapper(rawDrive, false, false, false);
         this.map = map;
         this.follower = follower;
         this.speed = speed;
@@ -583,22 +593,22 @@ public class PathfinderConfig {
     }
 
     public Odometry getRawOdometry() {
-        return odometry;
+        return rawOdometry;
     }
 
     /**
-     * Get the odometry system.
+     * Get the rawOdometry system.
      *
-     * @return the odometry system.
+     * @return the rawOdometry system.
      */
     public Odometry getOdometry() {
         return wrappedOdometry;
     }
 
-    public PathfinderConfig setOdometry(Odometry odometry) {
+    public PathfinderConfig setRawOdometry(Odometry rawOdometry) {
         this.wrappedOdometry =
-                new OdometryWrapper(odometry, swapXY, invertX, invertY);
-        this.odometry = odometry;
+                new OdometryWrapper(rawOdometry, odometrySwapXY, odometryInvertX, odometryInvertY);
+        this.rawOdometry = rawOdometry;
         return this;
     }
 
@@ -617,17 +627,31 @@ public class PathfinderConfig {
     }
 
     /**
+     * Get the robot's raw drivetrain.
+     *
+     * @return the robot's raw drivetrain.
+     */
+    public Drive getRawDrive() {
+        return rawDrive;
+    }
+
+    /**
      * Get the robot's drivetrain.
      *
      * @return the robot's drivetrain.
      */
     public Drive getDrive() {
-        return drive;
+        return wrappedDrive;
     }
 
-    public PathfinderConfig setDrive(Drive drive) {
-        this.drive = drive;
-        return this;
+    public void setDrive(Drive drive) {
+        this.rawDrive = drive;
+        wrappedDrive = new DriveWrapper(
+                drive,
+                driveSwapXY,
+                driveInvertX,
+                driveInvertY
+        );
     }
 
     /**
@@ -701,50 +725,130 @@ public class PathfinderConfig {
     /**
      * Swap the X and Y coordinate inputs.
      */
-    public void swapXY(boolean xy) {
+    public void odometrySwapXY(boolean xy) {
         this.wrappedOdometry =
-                new OdometryWrapper(odometry, swapXY, invertX, invertY);
-        this.swapXY = xy;
+                new OdometryWrapper(
+                        rawOdometry,
+                        odometrySwapXY,
+                        odometryInvertX,
+                        odometryInvertY
+                );
+        this.odometrySwapXY = xy;
     }
 
     /**
      * Set the X coordinates to be inverted or not.
      * True = inverted, false = normal.
      */
-    public void invertX(boolean invert) {
+    public void odometryInvertX(boolean invert) {
         this.wrappedOdometry =
-                new OdometryWrapper(odometry, swapXY, invertX, invertY);
-        this.invertX = invert;
+                new OdometryWrapper(
+                        rawOdometry,
+                        odometrySwapXY,
+                        odometryInvertX,
+                        odometryInvertY
+                );
+        this.odometryInvertX = invert;
     }
 
     /**
      * Set the Y coordinates to be inverted or not.
      * True = inverted, false = normal.
      */
-    public void invertY(boolean invert) {
+    public void odometryInvertY(boolean invert) {
         this.wrappedOdometry =
-                new OdometryWrapper(odometry, swapXY, invertX, invertY);
-        this.invertY = invert;
+                new OdometryWrapper(
+                        rawOdometry,
+                        odometrySwapXY,
+                        odometryInvertX,
+                        odometryInvertY
+                );
+        this.odometryInvertY = invert;
     }
 
     /**
      * Are the X and Y coordinates swapped?
      */
-    public boolean swapXY() {
-        return swapXY;
+    public boolean odometrySwapXY() {
+        return odometrySwapXY;
     }
 
     /**
      * Is the X coordinate inverted?
      */
-    public boolean invertX() {
-        return invertX;
+    public boolean odometryInvertX() {
+        return odometryInvertX;
     }
 
     /**
      * Is the Y coordinate inverted?
      */
-    public boolean invertY() {
-        return invertY;
+    public boolean odometryInvertY() {
+        return odometryInvertY;
+    }
+
+    /**
+     * Swap the X and Y coordinate inputs.
+     */
+    public void driveSwapXY(boolean xy) {
+        this.wrappedDrive =
+                new DriveWrapper(
+                        rawDrive,
+                        driveSwapXY,
+                        driveInvertX,
+                        driveInvertY
+                );
+        this.driveSwapXY = xy;
+    }
+
+    /**
+     * Set the X coordinates to be inverted or not.
+     * True = inverted, false = normal.
+     */
+    public void driveInvertX(boolean invert) {
+        this.wrappedDrive =
+                new DriveWrapper(
+                        rawDrive,
+                        driveSwapXY,
+                        driveInvertX,
+                        driveInvertY
+                );
+        this.driveInvertX = invert;
+    }
+
+    /**
+     * Set the Y coordinates to be inverted or not.
+     * True = inverted, false = normal.
+     */
+    public void driveInvertY(boolean invert) {
+        this.wrappedDrive =
+                new DriveWrapper(
+                        rawDrive,
+                        driveSwapXY,
+                        driveInvertX,
+                        driveInvertY
+                );
+        this.driveInvertY = invert;
+    }
+
+    /**
+     * Are the X and Y coordinates swapped?
+     */
+    public boolean driveSwapXY() {
+        return driveSwapXY;
+    }
+
+    /**
+     * Is the X coordinate inverted?
+     */
+    public boolean driveInvertX() {
+        return driveInvertX;
+    }
+
+    /**
+     * Is the Y coordinate inverted?
+     */
+    public boolean driveInvertY() {
+        return driveInvertY;
     }
 }

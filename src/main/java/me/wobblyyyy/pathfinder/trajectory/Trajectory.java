@@ -89,11 +89,25 @@ public class Trajectory {
      * @return the next segment (if it exists) or null (if it doesn't).
      */
     public Segment getNextSegment() {
-        if (currentSegment == segments.size() - 1) {
-            currentSegment += 1;
-            return getCurrentSegment();
+        if (currentSegment <= segments.size() - 1) {
+            return segments.get(currentSegment + 1);
         }
 
         return null;
+    }
+
+    /**
+     * "Complete" the current segment by incrementing the current segment
+     * counter by one. Throw an ArrayIndexOutOfBoundsException if the requested
+     * index increment is out of the trajectory's array bounds.
+     */
+    public void completeSegment() {
+        if (currentSegment <= segments.size() - 1) {
+            currentSegment++;
+        } else {
+            throw new ArrayIndexOutOfBoundsException(
+                    "No next segment at index " + currentSegment + " + 1!"
+            );
+        }
     }
 }

@@ -84,7 +84,7 @@ public class PathfinderOptions {
     }
 
     public void setOdometry(Odometry odometry) {
-        config.setOdometry(odometry);
+        config.setRawOdometry(odometry);
     }
 
     public void setDrive(Drive drive) {

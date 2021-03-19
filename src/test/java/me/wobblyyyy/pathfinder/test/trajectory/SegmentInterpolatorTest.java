@@ -56,9 +56,6 @@ public class SegmentInterpolatorTest extends SplineTest {
             System.out.println("Segment 1 at " +
                     percent + " y: " +
                     segment1.atPercentY(percent).toString());
-            System.out.println("Segment 1 at " +
-                    percent + ": " +
-                    segment1.atPercent(percent).toString());
         });
     }
 }

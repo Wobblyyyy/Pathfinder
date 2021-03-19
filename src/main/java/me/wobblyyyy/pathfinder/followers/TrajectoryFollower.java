@@ -29,14 +29,19 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
+import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.geometry.Point;
+import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.robot.Odometry;
 import me.wobblyyyy.pathfinder.trajectory.Trajectory;
+import me.wobblyyyy.pathfinder.util.Distance;
 
 public class TrajectoryFollower implements Follower {
     private final Trajectory trajectory;
     private final Odometry odometry;
     private final Drive drive;
+    private boolean hasFinished = false;
 
     public TrajectoryFollower(Trajectory trajectory,
                               Odometry odometry,
@@ -58,11 +63,37 @@ public class TrajectoryFollower implements Follower {
 
     @Override
     public void drive() {
+        HeadingPoint position = odometry.getPos();
+        Point start = trajectory.getCurrentSegment().start();
+        Point end = trajectory.getCurrentSegment().end();
 
+        if (Distance.isNearPoint(end, position, 0.25)) {
+            if (trajectory.getNextSegment() == null) {
+                hasFinished = true;
+            }
+
+            trajectory.completeSegment();
+        } else {
+            double totalDistance = Distance.distanceX(start, end);
+            double step = totalDistance / 100;
+            final Point target;
+
+            if (position.getX() > end.getX()) {
+                target = trajectory.getCurrentSegment().interpolateFromX(
+                        position.getX() + step
+                );
+            } else {
+                target = trajectory.getCurrentSegment().interpolateFromX(
+                        position.getX() - step
+                );
+            }
+
+            drive.drive(new RTransform(position, target, position.getAngle()));
+        }
     }
 
     @Override
     public boolean isDone() {
-        return false;
+        return hasFinished;
     }
 }
