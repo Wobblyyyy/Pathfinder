@@ -27,35 +27,56 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.test.general;
+package me.wobblyyyy.pathfinder.followers;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
-import me.wobblyyyy.pathfinder.followers.Followers;
-import me.wobblyyyy.pathfinder.util.RobotProfile;
+import me.wobblyyyy.pathfinder.followers.DualPidFollower;
+import me.wobblyyyy.pathfinder.followers.LinearFollower;
+import me.wobblyyyy.pathfinder.followers.PidFollower;
+import me.wobblyyyy.pathfinder.followers.TriPidFollower;
+import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 
-public class CoolConfig extends PathfinderConfig {
-    static CoolMotor m = new CoolMotor();
+public class FollowerFactory {
+    public static PidFollower pid(PathfinderConfig config,
+                                  DynamicArray<HeadingPoint> points) {
+        return new PidFollower(
+                config.getDrive(),
+                config.getOdometry(),
+                config.getOdometry().getPos(),
+                points.get(1),
+                config.getSpeed()
+        );
+    }
 
-    public CoolConfig() {
-        super(
-                new CoolOdometry(),
-                323,
-                629,
-                2,
-                10,
-                10,
-                5,
-                5,
-                new RobotProfile(1, 1, 15, 15, 5, 1),
-                new CoolDrive(
-                        m, m, m, m,
-                        m, m, m, m,
-                        m, m, m, m,
-                        m, m, m, m
-                ),
-                new CoolMap(),
-                Followers.LINEAR,
-                0.5,
-                true, true, true);
+    public static DualPidFollower dualPid(PathfinderConfig config,
+                                          DynamicArray<HeadingPoint> points) {
+        return new DualPidFollower(
+                config.getDrive(),
+                config.getOdometry(),
+                points.get(1),
+                config.getSpeed()
+        );
+    }
+
+    public static TriPidFollower triPid(PathfinderConfig config,
+                                        DynamicArray<HeadingPoint> points) {
+        return new TriPidFollower(
+                config.getDrive(),
+                config.getOdometry(),
+                points.get(1),
+                config.getSpeed()
+        );
+    }
+
+    public static LinearFollower linear(PathfinderConfig config,
+                                        DynamicArray<HeadingPoint> points) {
+        return new LinearFollower(
+                config.getDrive(),
+                config.getOdometry(),
+                points.get(0),
+                points.get(1),
+                config.getSpeed()
+        );
     }
 }

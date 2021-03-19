@@ -27,87 +27,38 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.config;
+package me.wobblyyyy.pathfinder.finders;
 
-import me.wobblyyyy.pathfinder.followers.Followers;
-import me.wobblyyyy.pathfinder.robot.Drive;
-import me.wobblyyyy.pathfinder.map.Map;
-import me.wobblyyyy.pathfinder.robot.Odometry;
-import me.wobblyyyy.pathfinder.util.RobotProfile;
+import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.pathfinder.geometry.Point;
 
 /**
- * Abstraction of the {@link PathfinderConfig} class designed to make life a
- * little bit easier and those parameters a little bit less grouped together.
+ * Interface used for connecting different types of path generation.
+ *
+ * <p>
+ * Generators are essentially little tiny itsy bitsy pathfinders. In order to
+ * give the end user more control over the operation of this library, there
+ * are several different generators that can be used.
+ * </p>
+ *
+ * <p>
+ * Generators shouldn't be toggled on/off during runtime - the pathfinder
+ * configuration should determine which generators are to be used during the
+ * pathfinder's operation.
+ * </p>
  *
  * @author Colin Robertson
- * @since 0.3.0
+ * @version 1.0.0
+ * @since 0.1.0
  */
-@SuppressWarnings("unused")
-public class PathfinderOptions {
-    private final PathfinderConfig config = new PathfinderConfig();
-
+public interface Generator {
     /**
-     * Create a new PathfinderOptions instance.
+     * Get a path, from a start coordinate to an end coordinate, that's
+     * directly readable by our implementation of the pathfinding system.
      *
-     * <p>
-     * All of the options are configured using the provided methods in this
-     * class, NOT right here. You can put these methods in an anonymous class
-     * initializer - very epic!
-     * </p>
+     * @param start the start coordinate.
+     * @param end   the end coordinate.
+     * @return a group, composed of individual Point items.
      */
-    public PathfinderOptions() {
-
-    }
-
-    public void setRobotX(double x) {
-        config.setRobotX(x);
-    }
-
-    public void setRobotY(double y) {
-        config.setRobotY(y);
-    }
-
-    public void setFieldX(double x) {
-        config.setFieldWidth((int) x);
-    }
-
-    public void setFieldY(double y) {
-        config.setFieldHeight((int) y);
-    }
-
-    public void setMap(Map map) {
-        config.setMap(map);
-    }
-
-    public void setRobotProfile(RobotProfile profile) {
-        config.setProfile(profile);
-    }
-
-    public void setOdometry(Odometry odometry) {
-        config.setOdometry(odometry);
-    }
-
-    public void setDrive(Drive drive) {
-        config.setDrive(drive);
-    }
-
-    public void setFollowerType(Followers follower) {
-        config.setFollower(follower);
-    }
-
-    public void setSpeed(double speed) {
-        config.setSpeed(speed);
-    }
-
-    public void setGapX(double x) {
-        config.setGapX(x);
-    }
-
-    public void setGapY(double y) {
-        config.setGapY(y);
-    }
-
-    public PathfinderConfig build() {
-        return config;
-    }
+    DynamicArray<Point> getCoordinatePath(Point start, Point end);
 }

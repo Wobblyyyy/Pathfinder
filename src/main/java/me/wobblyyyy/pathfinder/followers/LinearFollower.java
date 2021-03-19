@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
-import me.wobblyyyy.pathfinder.core.Follower;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.robot.Odometry;

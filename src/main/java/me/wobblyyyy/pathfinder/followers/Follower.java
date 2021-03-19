@@ -27,87 +27,53 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.config;
-
-import me.wobblyyyy.pathfinder.followers.Followers;
-import me.wobblyyyy.pathfinder.robot.Drive;
-import me.wobblyyyy.pathfinder.map.Map;
-import me.wobblyyyy.pathfinder.robot.Odometry;
-import me.wobblyyyy.pathfinder.util.RobotProfile;
+package me.wobblyyyy.pathfinder.followers;
 
 /**
- * Abstraction of the {@link PathfinderConfig} class designed to make life a
- * little bit easier and those parameters a little bit less grouped together.
+ * Interface used for different types of followers.
+ *
+ * <p>
+ * Followers are one of the lowest-levels of pathfinding utilities - given a
+ * target position and a start position, determine how to control the robot
+ * so that it optimally reaches its target position.
+ * </p>
  *
  * @author Colin Robertson
- * @since 0.3.0
+ * @version 1.0.0
+ * @since 0.1.0
  */
-@SuppressWarnings("unused")
-public class PathfinderOptions {
-    private final PathfinderConfig config = new PathfinderConfig();
+public interface Follower {
+    /**
+     * Update the follower's drive values.
+     */
+    void update();
 
     /**
-     * Create a new PathfinderOptions instance.
+     * Calculate a list of all the instructions needed to follow the path.
      *
      * <p>
-     * All of the options are configured using the provided methods in this
-     * class, NOT right here. You can put these methods in an anonymous class
-     * initializer - very epic!
+     * This should (needs to, really) be run before the robot makes any sort
+     * of movement in any direction - otherwise, you're defeating the whole
+     * purpose of having a pre-planned route.
      * </p>
      */
-    public PathfinderOptions() {
+    void calculate();
 
-    }
+    /**
+     * Drive the robot itself.
+     *
+     * <p>
+     * The drive method should almost always call another drive method, a
+     * drive method that's contained in a Drive class, actually. Driving the
+     * robot within the follower is a shitty idea, and you shouldn't do it.
+     * </p>
+     */
+    void drive();
 
-    public void setRobotX(double x) {
-        config.setRobotX(x);
-    }
-
-    public void setRobotY(double y) {
-        config.setRobotY(y);
-    }
-
-    public void setFieldX(double x) {
-        config.setFieldWidth((int) x);
-    }
-
-    public void setFieldY(double y) {
-        config.setFieldHeight((int) y);
-    }
-
-    public void setMap(Map map) {
-        config.setMap(map);
-    }
-
-    public void setRobotProfile(RobotProfile profile) {
-        config.setProfile(profile);
-    }
-
-    public void setOdometry(Odometry odometry) {
-        config.setOdometry(odometry);
-    }
-
-    public void setDrive(Drive drive) {
-        config.setDrive(drive);
-    }
-
-    public void setFollowerType(Followers follower) {
-        config.setFollower(follower);
-    }
-
-    public void setSpeed(double speed) {
-        config.setSpeed(speed);
-    }
-
-    public void setGapX(double x) {
-        config.setGapX(x);
-    }
-
-    public void setGapY(double y) {
-        config.setGapY(y);
-    }
-
-    public PathfinderConfig build() {
-        return config;
-    }
+    /**
+     * Whether or not the follower has finished its execution.
+     *
+     * @return whether or not the follower has finished its execution.
+     */
+    boolean isDone();
 }

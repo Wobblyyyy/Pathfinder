@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.config;
 
-import me.wobblyyyy.pathfinder.core.Followers;
+import me.wobblyyyy.pathfinder.followers.Followers;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.error.NoFindersException;
 import me.wobblyyyy.pathfinder.map.Map;

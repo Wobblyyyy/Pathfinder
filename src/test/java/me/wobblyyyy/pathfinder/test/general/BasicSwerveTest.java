@@ -33,7 +33,7 @@ import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.api.Pathfinder;
 import me.wobblyyyy.pathfinder.config.PathfinderOptions;
 import me.wobblyyyy.pathfinder.config.SimpleConfig;
-import me.wobblyyyy.pathfinder.core.Followers;
+import me.wobblyyyy.pathfinder.followers.Followers;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.map.Map;

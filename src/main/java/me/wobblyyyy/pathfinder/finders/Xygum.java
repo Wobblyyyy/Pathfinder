@@ -31,8 +31,7 @@ package me.wobblyyyy.pathfinder.finders;
 
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
-import me.wobblyyyy.pathfinder.core.Generator;
-import me.wobblyyyy.pathfinder.core.MapTools;
+import me.wobblyyyy.pathfinder.util.MapTools;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.map.Map;
 import org.xguzm.pathfinding.Heuristic;
