@@ -474,7 +474,7 @@ public class HeadingPoint extends Point {
          * Add to the main point.
          */
         for (HeadingPoint p : points) {
-            add(t, p);
+            t = add(t, p);
         }
 
         /*
