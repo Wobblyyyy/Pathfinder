@@ -187,7 +187,7 @@ public class PathfinderManager {
         DynamicArray<Point> finalMerged = merged;
         paths.itr().forEach(path -> path.itr().forEach(finalMerged::add));
 
-        merged = Extra.removeDuplicatePoints(finalMerged);
+        merged = Extra.removeAdjacentDuplicates(finalMerged);
 
         return merged;
     }
