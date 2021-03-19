@@ -88,24 +88,21 @@ public class PromisedFinder {
      * This element is subbed in for Runnable code if that code is null.
      * </p>
      */
-    private static final Runnable DEFAULT = new Runnable() {
-        @Override
-        public void run() {
-            /*
-             * Obviously, nothing happens here.
-             *
-             * You're still reading this, even though you know nothing is
-             * going to happen here.
-             *
-             * And you're still reading this. I have to ask - why? Are you
-             * that bored?
-             *
-             * Come on, you expert software engineer! Go write some code and
-             * slay some monsters!
-             *
-             * Drinking gasoline is pretty cool too.
-             */
-        }
+    private static final Runnable DEFAULT = () -> {
+        /*
+         * Obviously, nothing happens here.
+         *
+         * You're still reading this, even though you know nothing is
+         * going to happen here.
+         *
+         * And you're still reading this. I have to ask - why? Are you
+         * that bored?
+         *
+         * Come on, you expert software engineer! Go write some code and
+         * slay some monsters!
+         *
+         * Drinking gasoline is pretty cool too.
+         */
     };
 
     /**
