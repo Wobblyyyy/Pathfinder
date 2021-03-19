@@ -27,27 +27,57 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.robot;
+package me.wobblyyyy.pathfinder.robot.wrappers;
 
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
+import me.wobblyyyy.pathfinder.robot.Drive;
 
 /**
- * An interface used to make sure different types of drive systems are
- * fully integrated and working.
- *
- * <p>
- * If you're trying to make a Pathfinder configuration and you want to add
- * a drivetrain (have to, actually) you SHOULD NOT implement this class.
- * UNLESS you have a drivetrain that's not a swerve drive, a meccanum drive,
- * or a tank drive, you should use a pre-made class instead of creating your
- * own. Unless you like debugging...
- * </p>
+ * Wrapper surrounding user-inputted drivetrains that's designed to allow users
+ * to invert the X or Y transform values that are fed to their drivetrains.
  *
  * @author Colin Robertson
- * @version 2.1.0
- * @since 0.1.0
+ * @since 0.4.0
  */
-public interface Drive {
+public class DriveWrapper implements Drive {
+    /**
+     * The wrapper's drivetrain.
+     */
+    private final Drive drive;
+
+    /**
+     * Should X and Y transformations be swapped?
+     */
+    private final boolean driveSwapXY;
+
+    /**
+     * Should transformational X values be swapped?
+     */
+    private final boolean driveInvertX;
+
+    /**
+     * Should transformational Y values be swapped?
+     */
+    private final boolean driveInvertY;
+
+    /**
+     * Create a new drive wrapper.
+     *
+     * @param drive        the {@code Drive} to use for the wrapper.
+     * @param driveSwapXY  should X and Y transforms be swapped?
+     * @param driveInvertX should X transforms be inverted?
+     * @param driveInvertY should Y transforms be inverted?
+     */
+    public DriveWrapper(Drive drive,
+                        boolean driveSwapXY,
+                        boolean driveInvertX,
+                        boolean driveInvertY) {
+        this.drive = drive;
+        this.driveSwapXY = driveSwapXY;
+        this.driveInvertX = driveInvertX;
+        this.driveInvertY = driveInvertY;
+    }
+
     /**
      * Drive the robot according to a specified transformation. Transformations
      * are made up of several components, most notably X, Y, and angle. It's
@@ -60,39 +90,34 @@ public interface Drive {
      *                  much the robot should be turning, it means the angle
      *                  that the robot should currently be facing.
      */
-    void drive(RTransform transform);
+    @Override
+    public void drive(RTransform transform) {
+        transform = driveSwapXY ?
+                new RTransform(
+                        transform.getStart(),
+                        transform.getStop(),
+                        transform.getTurn()
+                ) : transform;
+
+        if (driveInvertX) transform.invertX();
+        if (driveInvertY) transform.invertY();
+
+        drive.drive(transform);
+    }
 
     /**
-     * Allow the drivetrain to be controlled by a user.
-     *
-     * <p>
-     * User control needs to be enabled in order for the user to actually
-     * control the robot manually, such as via a joystick. Although
-     * Pathfinder is pretty lovely, sometimes you need to control the robot.
-     * </p>
-     *
-     * <p>
-     * If this isn't implemented properly, you may see very funky things going
-     * on with the motors - spasms, for example. In order to counter this, it's
-     * a good idea to... well, actually implement this method properly.
-     * </p>
+     * {@inheritDoc}
      */
-    void enableUserControl();
+    @Override
+    public void enableUserControl() {
+        drive.enableUserControl();
+    }
 
     /**
-     * Stop allowing the drivetrain to be controlled by a user.
-     *
-     * <p>
-     * In order for Pathfinder to actually function, and in order for the
-     * user to not miserably mess up absolutely everything, user control
-     * needs to be disabled prior to controlling a motor.
-     * </p>
-     *
-     * <p>
-     * If this isn't implemented properly, you may see very funky things going
-     * on with the motors - spasms, for example. In order to counter this, it's
-     * a good idea to... well, actually implement this method properly.
-     * </p>
+     * {@inheritDoc}
      */
-    void disableUserControl();
+    @Override
+    public void disableUserControl() {
+        drive.disableUserControl();
+    }
 }

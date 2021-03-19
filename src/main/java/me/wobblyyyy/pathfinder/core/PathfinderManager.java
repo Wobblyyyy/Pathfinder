@@ -332,24 +332,25 @@ public class PathfinderManager {
                             );
                             break;
                         case PID:
-                            followers.add(
-                                    FollowerFactory.pid(
-                                            config, points
-                                    )
-                            );
+//                            followers.add(
+//                                    FollowerFactory.pid(
+//                                            config, points
+//                                    )
+//                            );
+                            break;
                         case DUAL_PID:
-                            followers.add(
-                                    FollowerFactory.dualPid(
-                                            config, points
-                                    )
-                            );
+//                            followers.add(
+//                                    FollowerFactory.dualPid(
+//                                            config, points
+//                                    )
+//                            );
                             break;
                         case TRI_PID:
-                            followers.add(
-                                    FollowerFactory.triPid(
-                                            config, points
-                                    )
-                            );
+//                            followers.add(
+//                                    FollowerFactory.triPid(
+//                                            config, points
+//                                    )
+//                            );
                             break;
                         default:
                     }
@@ -628,7 +629,7 @@ public class PathfinderManager {
      */
     @Sync
     public void stopRobot() {
-        config.getDrive().drive(0, 0);
+//        config.getDrive().drive(0, 0);
     }
 
     /**

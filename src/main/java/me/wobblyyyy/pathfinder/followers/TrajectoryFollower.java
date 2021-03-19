@@ -27,14 +27,42 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.test.general;
+package me.wobblyyyy.pathfinder.followers;
 
-import me.wobblyyyy.pathfinder.api.Pathfinder;
-import org.junit.jupiter.api.Test;
+import me.wobblyyyy.pathfinder.robot.Drive;
+import me.wobblyyyy.pathfinder.robot.Odometry;
+import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 
-public class JaciTest {
-    @Test
-    public void runTest() {
-        Pathfinder pathfinder = new Pathfinder(new CoolConfig());
+public class TrajectoryFollower implements Follower {
+    private final Trajectory trajectory;
+    private final Odometry odometry;
+    private final Drive drive;
+
+    public TrajectoryFollower(Trajectory trajectory,
+                              Odometry odometry,
+                              Drive drive) {
+        this.trajectory = trajectory;
+        this.odometry = odometry;
+        this.drive = drive;
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void calculate() {
+
+    }
+
+    @Override
+    public void drive() {
+
+    }
+
+    @Override
+    public boolean isDone() {
+        return false;
     }
 }

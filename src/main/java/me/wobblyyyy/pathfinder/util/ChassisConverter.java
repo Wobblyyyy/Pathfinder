@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.util;
 
-import me.wobblyyyy.pathfinder.drive.swerve.Swerve;
 import me.wobblyyyy.pathfinder.tracking.swerve.SwerveChassisTracker;
 
 /**
@@ -47,31 +46,5 @@ import me.wobblyyyy.pathfinder.tracking.swerve.SwerveChassisTracker;
  * @since 0.1.0
  */
 public class ChassisConverter {
-    /**
-     * Get a brand-new Swerve tracker, based on a Swerve drivetrain.
-     *
-     * @param swerve   the original swerve drivetrain.
-     * @param diameter the diameter of the wheels.
-     * @param gapX     see: {@link SwerveChassisTracker#gapX}
-     * @param gapY     see: {@link SwerveChassisTracker#gapY}
-     * @return a new {@link SwerveChassisTracker}
-     */
-    public static SwerveChassisTracker getSwerveTracker(Swerve swerve,
-                                                        double diameter,
-                                                        double gapX,
-                                                        double gapY) {
-        return new SwerveChassisTracker(
-                swerve.getFr_turn_enc(),
-                swerve.getFr_drive_enc(),
-                swerve.getFl_turn_enc(),
-                swerve.getFl_drive_enc(),
-                swerve.getBr_turn_enc(),
-                swerve.getBr_drive_enc(),
-                swerve.getBl_turn_enc(),
-                swerve.getBl_drive_enc(),
-                diameter,
-                gapX,
-                gapY
-        );
-    }
+
 }

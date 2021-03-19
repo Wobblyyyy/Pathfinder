@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
+import me.wobblyyyy.pathfinder.geometry.Angle;
+import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.robot.Odometry;
@@ -64,6 +66,7 @@ public class LinearFollower implements Follower {
     /**
      * The follower's start point.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final HeadingPoint start;
 
     /**
@@ -158,17 +161,17 @@ public class LinearFollower implements Follower {
 
     /**
      * Drive the robot. This method attempts to power the robot by calling
-     * the drive method of the drivetrain. If the drivetrain hasn't implemented
-     * the {@link Drive#drive(HeadingPoint, HeadingPoint, double)} method,
-     * the robot can't effectively be driven.
+     * the drive method of the drivetrain.
      */
     @Override
     public void drive() {
-        drive.drive(
+        RTransform transformation = new RTransform(
                 odometry.getPos(),
                 end,
-                coefficient
+                Angle.fromDegrees(end.getHeading())
         );
+
+        drive.drive(transformation);
     }
 
     /**
@@ -189,9 +192,9 @@ public class LinearFollower implements Follower {
         if (Distance.isNearPoint(
                 odometry.getPos(),
                 end,
-                4
+                0.5
         )) {
-            drive.drive(0.0, 0.0);
+            drive.drive(RTransform.ZERO);
             return true;
         }
 

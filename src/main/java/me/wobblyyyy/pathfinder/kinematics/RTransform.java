@@ -31,6 +31,7 @@ package me.wobblyyyy.pathfinder.kinematics;
 
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.Point;
+import me.wobblyyyy.pathfinder.math.Reflection;
 import me.wobblyyyy.pathfinder.util.Distance;
 
 /**
@@ -47,6 +48,31 @@ import me.wobblyyyy.pathfinder.util.Distance;
  */
 public class RTransform {
     /**
+     * Zero transformation - no movement whatsoever.
+     */
+    public static RTransform ZERO = new RTransform(0, 0, fd(0));
+
+    /**
+     * Forwards transformation - (0, 1)
+     */
+    public static RTransform FORWARDS = new RTransform(0, 1, fd(0));
+
+    /**
+     * Rightwards transformation - (1, 0)
+     */
+    public static RTransform RIGHT = new RTransform(1, 0, fd(0));
+
+    /**
+     * Backwards transformation - (0, -1)
+     */
+    public static RTransform BACKWARDS = new RTransform(0, -1, fd(0));
+
+    /**
+     * Leftwards transformation - (0, -1)
+     */
+    public static RTransform LEFT = new RTransform(-1, 0, fd(0));
+
+    /**
      * The transformation's start point.
      */
     private final Point start;
@@ -54,7 +80,7 @@ public class RTransform {
     /**
      * The transformation's stop point.
      */
-    private final Point stop;
+    private Point stop;
 
     /**
      * The transformation's facing. This facing should represent the angle that
@@ -65,12 +91,12 @@ public class RTransform {
     /**
      * X distance between start and stop points.
      */
-    private final double x;
+    private double x;
 
     /**
      * Y distance between start and stop points.
      */
-    private final double y;
+    private double y;
 
     /**
      * Create a new robot transformation instance by using two points and an
@@ -110,6 +136,17 @@ public class RTransform {
                 new Point(x, y),
                 turn
         );
+    }
+
+    /**
+     * Internally-used method to get an angle from a degrees measurement.
+     *
+     * @param d degrees of angle.
+     * @return angle from degrees.
+     */
+    @SuppressWarnings("SameParameterValue")
+    private static Angle fd(double d) {
+        return Angle.fromDegrees(d);
     }
 
     /**
@@ -203,6 +240,50 @@ public class RTransform {
      */
     public double getY() {
         return y;
+    }
+
+    /**
+     * Internal method to update the transformation's distance values.
+     */
+    private void updateTransformDistances() {
+        this.x = Distance.distanceX(start, stop);
+        this.y = Distance.distanceY(start, stop);
+    }
+
+    /**
+     * Invert the transformation's X value.
+     *
+     * <p>
+     * This change is reflected in both the X distance and the stop point. The
+     * stop point has its X value literally flipped over the start point's X
+     * value, thus giving you an inverted value.
+     * </p>
+     */
+    public void invertX() {
+        stop = new Point(
+                Reflection.of(stop.getX(), start.getX()),
+                stop.getY()
+        );
+
+        updateTransformDistances();
+    }
+
+    /**
+     * Invert the transformation's Y value.
+     *
+     * <p>
+     * This change is reflected in both the Y distance and the stop point. The
+     * stop point has its Y value literally flipped over the start point's Y
+     * value, thus giving you an inverted value.
+     * </p>
+     */
+    public void invertY() {
+        stop = new Point(
+                stop.getX(),
+                Reflection.of(stop.getY(), start.getY())
+        );
+
+        updateTransformDistances();
     }
 
     /**
