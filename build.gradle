@@ -50,6 +50,14 @@ dependencies {
      * For:     Three-wheel positional tracking.
      */
     implementation 'com.github.tmthecoder:OdometryCore:1.0.0'
+
+    /*
+     * Name:    gson
+     * Version: +2.8.6
+     * Since:   0.5.0
+     * For:     Serializing paths and trajectories as JSON files.
+     */
+    implementation 'com.google.code.gson:gson:2.8.6'
     
     /*
      * Name:    Reflections
