@@ -42,44 +42,40 @@ import java.util.ArrayList;
 public class JsonTest {
     @Test
     public void testSaveAndLoadJson() {
-        ArrayList<HeadingPoint> points = new ArrayList<>() {{
-            add(new HeadingPoint(0, 0, 0));
-            add(new HeadingPoint(10, 10, 0));
-        }};
-
-        String path = FileSystems.getDefault().getPath("Foo.txt").toString();
-
-        try {
-            JsonIO.savePoints(path, points);
-            ArrayList<HeadingPoint> loadedPoints = JsonIO.loadPoints(path);
-
-            for (HeadingPoint p : loadedPoints) {
-                System.out.println(p.toString());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        ArrayList<HeadingPoint> points = new ArrayList<>() {{
+//            add(new HeadingPoint(0, 0, 0));
+//            add(new HeadingPoint(10, 10, 0));
+//        }};
+//
+//        String path = FileSystems.getDefault().getPath("Foo.txt").toString();
+//
+//        try {
+//            JsonIO.savePoints(path, points);
+//            ArrayList<HeadingPoint> loadedPoints = JsonIO.loadPoints(path);
+//
+//            for (HeadingPoint p : loadedPoints) {
+//                System.out.println(p.toString());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Test
-    public void testSegments() {
-        Trajectory trajectory = new Trajectory(new DynamicArray<>(
-                new Spline(new DynamicArray<>(
-                        new HeadingPoint(0, 0, 0),
-                        new HeadingPoint(10, 10, 0)
-                )),
-                new Spline(new DynamicArray<>(
-                        new HeadingPoint(10, 10, 0),
-                        new HeadingPoint(20, 20, 0)
-                ))
-        ));
+    public void jsonTesting() {
+        ArrayList<HeadingPoint> points = new ArrayList<>() {{
+            add(new HeadingPoint(0, 0, 0));
+            add(new HeadingPoint(10, 10, 0));
+            add(new HeadingPoint(20, 20, 0));
+            add(new HeadingPoint(30, 30, 0));
+        }};
 
-        String json = JsonIO.trajectoryToJson(trajectory);
+        String json = JsonIO.pointsToJson(points);
         System.out.println(json);
-        Trajectory newTrajectory = JsonIO.trajectoryFromJson(json);
+        ArrayList<HeadingPoint> newPoints = JsonIO.pointsFromJson(json);
 
-        newTrajectory.getSegments().itr().forEach(segment -> {
-            System.out.println(segment.toString());
-        });
+        for (HeadingPoint p : newPoints) {
+            System.out.println(p.toString());
+        }
     }
 }

@@ -31,10 +31,10 @@ package me.wobblyyyy.pathfinder.json;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.trajectory.Segment;
-import me.wobblyyyy.pathfinder.trajectory.Trajectory;
+import me.wobblyyyy.pathfinder.trajectory.Spline;
 
 import java.io.File;
 import java.io.FileReader;
@@ -70,7 +70,7 @@ public class JsonIO {
      * Type used for segment lists.
      */
     private static final Type SEGMENT_LIST_TYPE =
-            new TypeToken<ArrayList<Segment>>() {
+            new TypeToken<ArrayList<Spline>>() {
             }.getType();
 
     /**
@@ -154,48 +154,6 @@ public class JsonIO {
     }
 
     /**
-     * Get a {@code String} representing the JSON value of a list of segments.
-     *
-     * @param segments the segments to convert to JSON.
-     * @return the JSON string of segments.
-     */
-    public static String segmentsToJson(ArrayList<Segment> segments) {
-        return gson.toJson(segments, SEGMENT_LIST_TYPE);
-    }
-
-    /**
-     * Get an {@code ArrayList} of segments from a JSON string.
-     *
-     * @param json the JSON string to parse.
-     * @return the segments from the JSON string.
-     */
-    public static ArrayList<Segment> segmentsFromJson(String json) {
-        return gson.fromJson(json, SEGMENT_LIST_TYPE);
-    }
-
-    /**
-     * Convert a trajectory to a JSON string.
-     *
-     * @param trajectory the trajectory to convert.
-     * @return the string representation of the trajectory.
-     */
-    public static String trajectoryToJson(Trajectory trajectory) {
-        ArrayList<Segment> segmentsList = new ArrayList<>();
-        trajectory.getSegments().itr().forEach(segmentsList::add);
-        return segmentsToJson(segmentsList);
-    }
-
-    /**
-     * Convert a JSON representation of a trajectory into a trajectory.
-     *
-     * @param json the string representing the trajectory.
-     * @return the created trajectory.
-     */
-    public static Trajectory trajectoryFromJson(String json) {
-        return new Trajectory(new DynamicArray<>(segmentsFromJson(json)));
-    }
-
-    /**
      * Save an {@code ArrayList} of {@code HeadingPoint}s to a JSON file.
      *
      * @param path      the path of the JSON file to save.
@@ -227,61 +185,26 @@ public class JsonIO {
     }
 
     /**
-     * Save an {@code ArrayList} of {@code Segment}s to a JSON file.
+     * Convert an {@code Arrayable} to an ArrayList of heading points.
      *
-     * @param path     the path of the JSON file to save.
-     * @param segments the {@code ArrayList} of segments to save.
+     * @param points the points to convert to an {@code ArrayList}.
+     * @return the converted {@code ArrayList}.
      */
-    public static void saveSegments(String path,
-                                    ArrayList<Segment> segments) {
-        FileWriter writer = getFileWriter(path);
-        assert writer != null;
-
-        try {
-            writer.write(segmentsToJson(segments));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static ArrayList<HeadingPoint> toArrayList(
+            Arrayable<HeadingPoint> points) {
+        ArrayList<HeadingPoint> list = new ArrayList<>(points.size());
+        points.itr().forEach(list::add);
+        return list;
     }
 
     /**
-     * Read an {@code ArrayList} of {@code Segment}s from a JSON file.
+     * Convert an {@code ArrayList} into a {@code DynamicArray}.
      *
-     * @param path the path to the JSON file that will be read from.
-     * @return the generated {@code ArrayList}.
+     * @param points the points to convert.
+     * @return the converted points.
      */
-    public static ArrayList<Segment> loadSegments(String path) {
-        FileReader reader = getFileReader(path);
-        assert reader != null;
-
-        return gson.fromJson(reader, SEGMENT_LIST_TYPE);
-    }
-
-    /**
-     * Save a {@code Trajectory} to the host's filesystem.
-     *
-     * @param path       the path that the trajectory should be saved to.
-     * @param trajectory the trajectory that should be saved.
-     */
-    public static void saveTrajectory(String path,
-                                      Trajectory trajectory) {
-        DynamicArray<Segment> segmentDynamicArray = trajectory.getSegments();
-        ArrayList<Segment> segmentArrayList = new ArrayList<>();
-
-        segmentDynamicArray.itr().forEach(segmentArrayList::add);
-
-        saveSegments(path, segmentArrayList);
-    }
-
-    /**
-     * Load a {@code Trajectory} from the host's filesystem.
-     *
-     * @param path the path to the trajectory that should be loaded.
-     * @return a trajectory, loaded from the target path.
-     */
-    public static Trajectory loadTrajectory(String path) {
-        ArrayList<Segment> segmentArrayList = loadSegments(path);
-
-        return new Trajectory(new DynamicArray<>(segmentArrayList));
+    public static DynamicArray<HeadingPoint> toDynamicArray(
+            ArrayList<HeadingPoint> points) {
+        return new DynamicArray<>(points);
     }
 }
