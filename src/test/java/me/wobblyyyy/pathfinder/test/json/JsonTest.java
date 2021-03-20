@@ -29,8 +29,11 @@
 
 package me.wobblyyyy.pathfinder.test.json;
 
+import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.json.JsonIO;
+import me.wobblyyyy.pathfinder.trajectory.Spline;
+import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.FileSystems;
@@ -56,5 +59,27 @@ public class JsonTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testSegments() {
+        Trajectory trajectory = new Trajectory(new DynamicArray<>(
+                new Spline(new DynamicArray<>(
+                        new HeadingPoint(0, 0, 0),
+                        new HeadingPoint(10, 10, 0)
+                )),
+                new Spline(new DynamicArray<>(
+                        new HeadingPoint(10, 10, 0),
+                        new HeadingPoint(20, 20, 0)
+                ))
+        ));
+
+        String json = JsonIO.trajectoryToJson(trajectory);
+        System.out.println(json);
+        Trajectory newTrajectory = JsonIO.trajectoryFromJson(json);
+
+        newTrajectory.getSegments().itr().forEach(segment -> {
+            System.out.println(segment.toString());
+        });
     }
 }
