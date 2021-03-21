@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
+import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
@@ -37,7 +38,17 @@ import me.wobblyyyy.pathfinder.robot.Odometry;
 import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 import me.wobblyyyy.pathfinder.util.Distance;
 
+/**
+ * A lovely follower designed for trajectories. Normal followers, although
+ * quite cool, aren't exactly as lovely as trajectory followers. Trajectories
+ * are at least 25% more epic than normal lines.
+ *
+ * @author Colin Robertson
+ * @since 0.5.0
+ */
 public class TrajectoryFollower implements Follower {
+    private static final double POWER = 0.225;
+
     private final Trajectory trajectory;
     private final Odometry odometry;
     private final Drive drive;
@@ -59,6 +70,52 @@ public class TrajectoryFollower implements Follower {
     @Override
     public void calculate() {
 
+    }
+
+    /**
+     * Get a robot transformation based on current position, target position,
+     * and current angle.
+     *
+     * @param current the robot's current position.
+     * @param target  the robot's target position.
+     * @param angle   the angle the robot should face.
+     * @return a new transformation based on the current and target points, as
+     * well as the provided angle.
+     */
+    public RTransform getTransform(Point current,
+                                   Point target,
+                                   Angle angle) {
+        /*
+         * Basically a subtraction operation - target minus current.
+         */
+        Point difference = Point.add(
+                target,
+                Point.scale(current, -1)
+        );
+
+        /*
+         * Get the angle to the target point from the current point.
+         */
+        double thetaDegrees = difference.getTheta();
+
+        /*
+         * Create a point, representing where the target is at the power the
+         * follower should operate at.
+         */
+        Point targetPoint = Distance.inDirection(
+                new Point(0, 0), // origin point
+                thetaDegrees,    // degrees to target point
+                POWER            // the robot's drivetrain power
+        );
+
+        /*
+         * Create a new transformation and return it.
+         */
+        return new RTransform(
+                new Point(0, 0), // (0, 0) - default origin
+                targetPoint,     // crafted target point
+                angle            // angle the robot should face
+        );
     }
 
     @Override
@@ -88,7 +145,11 @@ public class TrajectoryFollower implements Follower {
                 );
             }
 
-            drive.drive(new RTransform(position, target, position.getAngle()));
+            drive.drive(getTransform(
+                    position,
+                    target,
+                    position.getAngle()
+            ));
         }
     }
 
