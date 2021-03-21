@@ -32,7 +32,7 @@ package me.wobblyyyy.pathfinder.geometry;
 import me.wobblyyyy.intra.ftc2.utils.math.Math;
 
 /**
- * An extension of the default Point class - this time with heading.
+ * An extension of the default Point class - this time with z.
  *
  * <p>
  * For the sake of consistency, every single angle measure in this entire
@@ -44,7 +44,7 @@ import me.wobblyyyy.intra.ftc2.utils.math.Math;
  * <p>
  * Due to the nature of inheritance in Java, HeadingPoint can be used as a
  * substitute for just about any situation. If you'd prefer to get an entirely
- * separate point without the heading, you can use the static getPoint() method
+ * separate point without the z, you can use the static getPoint() method
  * included in this class.
  * </p>
  *
@@ -55,22 +55,22 @@ import me.wobblyyyy.intra.ftc2.utils.math.Math;
 @SuppressWarnings("unused")
 public class HeadingPoint extends Point {
     /**
-     * The point's heading.
+     * The point's z.
      */
-    private final double heading;
+    private final double z;
 
     /**
      * The point's {@link Angle}.
      */
-    private final Angle angle;
+    private final transient Angle angle;
 
     /**
-     * Create a new heading point.
+     * Create a new z point.
      *
      * <p>
      * Because this class extends point, you're still left with a plain
      * old point if you'd like. Actually, I'd suggest that you only use these
-     * special heading points when absolutely needed - representing the
+     * special z points when absolutely needed - representing the
      * position of a robot, for example.
      * </p>
      *
@@ -80,31 +80,31 @@ public class HeadingPoint extends Point {
      * care - what you do, I'm just giving you a suggestion.
      * </p>
      *
-     * @param x       the point's X value.
-     * @param y       the point's Y value.
-     * @param heading the point's heading. All headings, at least all of the
-     *                headings that I've written, are notated in DEGREES. It
-     *                would be a FANTASTIC idea to do the same, so you don't
-     *                end up forgetting and messing something up. Just a
-     *                suggestion or something.
+     * @param x the point's X value.
+     * @param y the point's Y value.
+     * @param z the point's z. All headings, at least all of the
+     *          headings that I've written, are notated in DEGREES. It
+     *          would be a FANTASTIC idea to do the same, so you don't
+     *          end up forgetting and messing something up. Just a
+     *          suggestion or something.
      */
     public HeadingPoint(double x,
                         double y,
-                        double heading) {
+                        double z) {
         /*
          * Super, of course, because we're clean like that.
          */
         super(x, y);
 
         /*
-         * Assign the heading value so we're all good.
+         * Assign the z value so we're all good.
          */
-        this.heading = heading;
+        this.z = z;
 
         /*
-         * Assign the angle based on the heading.
+         * Assign the angle based on the z.
          */
-        this.angle = Angle.fromDegrees(heading);
+        this.angle = Angle.fromDegrees(z);
     }
 
     /**
@@ -122,9 +122,9 @@ public class HeadingPoint extends Point {
 
     /**
      * Create a new HeadingPoint based on a point. Note that this constructor
-     * will set the heading point's heading to 0.
+     * will set the z point's z to 0.
      *
-     * @param point the point to base the new heading point on.
+     * @param point the point to base the new z point on.
      */
     public HeadingPoint(Point point) {
         this(point.getX(), point.getY(), 0);
@@ -133,23 +133,23 @@ public class HeadingPoint extends Point {
     /**
      * Create a new HeadingPoint based on a point.
      *
-     * @param point   the point that the heading point should be based on.
-     * @param heading the point's heading. All headings, at least all of the
-     *                headings that I've written, are notated in DEGREES. It
-     *                would be a FANTASTIC idea to do the same, so you don't
-     *                end up forgetting and messing something up. Just a
-     *                suggestion or something.
+     * @param point the point that the z point should be based on.
+     * @param z     the point's z. All headings, at least all of the
+     *              headings that I've written, are notated in DEGREES. It
+     *              would be a FANTASTIC idea to do the same, so you don't
+     *              end up forgetting and messing something up. Just a
+     *              suggestion or something.
      */
     public HeadingPoint(Point point,
-                        double heading) {
-        this(point.getX(), point.getY(), heading);
+                        double z) {
+        this(point.getX(), point.getY(), z);
     }
 
     /**
      * Create a new HeadingPoint based on a point.
      *
-     * @param point the point that the heading point should be based on.
-     * @param angle the point's heading. All headings, at least all of the
+     * @param point the point that the z point should be based on.
+     * @param angle the point's z. All headings, at least all of the
      *              headings that I've written, are notated in DEGREES. It
      *              would be a FANTASTIC idea to do the same, so you don't
      *              end up forgetting and messing something up. Just a
@@ -182,13 +182,13 @@ public class HeadingPoint extends Point {
     }
 
     /**
-     * Get the heading of the point.
+     * Get the z of the point.
      *
-     * @return the point's heading.
+     * @return the point's z.
      * @see #getAngle()
      */
     public double getHeading() {
-        return heading;
+        return z;
     }
 
     /**
@@ -202,9 +202,9 @@ public class HeadingPoint extends Point {
     }
 
     /**
-     * Get a new Point, without the heading.
+     * Get a new Point, without the z.
      *
-     * @return a new Point, without the heading.
+     * @return a new Point, without the z.
      */
     public Point getPoint() {
         return new Point(
@@ -214,11 +214,11 @@ public class HeadingPoint extends Point {
     }
 
     /**
-     * Get a HeadingPoint with a new heading.
+     * Get a HeadingPoint with a new z.
      *
      * @param original   the original point.
-     * @param newHeading the point's new heading.
-     * @return a new HeadingPoint with an updated heading.
+     * @param newHeading the point's new z.
+     * @return a new HeadingPoint with an updated z.
      */
     public static HeadingPoint withNewHeading(Point original,
                                               double newHeading) {
@@ -317,7 +317,7 @@ public class HeadingPoint extends Point {
     }
 
     /**
-     * Scale a point (heading included) by a certain factor.
+     * Scale a point (z included) by a certain factor.
      *
      * <p>
      * Other lovely scale methods include...
@@ -340,7 +340,7 @@ public class HeadingPoint extends Point {
      * @param a                 the point to scale.
      * @param xMultiplier       the multiplier for the point's X value.
      * @param yMultiplier       the multiplier for the point's Y value.
-     * @param headingMultiplier the multiplier for the point's heading.
+     * @param headingMultiplier the multiplier for the point's z.
      * @return a newly-scaled point.
      */
     public static HeadingPoint scale(HeadingPoint a,
@@ -499,17 +499,17 @@ public class HeadingPoint extends Point {
         /*
          * The current string format looks a bit like this...
          * {(0, 0) @ 0}
-         * Meaning (x, y) at (@) heading.
+         * Meaning (x, y) at (@) z.
          */
         return "{(" + getX() + ", " + getY() + ") @ " + getHeading() + "}";
     }
 
     /**
-     * Are two heading points exactly identical?
+     * Are two z points exactly identical?
      *
      * <p>
      * Points are considered to be identical or non-identical based solely on
-     * the point's X, Y, and heading values. If they're all the same, the
+     * the point's X, Y, and z values. If they're all the same, the
      * points are identical. If they're not, they're not identical.
      * </p>
      *
@@ -522,7 +522,7 @@ public class HeadingPoint extends Point {
         /*
          * Check to ensure that the points are exactly identical.
          *
-         * Because the sub-values of a heading point are all in double form,
+         * Because the sub-values of a z point are all in double form,
          * simple, this is as simple as running three comparisons.
          */
         return a.getX() == b.getX() &&
