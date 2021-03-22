@@ -51,7 +51,8 @@ public class FollowerFactory {
         return new TrajectoryFollower(
                 trajectory,
                 config.getRawOdometry(),
-                config.getDrive()
+                config.getDrive(),
+                config
         );
     }
 }

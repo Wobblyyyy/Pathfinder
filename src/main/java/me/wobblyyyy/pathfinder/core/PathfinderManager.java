@@ -731,4 +731,13 @@ public class PathfinderManager {
         exec.tick();
         thread.tick();
     }
+
+    /**
+     * Get the pathfinder's follower executor.
+     *
+     * @return the pathfinder's follower executor.
+     */
+    public FollowerExecutor getExecutor() {
+        return exec;
+    }
 }

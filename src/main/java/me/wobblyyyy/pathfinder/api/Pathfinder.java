@@ -315,7 +315,7 @@ public class Pathfinder {
      * </p>
      *
      * @see PathfinderManager#lock()
-     * @see FollowerExecutor#lock()
+     * @see #tickUntil()
      */
     @Sync
     @Wait
@@ -376,10 +376,37 @@ public class Pathfinder {
      * multithreading Pathfinder can also use. If you'd prefer to have all
      * of our pathfinding related adventures operated in a sync fashion,
      * this method right here is your guy.
+     *
+     * @see #tickUntil()
      */
     @Sync
     public void tick() {
         pathfinderManager.tick();
+    }
+
+    /**
+     * Tick the pathfinder repeatedly until the pathfinder's execution has
+     * finished. This method is different than the {@link #lock()} method in
+     * that this doesn't utilize more than a single thread - all of the
+     * important execution stuff happens in the calling thread. This is mostly
+     * useful in situations where creating more than a single thread can be
+     * rather challenging - I'm looking at you, FRC and FTC... - but can be
+     * used just about anywhere.
+     *
+     * <p>
+     * The end effect of this method is exactly the same as that of the
+     * {@link #lock()} method, it's just the way it works internally is a bit
+     * different.
+     * </p>
+     *
+     * @see #lock()
+     */
+    @Sync
+    @Wait
+    public void tickUntil() {
+        while (!pathfinderManager.getExecutor().isEmpty()) {
+            tick();
+        }
     }
 
     /**

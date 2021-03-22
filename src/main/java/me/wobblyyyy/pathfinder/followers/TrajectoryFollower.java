@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
+import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
@@ -47,8 +48,7 @@ import me.wobblyyyy.pathfinder.util.Distance;
  * @since 0.5.0
  */
 public class TrajectoryFollower implements Follower {
-    private static final double POWER = 0.225;
-
+    private final double power;
     private final Trajectory trajectory;
     private final Odometry odometry;
     private final Drive drive;
@@ -56,10 +56,12 @@ public class TrajectoryFollower implements Follower {
 
     public TrajectoryFollower(Trajectory trajectory,
                               Odometry odometry,
-                              Drive drive) {
+                              Drive drive,
+                              PathfinderConfig config) {
         this.trajectory = trajectory;
         this.odometry = odometry;
         this.drive = drive;
+        this.power = config.getSpeed();
     }
 
     @Override
@@ -105,7 +107,7 @@ public class TrajectoryFollower implements Follower {
         Point targetPoint = Distance.inDirection(
                 new Point(0, 0), // origin point
                 thetaDegrees,    // degrees to target point
-                POWER            // the robot's drivetrain power
+                power            // the robot's drivetrain power
         );
 
         /*
