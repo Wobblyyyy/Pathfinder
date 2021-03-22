@@ -716,8 +716,6 @@ public class PathfinderManager {
      */
     @Sync
     public void close() {
-//        exec.close();
-//        thread.close();
         mainThread.close();
     }
 
