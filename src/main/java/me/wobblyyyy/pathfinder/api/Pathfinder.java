@@ -36,7 +36,9 @@ import me.wobblyyyy.pathfinder.annotations.Wait;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
 import me.wobblyyyy.pathfinder.core.PathfinderManager;
 import me.wobblyyyy.pathfinder.core.PromisedFinder;
+import me.wobblyyyy.pathfinder.followers.Follower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 
 /**
  * The highest-level Pathfinder available.
@@ -252,6 +254,23 @@ public class Pathfinder {
          * simplify the implementation of Pathfinder, not add to it.
          */
         return getManager().followPath(points);
+    }
+
+    /**
+     * Follow an inputted trajectory.
+     *
+     * @param trajectory the trajectory that should be followed.
+     * @return a PromisedFinder for the trajectory. Please note that this
+     * instance of promised finder doesn't contain any useful information.
+     * Additionally, it's always assumed that the finder has passed, even if
+     * it hasn't actually passed.
+     */
+    public PromisedFinder followTrajectory(Trajectory trajectory) {
+        DynamicArray<Follower> follower = getManager().getTrajectoryFollowers(
+                new DynamicArray<>(trajectory)
+        );
+        getManager().getExecutor().queueFollowers(new DynamicArray<>(follower));
+        return new PromisedFinder(true, new DynamicArray<>());
     }
 
     /**

@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.core;
 
+import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.annotations.Async;
@@ -46,6 +47,7 @@ import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.thread.FollowerExecutor;
 import me.wobblyyyy.pathfinder.thread.MainThread;
 import me.wobblyyyy.pathfinder.thread.PathfinderThreadManager;
+import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 import me.wobblyyyy.pathfinder.util.Extra;
 
 /**
@@ -113,12 +115,12 @@ public class PathfinderManager {
     /**
      * The follower execution system.
      */
-    private FollowerExecutor exec;
+    private final FollowerExecutor exec;
 
     /**
      * Manager used for updating loaded odometry systems.
      */
-    private PathfinderThreadManager thread;
+    private final PathfinderThreadManager thread;
 
     /**
      * Main Pathfinder thread - optionally used.
@@ -360,6 +362,25 @@ public class PathfinderManager {
             }
         });
 
+        return followers;
+    }
+
+    /**
+     * Get followers for a specified set of trajectories.
+     *
+     * @param trajectories the trajectories that should be followed.
+     * @return generated followers for each of the provided trajectories.
+     */
+    public DynamicArray<Follower> getTrajectoryFollowers(
+            Arrayable<Trajectory> trajectories) {
+        DynamicArray<Follower> followers =
+                new DynamicArray<>(trajectories.size());
+        trajectories.itr().forEach(trajectory -> {
+            followers.add(FollowerFactory.trajectory(
+                    config,
+                    trajectory
+            ));
+        });
         return followers;
     }
 
