@@ -69,4 +69,9 @@ public class ModuleState {
     public double getPower() {
         return power;
     }
+
+    @Override
+    public String toString() {
+        return "(Power: " + getPower() + ")";
+    }
 }

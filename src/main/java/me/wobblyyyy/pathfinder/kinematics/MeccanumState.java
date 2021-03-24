@@ -29,11 +29,13 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
+import java.util.stream.DoubleStream;
+
 public class MeccanumState {
-    private final ModuleState fl;
-    private final ModuleState fr;
-    private final ModuleState bl;
-    private final ModuleState br;
+    private ModuleState fl;
+    private ModuleState fr;
+    private ModuleState bl;
+    private ModuleState br;
 
     public MeccanumState(ModuleState fl,
                          ModuleState fr,
@@ -87,5 +89,41 @@ public class MeccanumState {
 
     public ModuleState br() {
         return br;
+    }
+
+    public double maxPower() {
+        return DoubleStream.of(
+                Math.abs(fl.getPower()),
+                Math.abs(fr.getPower()),
+                Math.abs(bl.getPower()),
+                Math.abs(br.getPower())
+        ).max().getAsDouble();
+    }
+
+    public void normalize(double max) {
+        double realMax = maxPower();
+
+        if (realMax > max) {
+            fl = new ModuleState(flPower() / realMax * max);
+            fr = new ModuleState(frPower() / realMax * max);
+            bl = new ModuleState(blPower() / realMax * max);
+            br = new ModuleState(brPower() / realMax * max);
+        }
+    }
+
+    public void normalize() {
+        normalize(1.0);
+    }
+
+    public void normalizeWithMax() {
+        double realMax = maxPower();
+
+        normalize(realMax);
+    }
+
+    public void normalizeFromMaxUnderOne() {
+        double max = maxPower();
+
+        normalize(max > 1 ? 1.0 : max);
     }
 }
