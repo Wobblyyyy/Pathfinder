@@ -31,6 +31,24 @@ package me.wobblyyyy.pathfinder.kinematics;
 
 import me.wobblyyyy.pathfinder.math.AbsMax;
 
+/**
+ * {@code MeccanumState} represents the state of a meccanum drivetrain,
+ * where each of the four wheels (colloquially internally referred to
+ * as "modules") contains a power value that should be applied to a
+ * physical drivetrain. 
+ *
+ * <p>
+ * Some useful methods you might want to check out:
+ * {@link MeccanumState#normalize(double)},
+ * {@link MeccanumState#normalize()},
+ * {@link MeccanumState#normalizeWithMax()},
+ * {@link MeccanumState#normalizeFromMaxUnderOne()}
+ * </p>
+ * 
+ * @author Colin Robertson
+ * @see MeccanumKinematics
+ * @since 0.5.0
+ */
 public class MeccanumState {
     private ModuleState fl;
     private ModuleState fr;
@@ -121,6 +139,13 @@ public class MeccanumState {
         normalize(realMax);
     }
 
+    /**
+     * Normalize the power values of the meccanum state by capping the
+     * state's maximum power value at one (or the regular maximum).
+     * This method will ensure that all of the power values fit within
+     * the range of (-1, 1), which is the range we most often want to
+     * use for controlling a drivetrain.
+     */
     public void normalizeFromMaxUnderOne() {
         double max = maxPower();
 
