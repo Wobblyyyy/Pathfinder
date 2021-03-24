@@ -30,12 +30,9 @@
 package me.wobblyyyy.pathfinder.config;
 
 import me.wobblyyyy.pathfinder.followers.Followers;
-import me.wobblyyyy.pathfinder.robot.Drive;
-import me.wobblyyyy.pathfinder.error.NoFindersException;
 import me.wobblyyyy.pathfinder.map.Map;
+import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.robot.Odometry;
-import me.wobblyyyy.pathfinder.robot.wrappers.DriveWrapper;
-import me.wobblyyyy.pathfinder.robot.wrappers.OdometryWrapper;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
 /**
@@ -44,7 +41,7 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
  * the meaning of any of these fields, you can check out the (rather
  * bulky) {@link PathfinderConfig} class, which explains everything
  * rather in-depth.
- * 
+ *
  * <p>
  * You should follow this order while building a pathfinder config.
  * {@link #newConfiguration}, then any of the following:
@@ -60,54 +57,58 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
  * @since 0.5.0
  */
 public class PathfinderConfigurationBuilder {
-  private Followers followerType = Followers.LINEAR;
-  private Drive drive;
-  private Odometry odometry;
-  private Map map = new Map();
-  private double speed = 0.225;
-  
-  private PathfinderConfigurationBuilder() {
-  }
-  
-  public static PathfinderConfigurationBuilder newConfiguration() {
-    return new PathfinderConfigurationBuilder();
-  }
-  
-  public void setFollowerType(Followers _followerType) {
-    followerType = _followerType;
-  }
-  
-  public void setDrive(Drive _drive) {
-    drive = _drive;
-  }
-  
-  public void setOdometry(Odometry _odometry) {
-    odometry = _odometry;
-  }
-  
-  public void setMap(Map _map) {
-    map = _map;
-  }
-  
-  public void setSpeed(double _speed) {
-    speed = _speed;
-  }
-  
-  public PathfinderConfig build() {
-    if (drive == null) throw new IllegalArgumentException("Please use the setDrive() method before building!");
-    if (odometry == null) throw new IllegalArgumentException("Please use the setOdometry() method before building!");
-    
-    return new PathfinderConfig(
-      odometry, 
-      0, 0, 3, 0, 0, 0, 0, 
-      new RobotProfile(0, 0, 0, 0, 0, 0), 
-      drive, 
-      map, 
-      followerType, 
-      speed, 
-      true, 
-      true, 
-      true
-    );
-  }
+    private Followers followerType = Followers.LINEAR;
+    private Drive drive;
+    private Odometry odometry;
+    private Map map = new Map();
+    private double speed = 0.225;
+
+    private PathfinderConfigurationBuilder() {
+    }
+
+    public static PathfinderConfigurationBuilder newConfiguration() {
+        return new PathfinderConfigurationBuilder();
+    }
+
+    public void setFollowerType(Followers _followerType) {
+        followerType = _followerType;
+    }
+
+    public void setDrive(Drive _drive) {
+        drive = _drive;
+    }
+
+    public void setOdometry(Odometry _odometry) {
+        odometry = _odometry;
+    }
+
+    public void setMap(Map _map) {
+        map = _map;
+    }
+
+    public void setSpeed(double _speed) {
+        speed = _speed;
+    }
+
+    public PathfinderConfig build() {
+        if (drive == null)
+            throw new IllegalArgumentException(
+                    "Please use the setDrive() method before building!");
+        if (odometry == null)
+            throw new IllegalArgumentException(
+                    "Please use the setOdometry() method before building!");
+
+        return new PathfinderConfig(
+                odometry,
+                0, 0, 3, 0, 0, 0, 0,
+                new RobotProfile(0, 0, 0, 0, 0, 0),
+                drive,
+                map,
+                followerType,
+                speed,
+                true,
+                true,
+                true
+        );
+    }
 }
