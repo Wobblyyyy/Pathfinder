@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
-import java.util.stream.DoubleStream;
+import me.wobblyyyy.pathfinder.math.AbsMax;
 
 public class MeccanumState {
     private ModuleState fl;
@@ -92,12 +92,12 @@ public class MeccanumState {
     }
 
     public double maxPower() {
-        return DoubleStream.of(
-                Math.abs(fl.getPower()),
-                Math.abs(fr.getPower()),
-                Math.abs(bl.getPower()),
-                Math.abs(br.getPower())
-        ).max().getAsDouble();
+        return AbsMax.getAbsoluteMax(
+                flPower(),
+                frPower(),
+                blPower(),
+                brPower()
+        );
     }
 
     public void normalize(double max) {
