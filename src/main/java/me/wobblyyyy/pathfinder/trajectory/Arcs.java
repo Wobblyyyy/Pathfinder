@@ -33,6 +33,7 @@ import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
+import me.wobblyyyy.pathfinder.math.PointRotation;
 import me.wobblyyyy.pathfinder.util.Distance;
 
 /**
@@ -196,12 +197,27 @@ public class Arcs {
             QUADRANTAL_RIGHT
     ));
 
+    /**
+     * A single-segment trajectory composed of {@link #SPLINE_QUAD_1}
+     */
     public static final Trajectory TRAJECTORY_QUAD_1 = new Trajectory(
             new StaticArray<>(SPLINE_QUAD_1));
+
+    /**
+     * A single-segment trajectory composed of {@link #SPLINE_QUAD_2}
+     */
     public static final Trajectory TRAJECTORY_QUAD_2 = new Trajectory(
             new StaticArray<>(SPLINE_QUAD_2));
+
+    /**
+     * A single-segment trajectory composed of {@link #SPLINE_QUAD_3}
+     */
     public static final Trajectory TRAJECTORY_QUAD_3 = new Trajectory(
             new StaticArray<>(SPLINE_QUAD_3));
+
+    /**
+     * A single-segment trajectory composed of {@link #SPLINE_QUAD_4}
+     */
     public static final Trajectory TRAJECTORY_QUAD_4 = new Trajectory(
             new StaticArray<>(SPLINE_QUAD_4));
 
@@ -211,15 +227,61 @@ public class Arcs {
      */
     public static final int SAMPLES = 10;
 
+    /**
+     * A set of interpolated points based on {@link #TRAJECTORY_QUAD_1}.
+     * By default, there are 10 interpolation samples. If you'd like to
+     * customize how many samples there are, check out the "see" tags.
+     *
+     * @see #interpolateQuad1(int)
+     * @see #interpolateQuad2(int)
+     * @see #interpolateQuad3(int)
+     * @see #interpolateQuad4(int)
+     */
     public static final DynamicArray<HeadingPoint> INTERPOLATED_QUAD_1 =
             PathGenerator.toPath(TRAJECTORY_QUAD_1, SAMPLES);
+
+    /**
+     * A set of interpolated points based on {@link #TRAJECTORY_QUAD_2}.
+     * By default, there are 10 interpolation samples. If you'd like to
+     * customize how many samples there are, check out the "see" tags.
+     *
+     * @see #interpolateQuad1(int)
+     * @see #interpolateQuad2(int)
+     * @see #interpolateQuad3(int)
+     * @see #interpolateQuad4(int)
+     */
     public static final DynamicArray<HeadingPoint> INTERPOLATED_QUAD_2 =
             PathGenerator.toPath(TRAJECTORY_QUAD_2, SAMPLES);
+
+    /**
+     * A set of interpolated points based on {@link #TRAJECTORY_QUAD_3}.
+     * By default, there are 10 interpolation samples. If you'd like to
+     * customize how many samples there are, check out the "see" tags.
+     *
+     * @see #interpolateQuad1(int)
+     * @see #interpolateQuad2(int)
+     * @see #interpolateQuad3(int)
+     * @see #interpolateQuad4(int)
+     */
     public static final DynamicArray<HeadingPoint> INTERPOLATED_QUAD_3 =
             PathGenerator.toPath(TRAJECTORY_QUAD_3, SAMPLES);
+
+    /**
+     * A set of interpolated points based on {@link #TRAJECTORY_QUAD_4}.
+     * By default, there are 10 interpolation samples. If you'd like to
+     * customize how many samples there are, check out the "see" tags.
+     *
+     * @see #interpolateQuad1(int)
+     * @see #interpolateQuad2(int)
+     * @see #interpolateQuad3(int)
+     * @see #interpolateQuad4(int)
+     */
     public static final DynamicArray<HeadingPoint> INTERPOLATED_QUAD_4 =
             PathGenerator.toPath(TRAJECTORY_QUAD_4, SAMPLES);
 
+    /**
+     * Private constructor - utility classes should not instantiatable.
+     */
     private Arcs() {
 
     }
@@ -420,5 +482,18 @@ public class Arcs {
             double radius,
             Point center) {
         return ensureDecreasingOrder(transformPoints(points, radius, center));
+    }
+
+    /**
+     * Rotate a set of points by a specified amount of degrees.
+     *
+     * @param points          the points to rotate.
+     * @param degreesToRotate the degrees to rotate the points by.
+     * @return the rotated points.
+     */
+    public static DynamicArray<HeadingPoint> rotatePoints(
+            DynamicArray<HeadingPoint> points,
+            double degreesToRotate) {
+        return PointRotation.rotatePointsWithHeading(points, degreesToRotate);
     }
 }
