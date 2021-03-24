@@ -35,8 +35,10 @@ import me.wobblyyyy.pathfinder.math.Reciprocal;
 import org.ejml.simple.SimpleMatrix;
 
 /**
- * Kinematic utilities for a very lovely meccanum drivetrain. If you ask me,
- * who doesn't love meccanum drivetrains? Exactly. We all do.
+ * Forwards and inverse meccanum kinematics. Most forms of drivetrains
+ * can use the states of each wheel to determine a position estimate,
+ * but meccanum drivetrains have so much slip that doesn't really work.
+ * Thus, this class is mostly only useful for forwards kinematics.
  *
  * @author Colin Robertson
  * @since 0.5.0
@@ -51,6 +53,20 @@ public class MeccanumKinematics {
     private final Point posBl;
     private final Point posBr;
 
+    /**
+     * Create a new {@code MeccanumKinematics} instance that calculates
+     * power values and transformations based on the inputted points. 
+     * These points are relative to the center of the robot.
+     *
+     * @param posFl the position of one of the meccanum modules. This
+     *              position is relative to the center of the robot.
+     * @param posFr the position of one of the meccanum modules. This
+     *              position is relative to the center of the robot.
+     * @param posBl the position of one of the meccanum modules. This
+     *              position is relative to the center of the robot.
+     * @param posBr the position of one of the meccanum modules. This
+     *              position is relative to the center of the robot.
+     */
     public MeccanumKinematics(final Point posFl,
                               final Point posFr,
                               final Point posBl,
@@ -69,6 +85,17 @@ public class MeccanumKinematics {
         kinematicsForwards = kinematicsBackwards.pseudoInverse();
     }
 
+    /**
+     * Get a {@code MeccanumState} from a provided {@code RTransform}.
+     *
+     * @param transform the desired robot translation.
+     * @return a meccanum state, representing the power values each module
+     * should have to move as desired. Please note: the returned state is
+     * NOT normalized, meaning the power values aren't ensured to be in
+     * any valid range. It's strongly suggested that you normalize these
+     * power values by using the {@link MeccanumState#normalizeFromMaxUnderOne()}
+     * method - otherwise, the power values might not be very epic.
+     */
     public MeccanumState toMeccanumState(RTransform transform) {
         SimpleMatrix speedVector = new SimpleMatrix(3, 1);
         speedVector.setColumn(
@@ -87,6 +114,13 @@ public class MeccanumKinematics {
         );
     }
 
+    /**
+     * Convert meccanum states into a robot transformation.
+     *
+     * @param state the meccanum state to get a transformation from.
+     * @param angle yeah I don't know it's an angle or something!
+     * @return a transformation representing the provided meccanum state.
+     */
     public RTransform toTransform(MeccanumState state, Angle angle) {
         SimpleMatrix moduleMatrix = new SimpleMatrix(4, 1);
         moduleMatrix.setColumn(
