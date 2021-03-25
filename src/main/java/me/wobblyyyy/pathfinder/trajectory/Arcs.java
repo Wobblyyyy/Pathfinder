@@ -42,6 +42,63 @@ import me.wobblyyyy.pathfinder.util.Distance;
  * much functionality on its own - rather, the fields and methods in this class
  * allow you to easily use all sorts of arcs in your own code.
  *
+ * <p>
+ * This class was originally created to contain various 90 degree arcs that can
+ * be transformed and adjusted to whatever specification you want. These arcs
+ * can be accessed in two ways - firstly, you can use the pre-interpolated paths,
+ * named INTERPOLATED_QUAD_(1, 2, 3, or 4), or you can use the trajectories for
+ * each of these arcs, manually interpolate them, and then transform them from
+ * there. You should go check out some examples for how this class can be
+ * utilized - it's a lot easier to explain like that.
+ * </p>
+ *
+ * <p>
+ * One of the core concepts at play here is quadrants. These quadrants are like
+ * those on a cartesian coordinate plane.
+ * <ul>
+ * <li>Quadrant 1: positive x, positive y</li>
+ * <li>Quadrant 2: negative x, positive y</li>
+ * <li>Quadrant 3: negative x, negative y</li>
+ * <li>Quadrant 4: positive x, negative y</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * As mentioned above, it's a good idea to check out some of the documentation
+ * to get a better picture of what's going on here.
+ * </p>
+ *
+ * <p>
+ * As an example, here's how a semi-circle with a radius of 10 units with a
+ * center point of (0, 0) would be constructed.
+ * <pre>
+ * <code>
+ * DynamicArray<HeadingPoint> allPoints = new DynamicArray<>();
+ * double RADIUS_SEMICIRCLE = 10;
+ * Point ORIGIN_SEMICIRCLE = new Point(0, 0);
+ * DynamicArray<HeadingPoint> SEMICIRCLE_A = Arcs.ensureIncreasingOrder(
+ *     Arcs.transformPoints(
+ *         Arcs.INTERPOLATED_QUAD_2,
+ *         RADIUS_SEMICIRCLE,
+ *         ORIGIN_SEMICIRCLE
+ *     )
+ * );
+ * DynamicArray<HeadingPoint> SEMICIRCLE_B = Arcs.ensureIncreasingOrder(
+ *     Arcs.transformPoints(
+ *         Arcs.INTERPOLATED_QUAD_1,
+ *         RADIUS_SEMICIRCLE,
+ *         ORIGIN_SEMICIRCLE
+ *     )
+ * );
+ * SEMICIRCLE_A.itr().forEach(allPoints::add);
+ * SEMICIRCLE_B.itr().forEach(allPoints::add);
+ * </code>
+ * </pre>
+ * By the end of this example, the {@code allPoints} array will contain
+ * points forming a semicircle, starting at (-10, 0) and eventually ending
+ * up at (10, 0). Very cool, very epic, I know.
+ * </p>
+ *
  * @author Colin Robertson
  * @since 0.5.0
  */
