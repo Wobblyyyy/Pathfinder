@@ -141,7 +141,7 @@ public class SplineTest {
         frame.setVisible(true);
 
         try {
-            Thread.sleep(10000);
+//            Thread.sleep(10000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,7 +165,7 @@ public class SplineTest {
         frame.setVisible(true);
 
         try {
-            Thread.sleep(10000);
+//            Thread.sleep(10000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class SplineTest {
         frame.setVisible(true);
 
         try {
-            Thread.sleep(10000);
+//            Thread.sleep(10000);
         } catch (Exception e) {
             e.printStackTrace();
         }
