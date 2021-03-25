@@ -42,6 +42,70 @@ import me.wobblyyyy.pathfinder.util.Distance;
  * much functionality on its own - rather, the fields and methods in this class
  * allow you to easily use all sorts of arcs in your own code.
  *
+ * <p>
+ * This class was originally created to contain various 90 degree arcs that can
+ * be transformed and adjusted to whatever specification you want. These arcs
+ * can be accessed in two ways - firstly, you can use the pre-interpolated paths,
+ * named INTERPOLATED_QUAD_(1, 2, 3, or 4), or you can use the trajectories for
+ * each of these arcs, manually interpolate them, and then transform them from
+ * there. You should go check out some examples for how this class can be
+ * utilized - it's a lot easier to explain like that.
+ * </p>
+ *
+ * <p>
+ * One of the core concepts at play here is quadrants. These quadrants are like
+ * those on a cartesian coordinate plane.
+ * <ul>
+ * <li>Quadrant 1: positive x, positive y</li>
+ * <li>Quadrant 2: negative x, positive y</li>
+ * <li>Quadrant 3: negative x, negative y</li>
+ * <li>Quadrant 4: positive x, negative y</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * As mentioned above, it's a good idea to check out some of the documentation
+ * to get a better picture of what's going on here.
+ * </p>
+ *
+ * <p>
+ * As an example, here's how a semi-circle with a radius of 10 units with a
+ * center point of (0, 0) would be constructed.
+ * <pre>
+ * <code>
+ * DynamicArray<HeadingPoint> allPoints = new DynamicArray<>();
+ * double RADIUS_SEMICIRCLE = 10;
+ * Point ORIGIN_SEMICIRCLE = new Point(0, 0);
+ * DynamicArray<HeadingPoint> SEMICIRCLE_A = Arcs.ensureIncreasingOrder(
+ *     Arcs.transformPoints(
+ *         Arcs.INTERPOLATED_QUAD_2,
+ *         RADIUS_SEMICIRCLE,
+ *         ORIGIN_SEMICIRCLE
+ *     )
+ * );
+ * DynamicArray<HeadingPoint> SEMICIRCLE_B = Arcs.ensureIncreasingOrder(
+ *     Arcs.transformPoints(
+ *         Arcs.INTERPOLATED_QUAD_1,
+ *         RADIUS_SEMICIRCLE,
+ *         ORIGIN_SEMICIRCLE
+ *     )
+ * );
+ * SEMICIRCLE_A.itr().forEach(allPoints::add);
+ * SEMICIRCLE_B.itr().forEach(allPoints::add);
+ * </code>
+ * </pre>
+ * By the end of this example, the {@code allPoints} array will contain
+ * points forming a semicircle, starting at (-10, 0) and eventually ending
+ * up at (10, 0). Very cool, very epic, I know.
+ * </p>
+ *
+ * <p>
+ * As stated previously, and just to re-iterate, if you're at all confused
+ * about how the methods and fields in this class operate, you should check
+ * out the examples in the Pathfinder/example/ directory - those should
+ * hopefully clarify what this class does.
+ * </p>
+ * 
  * @author Colin Robertson
  * @since 0.5.0
  */
@@ -50,6 +114,7 @@ public class Arcs {
     /**
      * The "origin point" of any cartesian plane. This is used mostly
      * internally to provide a reference for midpoints and more.
+     * This point has an X, Y, and heading values, all of zero.
      */
     public static final HeadingPoint ORIGIN = new HeadingPoint(0, 0, 0);
 
@@ -349,6 +414,16 @@ public class Arcs {
     /**
      * Ensure all of the provided points are in increasing X order.
      *
+     * <p>
+     * This method is most applicable when the robot should follow a
+     * specified trajectory in a given order. If, for example, your
+     * robot is at point (0, 0) and you want it to follow an arc that
+     * will get it to point (10, 10), you could use this method on the
+     * generated points to verify that the first point is the one with
+     * the lowest X value and the last point is the one with the highest
+     * X value. 
+     * </p>
+     *
      * @param points the set of points you'd like to use.
      * @return the points in increasing X order.
      */
@@ -372,6 +447,16 @@ public class Arcs {
 
     /**
      * Ensure all of the provided points are in decreasing X order.
+     *
+     * <p>
+     * This method is most applicable when the robot should follow a
+     * specified trajectory in a given order. If, for example, your
+     * robot is at point (10, 10) and you want it to follow an arc that
+     * will get it to point (0, 0), you could use this method on the
+     * generated points to verify that the first point is the one with
+     * the highest X value and the last point is the one with the lowest
+     * X value. 
+     * </p>
      *
      * @param points the set of points you'd like to use.
      * @return the points in decreasing X order.
@@ -434,6 +519,37 @@ public class Arcs {
      * radius as a multiplier. Then, the entire array gets the center point
      * added to it, thus making an arc around the center point.
      *
+     * <p>
+     * As an example, take the following.
+     * <pre>
+     * <code>
+     * // We want a set of points that form a 90 degree arc. This arc should
+     * // have a center of (10, 10), meaning that the arc will extend to
+     * // both (0, 10) and (10, 20).
+     * // Visualized, it would look something like this...
+     * // ________####
+     * // ______###___
+     * // _____#______
+     * // ____##______
+     * // ___#________
+     * // __##________
+     * // _##_________
+     * // _#__________
+     * // Obviously, that drawing is a bit off, but you get the point.
+     *
+     * // Get the points of an interpolated arc in quadrant 2
+     * DynamicArray<HeadingPoint> originalPoints = Arcs.INTERPOLATED_QUAD_2;
+     *
+     * // Apply a transformation to these points
+     * DynamicArray<HeadingPoint> transformedPoints = Arcs.transformPoints(
+     *     originalPoints,   // the points to transform
+     *     10,               // the radius of the arc - in this case, 10 units
+     *     new Point(10, 10) // the very center point of the arc
+     * );
+     * </code>
+     * </pre>
+     * </p>
+     *
      * @param points the points to scale and move.
      * @param radius the radius of the arc.
      * @param center the center point of the arc.
@@ -452,7 +568,33 @@ public class Arcs {
 
     /**
      * Apply the from operation and then apply the increasing operation.
+     * This method performs two operations - first, it transforms the points
+     * using the {@link #transformPoints(DynamicArray, double, Point) method.
+     * After transforming the points, code to ensure that all of the points
+     * are in a increasing X order is run. 
      *
+     * <p>
+     * Both of the methods used in this operation are already documented.
+     * If you're confused about what exactly this method does, or would just
+     * like to learn more about how it works, you should check out the
+     * methods linked in the "see" tags of this JavaDoc.
+     * </p>
+     * 
+     * <p>
+     * This method specifically can be used to ensure that, on a cartesian
+     * coordinate plane where positive X moves rightwards, that the points
+     * in the trajectory/arc/whatever you inputted to this method are moving
+     * in a rightwards direction. If, say, you'd like your robot to move
+     * that way, this method can be used. Ultimately, much of this will
+     * come down to testing, just to ensure that everything works well with
+     * your robot specifically. 
+     * </p>
+     * 
+     * <p>
+     * An example of this method's use can be found in the main JavaDoc
+     * for the arcs class: {@link Arcs}.
+     * </p>
+     * 
      * @param points the points that should be transformed.
      * @param radius the radius of the arc.
      * @param center the center point of the arc.
@@ -469,6 +611,32 @@ public class Arcs {
 
     /**
      * Apply the from operation and then apply the decreasing operation.
+     * This method performs two operations - first, it transforms the points
+     * using the {@link #transformPoints(DynamicArray, double, Point) method.
+     * After transforming the points, code to ensure that all of the points
+     * are in a decreasing X order is run. 
+     *
+     * <p>
+     * Both of the methods used in this operation are already documented.
+     * If you're confused about what exactly this method does, or would just
+     * like to learn more about how it works, you should check out the
+     * methods linked in the "see" tags of this JavaDoc.
+     * </p>
+     *
+     * <p>
+     * This method specifically can be used to ensure that, on a cartesian
+     * coordinate plane where positive X moves leftwards, that the points
+     * in the trajectory/arc/whatever you inputted to this method are moving
+     * in a leftwards direction. If, say, you'd like your robot to move
+     * that way, this method can be used. Ultimately, much of this will
+     * come down to testing, just to ensure that everything works well with
+     * your robot specifically. 
+     * </p>
+     * 
+     * <p>
+     * An example of this method's use can be found in the main JavaDoc
+     * for the arcs class: {@link Arcs}.
+     * </p>
      *
      * @param points the points that should be transformed.
      * @param radius the radius of the arc.
@@ -486,6 +654,25 @@ public class Arcs {
 
     /**
      * Rotate a set of points by a specified amount of degrees.
+     *
+     * <p>
+     * Rotating points is about as simple as it sounds - the points you input
+     * will be rotated by the degrees you input. As an example:
+     * <ul>
+     * <li>(0, 1) is rotated by 90 degrees, becomes (-1, 0).</li>
+     * <li>(1, 0) is rotated by 180 degrees, becomes (-1, 0).</li>
+     * <li>(1, 0) is rotated by 330 degrees, becomes (sqrt3/2, 0.5)</li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     * The points that are rotated in this method are rotated through the
+     * {@link PointRotation#rotatePointsWithHeading(DynamicArray, double)}
+     * method, which accepts a set of points and a measurement, in degrees,
+     * to rotate these points by. This measurement is deltaDegrees, not
+     * absolute degrees - if you have a point at a 90 degree angle and rotate
+     * it by 90 degrees, that point will then be at a 180 degree angle.
+     * </p>
      *
      * @param points          the points to rotate.
      * @param degreesToRotate the degrees to rotate the points by.

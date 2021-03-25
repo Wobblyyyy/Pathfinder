@@ -65,6 +65,15 @@ import java.util.Arrays;
  * and sexy math you might want to look at.
  * </p>
  *
+ * <p>
+ * It's certainly worth noting that splines don't form perfect arcs. If you'd
+ * like to create an arc that is as perfect as you can get, the spline class
+ * isn't the class for you. As of writing, there are no classes to do exactly
+ * that, but I'm planning on creating one within the next day. Check out the
+ * trajectory package for something that has to do with circles if you'd like
+ * to pursue that oh-so-perfect arc.
+ * </p>
+ *
  * @author Colin Robertson
  * @since 0.3.0
  */
@@ -126,6 +135,8 @@ public class Spline implements Segment {
      *               the robot will go exactly where you tell it to go.
      */
     public Spline(Arrayable<HeadingPoint> points) {
+        // Convert the provided points into a static array, just so
+        // we know that it should only be observed and not added to.
         this.points = new StaticArray<>(points);
 
         int size = points.size();
@@ -134,6 +145,8 @@ public class Spline implements Segment {
         DynamicArray<Double> yValues = new DynamicArray<>(size);
         angles = new DynamicArray<>(size);
 
+        // Init all of the minimum and maximum values so we don't have
+        // any issues with null comparison.
         xMinimum = points.get(0).getX();
         yMaximum = points.get(0).getY();
         xMaximum = xMinimum;
@@ -159,6 +172,8 @@ public class Spline implements Segment {
             yMaximum = Math.max(yMaximum, y);
         });
 
+        // SplineInterpolator uses lists, not arrays - we need
+        // to convert our points to lists first.
         ArrayList<Double> xList = fromDynamicArray(xValues);
         ArrayList<Double> yList = fromDynamicArray(yValues);
 
@@ -185,8 +200,14 @@ public class Spline implements Segment {
      * @return whether or not the values exclusively sequentially increase.
      */
     private static boolean onlyIncreasing(ArrayList<Double> values) {
+        // Init the lastValue double, once again - no null comparisons here
         double lastValue = values.get(0);
 
+        /*
+         * For each of the provided values, check to see if the value was
+         * lower than the last value. If it was, return false. If not,
+         * keep going.
+         */
         for (double value : values) {
             if (value != lastValue) {
                 if (!(value > lastValue)) return false;
@@ -195,6 +216,7 @@ public class Spline implements Segment {
             lastValue = value;
         }
 
+        // If the points are only increasing, return true.
         return true;
     }
 
@@ -313,6 +335,13 @@ public class Spline implements Segment {
     /**
      * Convert the spline to a string representation of the spline.
      *
+     * <p>
+     * This method calls the method {@link SplineInterpolator#toString()}
+     * method, which takes the following format:
+     * {@code {(x1, y1, m1), (x2, y2, m2), (x3, y3, m3)}},
+     * where x1, x2, x3, etc, represent ascending X values.
+     * </p>
+     *
      * @return the interpolator's representation of the spline in the very
      * readable String form.
      */
@@ -325,6 +354,11 @@ public class Spline implements Segment {
      * Get the point where the segment starts. This is defined as the position
      * that represents 0 percent of the segment's completion.
      *
+     * <p>
+     * We know that the first point of the spline is the first point in the
+     * array of points - thus, we can simply get the point at index 0.
+     * </p>
+     *
      * @return the point at which the segment begins.
      */
     @Override
@@ -335,6 +369,11 @@ public class Spline implements Segment {
     /**
      * Get the point where the segment ends. This is defined as the position
      * that represents 100 percent of the segment's completion.
+     *
+     * <p>
+     * Since we always know this point will be the last point in the array of
+     * points, we can simply get the point at the point array's size, minus 1.
+     * </p>
      *
      * @return the point at which the segment ends.
      */
