@@ -29,6 +29,9 @@
 
 package me.wobblyyyy.pathfinder.time;
 
+import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.geometry.Spline;
 import me.wobblyyyy.pathfinder.math.SplineInterpolator;
 
 import java.util.ArrayList;
@@ -136,6 +139,8 @@ public class TimeSpline {
         );
 
         if (startOnConstruction) start();
+
+        add(timestamps, values);
     }
 
     {
@@ -236,5 +241,35 @@ public class TimeSpline {
      */
     public RelativeTime getRelativeTime() {
         return relativeTime;
+    }
+
+    public List<Double> timestamps() {
+        return timestamps;
+    }
+
+    public List<Double> values() {
+        return values;
+    }
+
+    public static Spline toSpline(TimeSpline spline) {
+        DynamicArray<HeadingPoint> pointArray = new DynamicArray<>();
+
+        for (int i = 0; i < spline.timestamps().size(); i += 1) {
+            double timestamp = spline.timestamps().get(i);
+            double value = spline.values().get(i);
+            pointArray.add(
+                    new HeadingPoint(
+                            timestamp,
+                            value,
+                            0
+                    )
+            );
+        }
+
+        return new Spline(pointArray);
+    }
+
+    public Spline toSpline() {
+        return toSpline(this);
     }
 }

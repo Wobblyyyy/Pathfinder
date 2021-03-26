@@ -29,9 +29,14 @@
 
 package me.wobblyyyy.pathfinder.test.test;
 
+import me.wobblyyyy.pathfinder.geometry.Spline;
+import me.wobblyyyy.pathfinder.test.trajectory.SplineTest;
 import me.wobblyyyy.pathfinder.time.TimeSpline;
 import me.wobblyyyy.pathfinder.time.TimeUnit;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class TestTimeSpline {
     private final TimeUnit unit = TimeUnit.MILLISECOND;
@@ -96,6 +101,74 @@ public class TestTimeSpline {
                 );
                 lastInterpolated = interpolated;
             }
+        }
+    }
+
+    @SuppressWarnings("OctalInteger")
+    @Test
+    public void testFunkyInterpolation() {
+        TimeSpline spline = new TimeSpline(
+                unit,
+                new double[]{
+                        0000 / 100D,
+                        1000 / 100D,
+                        2000 / 100D,
+                        3000 / 100D,
+                        4000 / 100D,
+                        5000 / 100D,
+                        6000 / 100D,
+                        7000 / 100D,
+                        8000 / 100D,
+                        9000 / 100D
+                },
+                new double[]{
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        4,
+                        3,
+                        2,
+                        1,
+                        0
+                },
+                true
+        );
+
+        double interpolated;
+        double lastInterpolated = 0;
+        while ((interpolated = spline.interpolate()) != 0) {
+            if (interpolated != lastInterpolated) {
+                double relative = spline.getRelativeTime().relativeTime();
+                System.out.println(
+                        "Interpolated from " + relative + ": " + interpolated
+                );
+                lastInterpolated = interpolated;
+            }
+        }
+
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new FlowLayout());
+
+        Spline asSpline = spline.toSpline();
+
+        SplineTest.DrawableSpline drawable = new SplineTest.DrawableSpline(asSpline);
+        SplineTest.PlottableSpline plottable = new SplineTest.PlottableSpline(drawable);
+
+        frame.setLayout(new BorderLayout());
+        frame.add(plottable);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+
+        try {
+//            Thread.sleep(10000);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

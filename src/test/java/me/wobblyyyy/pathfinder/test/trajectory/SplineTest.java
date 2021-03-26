@@ -195,7 +195,7 @@ public class SplineTest {
         }
     }
 
-    public class DrawableSpline {
+    public static class DrawableSpline {
         private final Spline spline;
 
         public DrawableSpline(Spline spline) {
@@ -228,7 +228,7 @@ public class SplineTest {
         }
     }
 
-    public class PlottableSpline extends JComponent {
+    public static class PlottableSpline extends JComponent {
         private final DrawableSpline[] drawable;
 
         public PlottableSpline(DrawableSpline... drawable) {
