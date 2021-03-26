@@ -41,27 +41,43 @@ public class PointRotation {
 
     }
 
-    public static Point rotatePoint(Point toRotate,
-                                    double deltaDegrees) {
-        double currentAngle = toRotate.getTheta();
+    public static Point rotatePointAround(Point toRotate,
+                                          double deltaDegrees,
+                                          Point center) {
+        double currentAngle = Point.angleOfDeg(
+                center,
+                toRotate
+        );
         double nextAngle = currentAngle + deltaDegrees;
         return Distance.inDirection(
-                ZERO,
+                center,
                 nextAngle,
                 Distance.getDistance(ZERO, toRotate)
         );
     }
 
-    public static DynamicArray<Point> rotatePoints(
+    public static Point rotatePoint(Point toRotate,
+                                    double deltaDegrees) {
+        return rotatePointAround(toRotate, deltaDegrees, ZERO);
+    }
+
+    public static DynamicArray<Point> rotatePointsAround(
             final DynamicArray<Point> toRotate,
-            final double deltaDegrees) {
+            final double deltaDegrees,
+            final Point center) {
         DynamicArray<Point> rotatedPoints = new DynamicArray<>(toRotate.size());
 
         toRotate.itr().forEach(point -> {
-            rotatedPoints.add(rotatePoint(point, deltaDegrees));
+            rotatedPoints.add(rotatePointAround(point, deltaDegrees, center));
         });
 
         return rotatedPoints;
+    }
+
+    public static DynamicArray<Point> rotatePoints(
+            final DynamicArray<Point> toRotate,
+            final double deltaDegrees) {
+        return rotatePointsAround(toRotate, deltaDegrees, ZERO);
     }
 
     /**

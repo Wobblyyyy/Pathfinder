@@ -425,8 +425,8 @@ public class Point {
      * @param b the second of the two points.
      * @return the angle between the two points, notated in radians.
      */
-    public static double angleOfRad(HeadingPoint a,
-                                    HeadingPoint b) {
+    public static double angleOfRad(Point a,
+                                    Point b) {
         double angleInRadians = Math.atan2(
                 b.getY() - a.getY(),
                 b.getX() - a.getX()
@@ -444,8 +444,8 @@ public class Point {
      * @param b the second of the two points.
      * @return the angle between the two points, notated in radians.
      */
-    public static double angleOfDeg(HeadingPoint a,
-                                    HeadingPoint b) {
+    public static double angleOfDeg(Point a,
+                                    Point b) {
         return Math.toDegrees(angleOfRad(a, b));
     }
 }

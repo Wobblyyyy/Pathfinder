@@ -27,89 +27,69 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math;
+package me.wobblyyyy.pathfinder.math.functional.one;
 
-import java.util.stream.DoubleStream;
+import me.wobblyyyy.edt.Arrayable;
+import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.pathfinder.geometry.Point;
 
 /**
- * Additional math utilities for getting the absolute minimum of a set of data.
- * This is mostly useful in speed and state normalization.
+ * Reflect a value across a specific value.
  *
  * @author Colin Robertson
- * @since 0.5.0
+ * @since 0.4.0
  */
-public class AbsMin {
+public class Reflection {
     /**
-     * Get the minimum absolute value of the provided numbers.
+     * Reflect a number across 0 as an axis.
      *
-     * <p>
-     * Example A:
-     * <ul>
-     *     <li>
-     *         Inputs: 10, -15, 20, 30
-     *     </li>
-     *     <li>
-     *         Output: 10
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * <p>
-     * Example B:
-     * <ul>
-     *     <li>
-     *         Inputs: -130, 20, 10, 30
-     *     </li>
-     *     <li>
-     *         Output: 10
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * @param values the values to find the absolute minimum of.
-     * @return the absolute minimum of the provided values.
+     * @param value the number that should be reflected.
+     * @return the reflected number.
      */
-    public static double getAbsoluteMax(double... values) {
-        double[] newValues = new double[values.length];
-        if (values.length < 1) return 0;
-        for (int i = 0; i < values.length; i++) {
-            newValues[i] = Math.abs(values[i]);
-        }
-        return DoubleStream.of(newValues).min().getAsDouble();
+    public static double of(double value) {
+        return of(value, 0);
     }
 
     /**
-     * Get the minimum absolute value of the provided numbers.
-     * This method calls {@link #getAbsoluteMax(double...)}.
+     * Reflect a number across a specified axis.
      *
-     * <p>
-     * Example A:
-     * <ul>
-     *     <li>
-     *         Inputs: 10, -15, 20, 30
-     *     </li>
-     *     <li>
-     *         Output: 10
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * <p>
-     * Example B:
-     * <ul>
-     *     <li>
-     *         Inputs: -130, 20, 10, 30
-     *     </li>
-     *     <li>
-     *         Output: 10
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * @param values the values to find the absolute minimum of.
-     * @return the absolute minimum of the provided values.
+     * @param value  the number that should be reflected.
+     * @param center the axis to reflect over.
+     * @return the reflected number.
      */
-    public static double of(double... values) {
-        return getAbsoluteMax(values);
+    public static double of(double value,
+                            double center) {
+        if (value > center) return center - (Math.abs(center - value));
+        else return center + (Math.abs(center - value));
+    }
+
+    public static DynamicArray<Point> reflectPointsOverX(
+            Arrayable<Point> points,
+            double x) {
+        DynamicArray<Point> newPoints = new DynamicArray<>();
+
+        points.itr().forEach(point -> {
+            newPoints.add(new Point(
+                    of(point.getX(), x),
+                    point.getY()
+            ));
+        });
+
+        return newPoints;
+    }
+
+    public static DynamicArray<Point> reflectPointsOverY(
+            Arrayable<Point> points,
+            double y) {
+        DynamicArray<Point> newPoints = new DynamicArray<>();
+
+        points.itr().forEach(point -> {
+            newPoints.add(new Point(
+                    point.getX(),
+                    of(point.getY(), y)
+            ));
+        });
+
+        return newPoints;
     }
 }

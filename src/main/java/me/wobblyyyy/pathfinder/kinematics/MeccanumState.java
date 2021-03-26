@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
-import me.wobblyyyy.pathfinder.math.AbsMax;
+import me.wobblyyyy.pathfinder.math.functional.set.AbsMax;
 
 /**
  * {@code MeccanumState} represents the state of a meccanum drivetrain,
@@ -188,8 +188,6 @@ public class MeccanumState {
      * If they're not under the specified maximum, each of the power
      * values will be scaled down so they remain proportional to
      * eachother while fitting under the max.
-     * 
-     * @see MeccanumStates#normalizeFromMaxUnderOne()
      */
     public void normalize(double max) {
         double realMax = maxPower();

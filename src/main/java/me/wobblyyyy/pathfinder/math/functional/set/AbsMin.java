@@ -27,35 +27,89 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math;
+package me.wobblyyyy.pathfinder.math.functional.set;
+
+import java.util.stream.DoubleStream;
 
 /**
- * Math functionality for finding the reciprocal of a number.
+ * Additional math utilities for getting the absolute minimum of a set of data.
+ * This is mostly useful in speed and state normalization.
  *
  * @author Colin Robertson
  * @since 0.5.0
  */
-public class Reciprocal {
+public class AbsMin {
     /**
-     * Get the reciprocal of a specified number.
+     * Get the minimum absolute value of the provided numbers.
      *
-     * @param input the number to get the reciprocal of.
-     * @return the number's reciprocal.
+     * <p>
+     * Example A:
+     * <ul>
+     *     <li>
+     *         Inputs: 10, -15, 20, 30
+     *     </li>
+     *     <li>
+     *         Output: 10
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     * Example B:
+     * <ul>
+     *     <li>
+     *         Inputs: -130, 20, 10, 30
+     *     </li>
+     *     <li>
+     *         Output: 10
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * @param values the values to find the absolute minimum of.
+     * @return the absolute minimum of the provided values.
      */
-    public static double of(double input) {
-        return 1 / input;
+    public static double getAbsoluteMax(double... values) {
+        double[] newValues = new double[values.length];
+        if (values.length < 1) return 0;
+        for (int i = 0; i < values.length; i++) {
+            newValues[i] = Math.abs(values[i]);
+        }
+        return DoubleStream.of(newValues).min().getAsDouble();
     }
 
     /**
-     * Get the reciprocal of a specified number and multiply it by the provided
-     * scale coefficient.
+     * Get the minimum absolute value of the provided numbers.
+     * This method calls {@link #getAbsoluteMax(double...)}.
      *
-     * @param input the number to get the reciprocal of.
-     * @param scale the number to multiply by.
-     * @return the reciprocal of the specified number, multiplied by the
-     * provided scale value.
+     * <p>
+     * Example A:
+     * <ul>
+     *     <li>
+     *         Inputs: 10, -15, 20, 30
+     *     </li>
+     *     <li>
+     *         Output: 10
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     * Example B:
+     * <ul>
+     *     <li>
+     *         Inputs: -130, 20, 10, 30
+     *     </li>
+     *     <li>
+     *         Output: 10
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * @param values the values to find the absolute minimum of.
+     * @return the absolute minimum of the provided values.
      */
-    public static double of(double input, double scale) {
-        return of(input) * scale;
+    public static double of(double... values) {
+        return getAbsoluteMax(values);
     }
 }

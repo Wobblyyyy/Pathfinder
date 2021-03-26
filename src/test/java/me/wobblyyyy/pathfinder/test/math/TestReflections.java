@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.test.math;
 
-import me.wobblyyyy.pathfinder.math.Reflection;
+import me.wobblyyyy.pathfinder.math.functional.one.Reflection;
 import org.junit.jupiter.api.Test;
 
 public class TestReflections {

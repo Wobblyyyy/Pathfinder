@@ -27,7 +27,7 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math;
+package me.wobblyyyy.pathfinder.math.functional.set;
 
 import java.util.stream.DoubleStream;
 

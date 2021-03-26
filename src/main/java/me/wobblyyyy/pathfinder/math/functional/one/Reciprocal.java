@@ -27,26 +27,35 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math;
-
-import java.util.stream.DoubleStream;
+package me.wobblyyyy.pathfinder.math.functional.one;
 
 /**
- * Math utility to get the average of a set of numbers.
+ * Math functionality for finding the reciprocal of a number.
  *
  * @author Colin Robertson
  * @since 0.5.0
  */
-public class Average {
+public class Reciprocal {
     /**
-     * Get the average of a set of values.
+     * Get the reciprocal of a specified number.
      *
-     * @param values the values to get the average of.
-     * @return the average of the provided values.
+     * @param input the number to get the reciprocal of.
+     * @return the number's reciprocal.
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static double of(double... values) {
-        if (values.length < 1) return 0;
-        else return DoubleStream.of(values).average().getAsDouble();
+    public static double of(double input) {
+        return 1 / input;
+    }
+
+    /**
+     * Get the reciprocal of a specified number and multiply it by the provided
+     * scale coefficient.
+     *
+     * @param input the number to get the reciprocal of.
+     * @param scale the number to multiply by.
+     * @return the reciprocal of the specified number, multiplied by the
+     * provided scale value.
+     */
+    public static double of(double input, double scale) {
+        return of(input) * scale;
     }
 }
