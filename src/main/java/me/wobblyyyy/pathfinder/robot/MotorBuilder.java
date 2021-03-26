@@ -102,12 +102,12 @@ public class MotorBuilder {
      * a method to set power to the motor and a method to get power from the
      * motor.
      *
-     * @param setPower   a {@link FunctionalInterface} to set power to the
-     *                   motor. You should pass a method as a parameter here,
-     *                   ideally, a method of the motor's core implementation.
-     * @param getPower   a {@link FunctionalInterface} to get power from the
-     *                   motor. You should pass a method as a parameter here,
-     *                   ideally, a method of the motor's core implementation.
+     * @param setPower a {@link FunctionalInterface} to set power to the
+     *                 motor. You should pass a method as a parameter here,
+     *                 ideally, a method of the motor's core implementation.
+     * @param getPower a {@link FunctionalInterface} to get power from the
+     *                 motor. You should pass a method as a parameter here,
+     *                 ideally, a method of the motor's core implementation.
      * @return a new {@code PfMotor}/{@code Motor}, created from the
      * provided methods.
      */

@@ -105,7 +105,7 @@ import me.wobblyyyy.pathfinder.util.Distance;
  * out the examples in the Pathfinder/example/ directory - those should
  * hopefully clarify what this class does.
  * </p>
- * 
+ *
  * @author Colin Robertson
  * @since 0.5.0
  */
@@ -421,7 +421,7 @@ public class Arcs {
      * will get it to point (10, 10), you could use this method on the
      * generated points to verify that the first point is the one with
      * the lowest X value and the last point is the one with the highest
-     * X value. 
+     * X value.
      * </p>
      *
      * @param points the set of points you'd like to use.
@@ -453,7 +453,7 @@ public class Arcs {
      * will get it to point (0, 0), you could use this method on the
      * generated points to verify that the first point is the one with
      * the highest X value and the last point is the one with the lowest
-     * X value. 
+     * X value.
      * </p>
      *
      * @param points the set of points you'd like to use.
@@ -566,7 +566,7 @@ public class Arcs {
      * This method performs two operations - first, it transforms the points
      * using the {@link #transformPoints(DynamicArray, double, Point) method.
      * After transforming the points, code to ensure that all of the points
-     * are in a increasing X order is run. 
+     * are in a increasing X order is run.
      *
      * <p>
      * Both of the methods used in this operation are already documented.
@@ -574,7 +574,7 @@ public class Arcs {
      * like to learn more about how it works, you should check out the
      * methods linked in the "see" tags of this JavaDoc.
      * </p>
-     * 
+     *
      * <p>
      * This method specifically can be used to ensure that, on a cartesian
      * coordinate plane where positive X moves rightwards, that the points
@@ -582,14 +582,14 @@ public class Arcs {
      * in a rightwards direction. If, say, you'd like your robot to move
      * that way, this method can be used. Ultimately, much of this will
      * come down to testing, just to ensure that everything works well with
-     * your robot specifically. 
+     * your robot specifically.
      * </p>
-     * 
+     *
      * <p>
      * An example of this method's use can be found in the main JavaDoc
      * for the arcs class: {@link Arcs}.
      * </p>
-     * 
+     *
      * @param points the points that should be transformed.
      * @param radius the radius of the arc.
      * @param center the center point of the arc.
@@ -609,7 +609,7 @@ public class Arcs {
      * This method performs two operations - first, it transforms the points
      * using the {@link #transformPoints(DynamicArray, double, Point) method.
      * After transforming the points, code to ensure that all of the points
-     * are in a decreasing X order is run. 
+     * are in a decreasing X order is run.
      *
      * <p>
      * Both of the methods used in this operation are already documented.
@@ -625,9 +625,9 @@ public class Arcs {
      * in a leftwards direction. If, say, you'd like your robot to move
      * that way, this method can be used. Ultimately, much of this will
      * come down to testing, just to ensure that everything works well with
-     * your robot specifically. 
+     * your robot specifically.
      * </p>
-     * 
+     *
      * <p>
      * An example of this method's use can be found in the main JavaDoc
      * for the arcs class: {@link Arcs}.
