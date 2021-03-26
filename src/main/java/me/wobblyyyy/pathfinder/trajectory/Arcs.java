@@ -435,9 +435,7 @@ public class Arcs {
         if (fX > lX) {
             // original is decreasing
             DynamicArray<HeadingPoint> newPoints = new DynamicArray<>();
-            points.itr().forEach(point -> {
-                newPoints.add(0, point);
-            });
+            points.itr().forEach(point -> newPoints.add(0, point));
             return newPoints;
         } else {
             // original is increasing
@@ -469,9 +467,7 @@ public class Arcs {
         if (fX < lX) {
             // original is increasing
             DynamicArray<HeadingPoint> newPoints = new DynamicArray<>();
-            points.itr().forEach(point -> {
-                newPoints.add(0, point);
-            });
+            points.itr().forEach(point -> newPoints.add(0, point));
             return newPoints;
         } else {
             // original is decreasing
@@ -490,9 +486,8 @@ public class Arcs {
             DynamicArray<HeadingPoint> points,
             double scale) {
         return new DynamicArray<>() {{
-            points.itr().forEach(point -> {
-                add(HeadingPoint.scale(point, scale));
-            });
+            points.itr().forEach(point ->
+                    add(HeadingPoint.scale(point, scale)));
         }};
     }
 
@@ -507,9 +502,8 @@ public class Arcs {
             DynamicArray<HeadingPoint> points,
             Point center) {
         return new DynamicArray<>() {{
-            points.itr().forEach(point -> {
-                add(Point.add(point, center).withHeading(0));
-            });
+            points.itr().forEach(point ->
+                    add(Point.add(point, center).withHeading(0)));
         }};
     }
 
@@ -523,9 +517,9 @@ public class Arcs {
      * As an example, take the following.
      * <pre>
      * <code>
-     * // We want a set of points that form a 90 degree arc. This arc should
-     * // have a center of (10, 10), meaning that the arc will extend to
-     * // both (0, 10) and (10, 20).
+     * // We want a set of points that form a 90 degree arc.
+     * // Center of (10, 10).
+     * // Extends to (0, 10) and (10, 20).
      * // Visualized, it would look something like this...
      * // ________####
      * // ______###___
@@ -538,13 +532,14 @@ public class Arcs {
      * // Obviously, that drawing is a bit off, but you get the point.
      *
      * // Get the points of an interpolated arc in quadrant 2
-     * DynamicArray<HeadingPoint> originalPoints = Arcs.INTERPOLATED_QUAD_2;
+     * DynamicArray<HeadingPoint> originalPoints =
+     *     Arcs.INTERPOLATED_QUAD_2;
      *
      * // Apply a transformation to these points
      * DynamicArray<HeadingPoint> transformedPoints = Arcs.transformPoints(
      *     originalPoints,   // the points to transform
-     *     10,               // the radius of the arc - in this case, 10 units
-     *     new Point(10, 10) // the very center point of the arc
+     *     10,               // the radius of the arc
+     *     new Point(10, 10) // the center of the arc
      * );
      * </code>
      * </pre>

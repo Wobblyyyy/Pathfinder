@@ -45,11 +45,11 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
  * <p>
  * You should follow this order while building a pathfinder config.
  * {@link #newConfiguration}, then any of the following:
- * {@link #setFollowerType(Followers)},
- * {@link #setDrive(Drive)},
- * {@link #setOdometry(Odometry)},
- * {@link #setMap(Map)},
- * {@link #setSpeed(double)}, and then finally (this one has to be last)
+ * {@link #followerType(Followers)},
+ * {@link #drive(Drive)},
+ * {@link #odometry(Odometry)},
+ * {@link #map(Map)},
+ * {@link #speed(double)}, and then finally (this one has to be last)
  * you should call {@link #build()}.
  * </p>
  *
@@ -70,24 +70,29 @@ public class PathfinderConfigurationBuilder {
         return new PathfinderConfigurationBuilder();
     }
 
-    public void setFollowerType(Followers _followerType) {
-        followerType = _followerType;
+    public PathfinderConfigurationBuilder followerType(Followers _type) {
+        followerType = _type;
+        return this;
     }
 
-    public void setDrive(Drive _drive) {
+    public PathfinderConfigurationBuilder drive(Drive _drive) {
         drive = _drive;
+        return this;
     }
 
-    public void setOdometry(Odometry _odometry) {
+    public PathfinderConfigurationBuilder odometry(Odometry _odometry) {
         odometry = _odometry;
+        return this;
     }
 
-    public void setMap(Map _map) {
+    public PathfinderConfigurationBuilder map(Map _map) {
         map = _map;
+        return this;
     }
 
-    public void setSpeed(double _speed) {
+    public PathfinderConfigurationBuilder speed(double _speed) {
         speed = _speed;
+        return this;
     }
 
     public PathfinderConfig build() {
