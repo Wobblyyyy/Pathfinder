@@ -29,46 +29,23 @@
 
 package me.wobblyyyy.pathfinder.time;
 
-/**
- * Static time measurement utility designed to reduce the length of time
- * values by scaling them all down at start.
- *
- * @author Colin Robertson
- * @since 0.3.0
- */
-public class Time {
-    /**
-     * The time at which this library's execution begins. This is used as an
-     * offset.
-     */
-    private static final double startTimeMs = System.currentTimeMillis();
+public enum TimeUnit {
+    MILLISECOND(1),       // 1 ms, base unit of time
+    SECOND(1000),         // 1 second, 1000 ms
+    MINUTE(1000 * 60),    // 1 minute, 1000 * 60 ms
+    HOUR(1000 * 60 * 60); // 1 hour, 1000 * 60 * 60 ms
 
-    /**
-     * Make it so Time can't be instantiated.
-     */
-    private Time() {
+    private final int conversionFactor;
 
+    TimeUnit(int conversionFactor) {
+        this.conversionFactor = conversionFactor;
     }
 
-    public static double relativeTime(TimeUnit timeUnit) {
-        double timeGapMs = System.currentTimeMillis() - startTimeMs;
-
-        return timeUnit.convert(timeGapMs);
+    public int getConversionFactor() {
+        return conversionFactor;
     }
 
-    public static double relativeTimeMilliseconds() {
-        return relativeTime(TimeUnit.MILLISECOND);
-    }
-
-    public static double relativeTimeSeconds() {
-        return relativeTime(TimeUnit.SECOND);
-    }
-
-    public static double relativeTimeMinutes() {
-        return relativeTime(TimeUnit.MINUTE);
-    }
-
-    public static double relativeTimeHours() {
-        return relativeTime(TimeUnit.HOUR);
+    public double convert(double toConvert) {
+        return toConvert * conversionFactor;
     }
 }
