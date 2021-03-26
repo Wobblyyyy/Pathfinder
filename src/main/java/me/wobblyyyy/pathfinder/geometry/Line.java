@@ -248,7 +248,7 @@ public class Line {
         double b_b = b.a.getX() - b.b.getX();
         double b_c = (b_a * b.a.getX()) + (b_b * b.a.getY());
         // "det" is a pretty cool number. I have absolutely
-        // no clue what the fuck "det" means, and I'm way
+        // no clue what the heck "det" means, and I'm way
         // too lazy to figure out the meaning of it - but,
         // anyways...
         // If det is zero, both of the lines are parallel and
