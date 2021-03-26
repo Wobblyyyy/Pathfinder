@@ -37,7 +37,7 @@ import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.robot.Odometry;
 import me.wobblyyyy.pathfinder.trajectory.Trajectory;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
  * A lovely follower designed for trajectories. Normal followers, although

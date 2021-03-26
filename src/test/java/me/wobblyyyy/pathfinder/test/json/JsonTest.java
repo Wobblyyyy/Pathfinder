@@ -29,14 +29,10 @@
 
 package me.wobblyyyy.pathfinder.test.json;
 
-import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.json.JsonIO;
-import me.wobblyyyy.pathfinder.trajectory.Spline;
-import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
 
 public class JsonTest {

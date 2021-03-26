@@ -35,7 +35,7 @@ import me.wobblyyyy.pathfinder.util.MapTools;
 import me.wobblyyyy.pathfinder.geometry.Line;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.geometry.Zone;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
  * A relatively quick path generator - think of it as an extended version of

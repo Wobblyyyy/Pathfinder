@@ -32,7 +32,7 @@ package me.wobblyyyy.pathfinder.kinematics;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.util.Time;
+import me.wobblyyyy.pathfinder.time.Time;
 
 /**
  * Helper class for determining the position of a robot that uses a swerve

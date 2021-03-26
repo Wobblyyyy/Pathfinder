@@ -32,7 +32,7 @@ package me.wobblyyyy.pathfinder.tracking;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.robot.Encoder;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
  * Track a single point in a two-dimensional environment.

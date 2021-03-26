@@ -34,7 +34,7 @@ import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.robot.Odometry;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
  * The most incredibly simple trajectory follower you could possible imagine.

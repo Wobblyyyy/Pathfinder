@@ -27,7 +27,9 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.trajectory;
+package me.wobblyyyy.pathfinder.math;
+
+import me.wobblyyyy.pathfinder.geometry.Spline;
 
 import java.util.ArrayList;
 import java.util.List;

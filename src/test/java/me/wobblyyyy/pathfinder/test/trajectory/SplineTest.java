@@ -32,8 +32,8 @@ package me.wobblyyyy.pathfinder.test.trajectory;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.trajectory.Spline;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Spline;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;

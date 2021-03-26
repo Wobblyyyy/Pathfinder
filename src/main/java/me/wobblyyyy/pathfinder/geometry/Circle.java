@@ -29,8 +29,6 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
-import me.wobblyyyy.pathfinder.util.Distance;
-
 /**
  * Circles, much like rectangles, and literally any other shape, are...
  * cool? Maybe?

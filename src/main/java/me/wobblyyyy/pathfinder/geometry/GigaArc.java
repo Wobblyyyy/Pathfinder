@@ -30,7 +30,6 @@
 package me.wobblyyyy.pathfinder.geometry;
 
 import me.wobblyyyy.intra.ftc2.utils.math.Comparator;
-import me.wobblyyyy.pathfinder.util.Distance;
 
 /**
  * The core component behind a circle.

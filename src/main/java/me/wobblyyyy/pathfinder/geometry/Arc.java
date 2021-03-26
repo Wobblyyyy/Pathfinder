@@ -27,16 +27,11 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.trajectory;
+package me.wobblyyyy.pathfinder.geometry;
 
 import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.intra.ftc2.utils.math.Math;
-import me.wobblyyyy.pathfinder.geometry.AngleUtils;
-import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.geometry.Line;
-import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.util.Distance;
 
 /**
  * An {@code Arc} is an abstraction of the {@code Spline} class designed to

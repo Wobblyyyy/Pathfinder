@@ -27,7 +27,7 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.util;
+package me.wobblyyyy.pathfinder.time;
 
 /**
  * Static time measurement utility designed to reduce the length of time

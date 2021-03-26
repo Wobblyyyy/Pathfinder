@@ -29,8 +29,6 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
-import me.wobblyyyy.pathfinder.util.Distance;
-
 /**
  * A combination of two points, forming a line. Incredible, truly!
  *

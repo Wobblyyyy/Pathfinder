@@ -30,8 +30,8 @@
 package me.wobblyyyy.pathfinder.test.trajectory;
 
 import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.trajectory.SplineInterpolator;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.math.SplineInterpolator;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

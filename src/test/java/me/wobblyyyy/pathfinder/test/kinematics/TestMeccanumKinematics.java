@@ -36,7 +36,7 @@ import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.MeccanumKinematics;
 import me.wobblyyyy.pathfinder.kinematics.MeccanumState;
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 import org.junit.jupiter.api.Test;
 
 public class TestMeccanumKinematics {

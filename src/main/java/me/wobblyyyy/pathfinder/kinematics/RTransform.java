@@ -32,7 +32,7 @@ package me.wobblyyyy.pathfinder.kinematics;
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.math.Reflection;
-import me.wobblyyyy.pathfinder.util.Distance;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
  * A representation of a robot's transformation. This representation doesn't

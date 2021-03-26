@@ -34,7 +34,7 @@ import com.google.gson.reflect.TypeToken;
 import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.trajectory.Spline;
+import me.wobblyyyy.pathfinder.geometry.Spline;
 
 import java.io.File;
 import java.io.FileReader;
