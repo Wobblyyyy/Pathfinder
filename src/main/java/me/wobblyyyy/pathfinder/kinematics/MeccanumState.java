@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
-import me.wobblyyyy.pathfinder.math.functional.set.AbsMax;
+import me.wobblyyyy.pathfinder.math.functional.AbsMax;
 
 /**
  * {@code MeccanumState} represents the state of a meccanum drivetrain,

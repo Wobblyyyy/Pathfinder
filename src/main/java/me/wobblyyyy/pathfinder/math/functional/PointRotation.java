@@ -27,7 +27,7 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math;
+package me.wobblyyyy.pathfinder.math.functional;
 
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;

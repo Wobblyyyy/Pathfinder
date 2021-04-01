@@ -27,26 +27,69 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math.functional.set;
+package me.wobblyyyy.pathfinder.math.functional;
 
-import java.util.stream.DoubleStream;
+import me.wobblyyyy.edt.Arrayable;
+import me.wobblyyyy.edt.DynamicArray;
+import me.wobblyyyy.pathfinder.geometry.Point;
 
 /**
- * Math utility to get the average of a set of numbers.
+ * Reflect a value across a specific value.
  *
  * @author Colin Robertson
- * @since 0.5.0
+ * @since 0.4.0
  */
-public class Average {
+public class Reflection {
     /**
-     * Get the average of a set of values.
+     * Reflect a number across 0 as an axis.
      *
-     * @param values the values to get the average of.
-     * @return the average of the provided values.
+     * @param value the number that should be reflected.
+     * @return the reflected number.
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static double of(double... values) {
-        if (values.length < 1) return 0;
-        else return DoubleStream.of(values).average().getAsDouble();
+    public static double of(double value) {
+        return of(value, 0);
+    }
+
+    /**
+     * Reflect a number across a specified axis.
+     *
+     * @param value  the number that should be reflected.
+     * @param center the axis to reflect over.
+     * @return the reflected number.
+     */
+    public static double of(double value,
+                            double center) {
+        if (value > center) return center - (Math.abs(center - value));
+        else return center + (Math.abs(center - value));
+    }
+
+    public static DynamicArray<Point> reflectPointsOverX(
+            Arrayable<Point> points,
+            double x) {
+        DynamicArray<Point> newPoints = new DynamicArray<>();
+
+        points.itr().forEach(point -> {
+            newPoints.add(new Point(
+                    of(point.getX(), x),
+                    point.getY()
+            ));
+        });
+
+        return newPoints;
+    }
+
+    public static DynamicArray<Point> reflectPointsOverY(
+            Arrayable<Point> points,
+            double y) {
+        DynamicArray<Point> newPoints = new DynamicArray<>();
+
+        points.itr().forEach(point -> {
+            newPoints.add(new Point(
+                    point.getX(),
+                    of(point.getY(), y)
+            ));
+        });
+
+        return newPoints;
     }
 }

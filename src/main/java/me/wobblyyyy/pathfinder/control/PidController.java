@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.control;
 
-import me.wobblyyyy.pathfinder.math.functional.set.Sum;
+import me.wobblyyyy.pathfinder.math.functional.Sum;
 
 import java.util.function.Supplier;
 

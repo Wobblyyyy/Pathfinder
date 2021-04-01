@@ -27,69 +27,89 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math.functional.one;
+package me.wobblyyyy.pathfinder.math.functional;
 
-import me.wobblyyyy.edt.Arrayable;
-import me.wobblyyyy.edt.DynamicArray;
-import me.wobblyyyy.pathfinder.geometry.Point;
+import java.util.stream.DoubleStream;
 
 /**
- * Reflect a value across a specific value.
+ * Additional math utilities for getting the absolute maximum of a set of data.
+ * This is mostly useful in speed and state normalization.
  *
  * @author Colin Robertson
- * @since 0.4.0
+ * @since 0.5.0
  */
-public class Reflection {
+public class AbsMax {
     /**
-     * Reflect a number across 0 as an axis.
+     * Get the maximum absolute value of the provided numbers.
      *
-     * @param value the number that should be reflected.
-     * @return the reflected number.
+     * <p>
+     * Example A:
+     * <ul>
+     *     <li>
+     *         Inputs: 10, -15, 20, 30
+     *     </li>
+     *     <li>
+     *         Output: 30
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     * Example B:
+     * <ul>
+     *     <li>
+     *         Inputs: -130, 20, 10, 30
+     *     </li>
+     *     <li>
+     *         Output: 130
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * @param values the values to find the absolute maximum of.
+     * @return the absolute maximum of the provided values.
      */
-    public static double of(double value) {
-        return of(value, 0);
+    public static double getAbsoluteMax(double... values) {
+        double[] newValues = new double[values.length];
+        if (values.length < 1) return 0;
+        for (int i = 0; i < values.length; i++) {
+            newValues[i] = Math.abs(values[i]);
+        }
+        return DoubleStream.of(newValues).max().getAsDouble();
     }
 
     /**
-     * Reflect a number across a specified axis.
+     * Get the maximum absolute value of the provided numbers.
+     * This method calls {@link #getAbsoluteMax(double...)}.
      *
-     * @param value  the number that should be reflected.
-     * @param center the axis to reflect over.
-     * @return the reflected number.
+     * <p>
+     * Example A:
+     * <ul>
+     *     <li>
+     *         Inputs: 10, -15, 20, 30
+     *     </li>
+     *     <li>
+     *         Output: 30
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     * Example B:
+     * <ul>
+     *     <li>
+     *         Inputs: -130, 20, 10, 30
+     *     </li>
+     *     <li>
+     *         Output: 130
+     *     </li>
+     * </ul>
+     * </p>
+     *
+     * @param values the values to find the absolute maximum of.
+     * @return the absolute maximum of the provided values.
      */
-    public static double of(double value,
-                            double center) {
-        if (value > center) return center - (Math.abs(center - value));
-        else return center + (Math.abs(center - value));
-    }
-
-    public static DynamicArray<Point> reflectPointsOverX(
-            Arrayable<Point> points,
-            double x) {
-        DynamicArray<Point> newPoints = new DynamicArray<>();
-
-        points.itr().forEach(point -> {
-            newPoints.add(new Point(
-                    of(point.getX(), x),
-                    point.getY()
-            ));
-        });
-
-        return newPoints;
-    }
-
-    public static DynamicArray<Point> reflectPointsOverY(
-            Arrayable<Point> points,
-            double y) {
-        DynamicArray<Point> newPoints = new DynamicArray<>();
-
-        points.itr().forEach(point -> {
-            newPoints.add(new Point(
-                    point.getX(),
-                    of(point.getY(), y)
-            ));
-        });
-
-        return newPoints;
+    public static double of(double... values) {
+        return getAbsoluteMax(values);
     }
 }

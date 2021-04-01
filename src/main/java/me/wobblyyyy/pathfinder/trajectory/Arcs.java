@@ -34,7 +34,7 @@ import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.geometry.Spline;
-import me.wobblyyyy.pathfinder.math.PointRotation;
+import me.wobblyyyy.pathfinder.math.functional.PointRotation;
 import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**

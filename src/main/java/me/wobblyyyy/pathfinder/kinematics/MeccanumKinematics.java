@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder.kinematics;
 
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.math.functional.one.Reciprocal;
+import me.wobblyyyy.pathfinder.math.functional.Reciprocal;
 import org.ejml.simple.SimpleMatrix;
 
 /**

@@ -30,7 +30,7 @@
 package me.wobblyyyy.pathfinder.geometry;
 
 import me.wobblyyyy.edt.DynamicArray;
-import me.wobblyyyy.pathfinder.math.functional.one.Reflection;
+import me.wobblyyyy.pathfinder.math.functional.PointRotation;
 
 public class CircleInterpolator {
     private final Point center;
@@ -59,7 +59,7 @@ public class CircleInterpolator {
         DynamicArray<Point> points = new DynamicArray<>();
 
         for (double deg = startDegrees;
-             deg <= endDegrees;
+             deg >= endDegrees;
              deg += ((endDegrees - startDegrees) / samples)) {
             points.add(Distance.inDirection(
                     center,
@@ -71,7 +71,6 @@ public class CircleInterpolator {
         return points;
     }
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
     public DynamicArray<Point> getPointsFromEnd() {
         CircleInterpolator inverseInterpolator = new CircleInterpolator(
                 center,
@@ -82,10 +81,10 @@ public class CircleInterpolator {
         );
 
         DynamicArray<Point> inverted = inverseInterpolator.getPointsFromStart();
-        DynamicArray<Point> normal = Reflection.reflectPointsOverX(
-                inverted,
-                center.getX()
-        );
+        DynamicArray<Point> normal = new DynamicArray<>() {{
+            inverted.itr().forEach(this::add);
+        }};
+        normal = PointRotation.rotatePoints(normal, 270);
 
         return normal;
     }

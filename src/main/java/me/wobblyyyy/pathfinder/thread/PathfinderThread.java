@@ -43,14 +43,28 @@ import java.util.ArrayList;
 public class PathfinderThread implements Runnable {
     private boolean shouldExecute = true;
     private final ArrayList<Odometry> odometryArrayList;
+    private final Thread thread = new Thread(this::repeatRun);
+
+    public void repeatRun() {
+        while (shouldExecute) {
+            run();
+        }
+    }
 
     @Override
     public void run() {
-        while (shouldExecute) {
-            for (Odometry odometry : odometryArrayList) {
-                odometry.update();
-            }
+        for (Odometry odometry : odometryArrayList) {
+            odometry.update();
         }
+    }
+
+    public void start() {
+        shouldExecute = true;
+        thread.start();
+    }
+
+    public void stop() {
+        shouldExecute = false;
     }
 
     public PathfinderThread(ArrayList<Odometry> odometryArrayList) {

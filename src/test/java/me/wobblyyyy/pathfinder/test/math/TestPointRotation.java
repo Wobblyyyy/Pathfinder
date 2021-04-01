@@ -32,7 +32,7 @@ package me.wobblyyyy.pathfinder.test.math;
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
-import me.wobblyyyy.pathfinder.math.PointRotation;
+import me.wobblyyyy.pathfinder.math.functional.PointRotation;
 import me.wobblyyyy.pathfinder.trajectory.Arcs;
 import org.junit.jupiter.api.Test;
 

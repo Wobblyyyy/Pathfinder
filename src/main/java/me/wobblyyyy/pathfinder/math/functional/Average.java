@@ -27,89 +27,26 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math.functional.set;
+package me.wobblyyyy.pathfinder.math.functional;
 
 import java.util.stream.DoubleStream;
 
 /**
- * Additional math utilities for getting the absolute maximum of a set of data.
- * This is mostly useful in speed and state normalization.
+ * Math utility to get the average of a set of numbers.
  *
  * @author Colin Robertson
  * @since 0.5.0
  */
-public class AbsMax {
+public class Average {
     /**
-     * Get the maximum absolute value of the provided numbers.
+     * Get the average of a set of values.
      *
-     * <p>
-     * Example A:
-     * <ul>
-     *     <li>
-     *         Inputs: 10, -15, 20, 30
-     *     </li>
-     *     <li>
-     *         Output: 30
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * <p>
-     * Example B:
-     * <ul>
-     *     <li>
-     *         Inputs: -130, 20, 10, 30
-     *     </li>
-     *     <li>
-     *         Output: 130
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * @param values the values to find the absolute maximum of.
-     * @return the absolute maximum of the provided values.
+     * @param values the values to get the average of.
+     * @return the average of the provided values.
      */
-    public static double getAbsoluteMax(double... values) {
-        double[] newValues = new double[values.length];
-        if (values.length < 1) return 0;
-        for (int i = 0; i < values.length; i++) {
-            newValues[i] = Math.abs(values[i]);
-        }
-        return DoubleStream.of(newValues).max().getAsDouble();
-    }
-
-    /**
-     * Get the maximum absolute value of the provided numbers.
-     * This method calls {@link #getAbsoluteMax(double...)}.
-     *
-     * <p>
-     * Example A:
-     * <ul>
-     *     <li>
-     *         Inputs: 10, -15, 20, 30
-     *     </li>
-     *     <li>
-     *         Output: 30
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * <p>
-     * Example B:
-     * <ul>
-     *     <li>
-     *         Inputs: -130, 20, 10, 30
-     *     </li>
-     *     <li>
-     *         Output: 130
-     *     </li>
-     * </ul>
-     * </p>
-     *
-     * @param values the values to find the absolute maximum of.
-     * @return the absolute maximum of the provided values.
-     */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static double of(double... values) {
-        return getAbsoluteMax(values);
+        if (values.length < 1) return 0;
+        else return DoubleStream.of(values).average().getAsDouble();
     }
 }

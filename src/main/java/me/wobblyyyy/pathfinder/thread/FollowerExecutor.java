@@ -64,6 +64,11 @@ public class FollowerExecutor {
     private final Runnable executor;
 
     /**
+     * Repeating execution thread.
+     */
+    private final Thread repeatingExecutor;
+
+    /**
      * The currently-executed followers.
      */
     private final ArrayList<Follower> followers = new ArrayList<>();
@@ -126,21 +131,6 @@ public class FollowerExecutor {
      */
     public FollowerExecutor(Drive drive) {
         executor = () -> {
-            /*
-             * The thread should almost always be active - if it isn't,
-             * the thread will stop, and, well, that wouldn't be cool.
-             */
-            while (shouldRun) {
-                /*
-                 * Tell the CPU that this is a busy-wait and it doesn't
-                 * exactly matter how much CPU time the execution of
-                 * this has, so long as it's still executed.
-                 *
-                 * This should improve performance by freeing up some
-                 * processing time.
-                 */
-                BcThread.spin();
-
                 /*
                  * Thread-safe way to add a list of actions.
                  */
@@ -166,8 +156,22 @@ public class FollowerExecutor {
                  * Clear all of the actions - until next time!
                  */
                 clearActions();
-            }
         };
+        repeatingExecutor = new Thread(() -> {
+            while (shouldRun) {
+                /*
+                 * Tell the CPU that this is a busy-wait and it doesn't
+                 * exactly matter how much CPU time the execution of
+                 * this has, so long as it's still executed.
+                 *
+                 * This should improve performance by freeing up some
+                 * processing time.
+                 */
+                BcThread.spin();
+
+                executor.run();
+            }
+        });
 
         this.drive = drive;
     }
@@ -180,7 +184,8 @@ public class FollowerExecutor {
      * </p>
      */
     public void start() {
-//        executor.start();
+        shouldRun = true;
+        repeatingExecutor.start();
     }
 
     /**

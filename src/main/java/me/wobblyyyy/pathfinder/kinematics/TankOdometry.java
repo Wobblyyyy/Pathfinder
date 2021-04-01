@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder.kinematics;
 
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.math.functional.set.Average;
+import me.wobblyyyy.pathfinder.math.functional.Average;
 
 public class TankOdometry {
     private HeadingPoint position;
