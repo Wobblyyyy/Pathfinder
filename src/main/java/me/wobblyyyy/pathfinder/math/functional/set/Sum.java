@@ -29,7 +29,29 @@
 
 package me.wobblyyyy.pathfinder.math.functional.set;
 
+/**
+ * Functional utility class used to get the sum of a set of inputs.
+ *
+ * @author Colin Robertson
+ * @since 0.6.1
+ */
 public class Sum {
+    /**
+     * Private constructor so this utility class can't be used
+     * anywhere as an object.
+     */
+    private Sum() {
+        
+    }
+    
+    /**
+     * Get the sum of a data set. It's worth noting that this method is
+     * slower than manually adding each of the numbers, but it helps
+     * with code clarity and cleanliness.
+     *
+     * @param inputs the data set to get the sum of.
+     * @return the sum of all of the inputted numbers.
+     */
     public static double of(double... inputs) {
         double i = 0;
 
