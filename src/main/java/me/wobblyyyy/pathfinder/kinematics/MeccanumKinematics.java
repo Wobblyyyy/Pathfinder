@@ -45,12 +45,38 @@ import org.ejml.simple.SimpleMatrix;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class MeccanumKinematics {
+    /**
+     * Forwards kinematics, used for determining module states from
+     * inputted {@link RTransform}s.
+     */
     private final SimpleMatrix kinematicsForwards;
+
+    /**
+     * Backwards kinematics, used for (a) determining the forwards kinematics
+     * with the {@link SimpleMatrix#pseudoInverse()} method, and (b) getting
+     * an RTransform from module states. Note that this often isn't as accurate
+     * as we'd like it to be because the drivetrain has a lot of slip.
+     */
     private SimpleMatrix kinematicsBackwards;
 
+    /**
+     * The position of the front-left wheel.
+     */
     private final Point posFl;
+
+    /**
+     * The position of the front-right wheel.
+     */
     private final Point posFr;
+
+    /**
+     * The position of the back-left wheel.
+     */
     private final Point posBl;
+
+    /**
+     * The position of the back-right wheel.
+     */
     private final Point posBr;
 
     /**
