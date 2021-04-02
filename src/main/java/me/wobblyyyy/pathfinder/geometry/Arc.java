@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder.geometry;
 
 import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.StaticArray;
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+import me.wobblyyyy.pathfinder.math.functional.Average;
 
 /**
  * An {@code Arc} is an abstraction of the {@code Spline} class designed to
@@ -80,7 +80,7 @@ public class Arc extends Spline {
                 midpoint,
                 perpendicularToLine,
                 bendDistance
-        ).withHeading(Math.average(start.getHeading(), stop.getHeading()));
+        ).withHeading(Average.of(start.getHeading(), stop.getHeading()));
         return new Arc(new StaticArray<>(start, curvePoint, stop));
     }
 }
