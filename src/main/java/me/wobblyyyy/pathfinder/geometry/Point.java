@@ -58,6 +58,31 @@ import me.wobblyyyy.intra.ftc2.utils.math.Math;
  */
 public class Point {
     /**
+     * Point: (0, 0, 0)
+     */
+    public static final Point ZERO = new Point(0, 0);
+
+    /**
+     * Point: (0, 1, 0)
+     */
+    public static final Point FORWARDS = new Point(0, 1);
+
+    /**
+     * Point: (1, 0, 0)
+     */
+    public static final Point RIGHTWARDS = new Point(1, 0);
+
+    /**
+     * Point: (0, -1, 0)
+     */
+    public static final Point DOWNWARDS = new Point(0, -1);
+
+    /**
+     * Point: (-1, 0, 0)
+     */
+    public static final Point LEFTWARDS = new Point(-1, 0);
+
+    /**
      * The point's X value.
      */
     private double x;

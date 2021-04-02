@@ -55,6 +55,31 @@ import me.wobblyyyy.intra.ftc2.utils.math.Math;
 @SuppressWarnings("unused")
 public class HeadingPoint extends Point {
     /**
+     * Point: (0, 0, 0)
+     */
+    public static final HeadingPoint ZERO = new HeadingPoint(0, 0, 0);
+
+    /**
+     * Point: (0, 1, 0)
+     */
+    public static final HeadingPoint FORWARDS = new HeadingPoint(0, 1, 0);
+
+    /**
+     * Point: (1, 0, 0)
+     */
+    public static final HeadingPoint RIGHTWARDS = new HeadingPoint(1, 0, 0);
+
+    /**
+     * Point: (0, -1, 0)
+     */
+    public static final HeadingPoint DOWNWARDS = new HeadingPoint(0, -1, 0);
+
+    /**
+     * Point: (-1, 0, 0)
+     */
+    public static final HeadingPoint LEFTWARDS = new HeadingPoint(-1, 0, 0);
+
+    /**
      * The point's z.
      */
     private final double z;
