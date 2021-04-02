@@ -42,6 +42,11 @@ package me.wobblyyyy.pathfinder.geometry;
  */
 public class Angle {
     /**
+     * Zero degrees, zero radians - you name it. Just zero.
+     */
+    public static final Angle ZERO = new Angle(0);
+
+    /**
      * The angle, notated in degrees.
      */
     private final double angleDegrees;
@@ -245,5 +250,64 @@ public class Angle {
     public static Angle divide(Angle angle1,
                                Angle angle2) {
         return Angle.fromDegrees(angle1.getDegrees() / angle2.getDegrees());
+    }
+
+    /**
+     * Get the angle from point A to point B.
+     *
+     * <p>
+     * Just as some examples, because I know the phrasing of this can be a
+     * little bit confusing.
+     * <pre>
+     * Point A: (0, 0)
+     * Point B: (10, 10)
+     * Angle: 45 degrees
+     * </pre>
+     * <pre>
+     * Point A: (10, 10)
+     * Point B: (0, 0)
+     * Angle: 225 degrees
+     * </pre>
+     * </p>
+     *
+     * @param a the base point. This is the point that the angle is relative
+     *          to. The returned angle is the angle formed when looking at
+     *          the angle this point forms going to point B.
+     * @param b the target point.
+     * @return the angle between the two points.
+     */
+    public static Angle from(Point a,
+                             Point b) {
+        return fromRadians(Point.angleOfRad(a, b));
+    }
+
+    /**
+     * The inverse of the {@link #from(Point, Point)} operation. This method
+     * calls the from operation with the order of the inputted parameters
+     * swapped.
+     *
+     * <p>
+     * Just as some examples, because I know the phrasing of this can be a
+     * little bit confusing.
+     * <pre>
+     * Point A: (0, 0)
+     * Point B: (10, 10)
+     * Angle: 225 degrees
+     * </pre>
+     * <pre>
+     * Point A: (10, 10)
+     * Point B: (0, 0)
+     * Angle: 45 degrees
+     * </pre>
+     * </p>
+     *
+     * @param a the first of the two points.
+     * @param b the second of the two points.
+     * @return the angle formed from point B going to point A.
+     * @see #from(Point, Point)
+     */
+    public static Angle to(Point a,
+                           Point b) {
+        return from(b, a);
     }
 }

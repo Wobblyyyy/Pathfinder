@@ -33,7 +33,9 @@ import com.tejasmehta.OdometryCore.OdometryCore;
 import com.tejasmehta.OdometryCore.localization.EncoderPositions;
 import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 import me.wobblyyyy.pathfinder.error.UnimplementedException;
+import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.robot.Encoder;
 import me.wobblyyyy.pathfinder.tracking.Tracker;
 
@@ -93,40 +95,14 @@ public class ThreeWheelChassisTracker implements Tracker {
     private final Encoder middle;
 
     /**
-     * The diameter of each of the odometry wheels.
-     */
-    private final double wheelDiameter;
-
-    /**
-     * The left encoder's offset.
-     */
-    private final double leftOffset;
-
-    /**
-     * The right encoder's offset.
-     */
-    private final double rightOffset;
-
-    /**
-     * The middle encoder's offset.
-     */
-    private final double middleOffset;
-
-    /**
-     * Locally-used encoder values.
-     */
-    private EncoderPositions encoderPositions =
-            new EncoderPositions(0, 0, 0);
-
-    /**
-     * Locally-used odometry position implementation.
-     */
-    private OdometryPosition odometryPosition;
-
-    /**
      * Locally-used positional information about the robot.
      */
     private HeadingPoint position;
+
+    /**
+     * The odometry's offset.
+     */
+    private Point offset = Point.ZERO;
 
     /**
      * Create a new ThreeWheelChassisTracker instance.
@@ -163,10 +139,6 @@ public class ThreeWheelChassisTracker implements Tracker {
         this.left = left;
         this.right = right;
         this.middle = middle;
-        this.wheelDiameter = wheelDiameter;
-        this.leftOffset = leftOffset;
-        this.rightOffset = rightOffset;
-        this.middleOffset = middleOffset;
 
         OdometryCore.initialize(
                 middle.getCpr(),
@@ -175,6 +147,30 @@ public class ThreeWheelChassisTracker implements Tracker {
                 rightOffset,
                 middleOffset
         );
+    }
+
+    /**
+     * Set the robot's offset. This offset is applied to the reported
+     * positions from the tracker every time it's updated. If the robot has
+     * an offset of (10, 10) and it's actually at (0, 0), the robot will
+     * report that it's at (10, 10) instead of (0, 0). You get the point.
+     *
+     * @param offset the robot's offset.
+     */
+    public void setOffset(Point offset) {
+        this.offset = offset;
+    }
+
+    /**
+     * Use the robot's current position as an offset for the tracker.
+     *
+     * @see #setOffset(Point)
+     */
+    public void useCurrentPosAsOffset() {
+        setOffset(new Point(
+                position.getX() * -1,
+                position.getY() * -1
+        ));
     }
 
     /**
@@ -260,18 +256,29 @@ public class ThreeWheelChassisTracker implements Tracker {
      */
     @Override
     public void update() {
-        encoderPositions = new EncoderPositions(
+        EncoderPositions encoderPositions = new EncoderPositions(
                 left.getCount(),
                 right.getCount(),
                 middle.getCount()
         );
-        odometryPosition = OdometryCore
+
+        OdometryPosition odometryPosition = OdometryCore
                 .getInstance()
                 .getCurrentPosition(encoderPositions);
-        position = new HeadingPoint(
-                odometryPosition.getX(),
-                odometryPosition.getY(),
-                odometryPosition.getHeadingDegrees()
-        );
+
+        /*
+         * Do two things here. Firstly, we convert between an odometry position
+         * and a heading point. Then, we transform the heading point based on
+         * the tracker's offset. By default, there's an offset of zero, but
+         * if the user has changed their offset, this will shift the inputted
+         * point by whatever the offset is.
+         */
+        position = HeadingPoint
+                .fromOdometryPosition(odometryPosition)
+                .transform(
+                        offset.getX(),
+                        offset.getY(),
+                        Angle.ZERO
+                );
     }
 }

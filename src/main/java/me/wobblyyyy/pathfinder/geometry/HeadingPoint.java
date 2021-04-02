@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
+import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 import me.wobblyyyy.intra.ftc2.utils.math.Math;
 
 /**
@@ -564,5 +565,19 @@ public class HeadingPoint extends Point {
      */
     public static HeadingPoint pointOrIfNullZero(HeadingPoint point) {
         return point == null ? ZERO : point;
+    }
+
+    /**
+     * Convert an {@code OdometryPosition} into a {@code HeadingPoint}.
+     *
+     * @param position the position to convert.
+     * @return the converted position.
+     */
+    public static HeadingPoint fromOdometryPosition(OdometryPosition position) {
+        return new HeadingPoint(
+                position.getX(),
+                position.getY(),
+                position.getHeadingDegrees()
+        );
     }
 }
