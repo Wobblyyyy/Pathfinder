@@ -127,8 +127,8 @@ public class SpeedFinder implements Generator {
         DynamicArray<Zone> itw = MapTools.getZonesInArea(
                 config.getMap(),
                 new MapTools.Area(
-                        start,
-                        end
+                        Point.pointOrIfNullZero(start),
+                        Point.pointOrIfNullZero(end)
                 )
         );
 

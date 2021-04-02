@@ -43,13 +43,13 @@ import me.wobblyyyy.pathfinder.trajectory.Arcs;
 import org.junit.jupiter.api.Test;
 
 public class TestDrawingRobot {
-    private SimulatedRobot robot = new SimulatedRobot(0.0000001);
+    private SimulatedRobot robot = new SimulatedRobot(1);
     private PathfinderConfig config = PathfinderConfigurationBuilder
             .newConfiguration()
             .drive(robot)
             .odometry(robot)
             .followerType(Followers.LINEAR)
-            .speed(0.001)
+            .speed(0.0001)
             .build();
     private final Pathfinder pathfinder = new Pathfinder(config);
 
@@ -125,21 +125,21 @@ public class TestDrawingRobot {
                     final Point D10_CENTER = new Point(0, 300);
                     final double D10_RADIUS = 24;
 
-                    DynamicArray<HeadingPoint> D5_A = Arcs.increasingFrom(
-                            Arcs.INTERPOLATED_QUAD_2, D5_RADIUS, D5_CENTER);
-                    DynamicArray<HeadingPoint> D5_B = Arcs.increasingFrom(
+                    DynamicArray<HeadingPoint> D5_A = Arcs.decreasingFrom(
                             Arcs.INTERPOLATED_QUAD_1, D5_RADIUS, D5_CENTER);
-                    DynamicArray<HeadingPoint> D5_C = Arcs.decreasingFrom(
-                            Arcs.INTERPOLATED_QUAD_4, D5_RADIUS, D5_CENTER);
-                    DynamicArray<HeadingPoint> D5_D = Arcs.decreasingFrom(
+                    DynamicArray<HeadingPoint> D5_B = Arcs.decreasingFrom(
+                            Arcs.INTERPOLATED_QUAD_2, D5_RADIUS, D5_CENTER);
+                    DynamicArray<HeadingPoint> D5_C = Arcs.increasingFrom(
                             Arcs.INTERPOLATED_QUAD_3, D5_RADIUS, D5_CENTER);
+                    DynamicArray<HeadingPoint> D5_D = Arcs.increasingFrom(
+                            Arcs.INTERPOLATED_QUAD_4, D5_RADIUS, D5_CENTER);
 
-                    DynamicArray<HeadingPoint> B8_A = Arcs.decreasingFrom(
-                            Arcs.INTERPOLATED_QUAD_2, B8_RADIUS, B8_CENTER);
-                    DynamicArray<HeadingPoint> B8_B = Arcs.decreasingFrom(
+                    DynamicArray<HeadingPoint> B8_A = Arcs.increasingFrom(
                             Arcs.INTERPOLATED_QUAD_1, B8_RADIUS, B8_CENTER);
-                    DynamicArray<HeadingPoint> B8_C = Arcs.increasingFrom(
-                            Arcs.INTERPOLATED_QUAD_4, B8_RADIUS, B8_CENTER);
+                    DynamicArray<HeadingPoint> B8_B = Arcs.increasingFrom(
+                            Arcs.INTERPOLATED_QUAD_2, B8_RADIUS, B8_CENTER);
+                    DynamicArray<HeadingPoint> B8_C = Arcs.decreasingFrom(
+                            Arcs.INTERPOLATED_QUAD_3, B8_RADIUS, B8_CENTER);
 
                     DynamicArray<HeadingPoint> D10_A = new DynamicArray<>(
                             new HeadingPoint(0, 275, 0));

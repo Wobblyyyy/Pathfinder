@@ -473,4 +473,15 @@ public class Point {
                                     Point b) {
         return Math.toDegrees(angleOfRad(a, b));
     }
+
+    /**
+     * Ensure that the inputted point is not null.
+     *
+     * @param point the point to be de-nullified.
+     * @return if the point IS equal to null, return {@link #ZERO}. If the
+     * point IS NOT null, return the point itself.
+     */
+    public static Point pointOrIfNullZero(Point point) {
+        return point == null ? ZERO : point;
+    }
 }

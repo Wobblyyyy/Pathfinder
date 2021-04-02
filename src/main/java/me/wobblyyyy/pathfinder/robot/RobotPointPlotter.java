@@ -102,7 +102,7 @@ public class RobotPointPlotter {
         long sinceLast = 10000000;
         long last = System.currentTimeMillis();
         while (shouldCapture.get()) {
-            if (sinceLast > 50) {
+            if (sinceLast > 10) {
                 captured.add(odometry.getPos());
                 sinceLast = 0;
                 last = System.currentTimeMillis();

@@ -554,4 +554,15 @@ public class HeadingPoint extends Point {
                 a.getY() == b.getY() &&
                 a.getHeading() == b.getHeading();
     }
+
+    /**
+     * Ensure that the inputted point is not null.
+     *
+     * @param point the point to be de-nullified.
+     * @return if the point IS equal to null, return {@link #ZERO}. If the
+     * point IS NOT null, return the point itself.
+     */
+    public static HeadingPoint pointOrIfNullZero(HeadingPoint point) {
+        return point == null ? ZERO : point;
+    }
 }

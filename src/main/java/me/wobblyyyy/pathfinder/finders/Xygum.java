@@ -377,6 +377,9 @@ public class Xygum implements Generator {
          */
         DynamicArray<GridCell> getPath(Point start,
                                        Point end) {
+            start = Point.pointOrIfNullZero(start);
+            end = Point.pointOrIfNullZero(end);
+
             /*
              * Declare minimum and maximum values for later use.
              *
