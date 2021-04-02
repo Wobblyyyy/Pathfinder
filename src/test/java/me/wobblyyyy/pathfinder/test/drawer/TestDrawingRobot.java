@@ -37,9 +37,12 @@ import me.wobblyyyy.pathfinder.followers.Followers;
 import me.wobblyyyy.pathfinder.geometry.CircleInterpolator;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
+import me.wobblyyyy.pathfinder.geometry.Spline;
 import me.wobblyyyy.pathfinder.robot.RobotPointPlotter;
 import me.wobblyyyy.pathfinder.robot.SimulatedRobot;
 import me.wobblyyyy.pathfinder.trajectory.Arcs;
+import me.wobblyyyy.pathfinder.trajectory.PathGenerator;
+import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 import org.junit.jupiter.api.Test;
 
 public class TestDrawingRobot {
@@ -170,6 +173,36 @@ public class TestDrawingRobot {
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
         (new Thread(plotter::startCapturingPoints)).start();
         pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        plotter.stopCapturingPoints();
+        plotter.showCapturedPoints(100000);
+    }
+
+    @Test
+    public void testBouncePath() {
+        DynamicArray<HeadingPoint> bouncePath = new DynamicArray<>(
+                new HeadingPoint(-60, 30, 0),
+                new HeadingPoint(30, 30, 0),
+                new HeadingPoint(60, 60, 0),
+                new HeadingPoint(30, 90, 0),
+                new HeadingPoint(-60, 90, 0),
+                new HeadingPoint(30, 90, 0),
+                new HeadingPoint(60, 90, 0),
+                new HeadingPoint(60, 135, 0),
+                new HeadingPoint(60, 180, 0),
+                new HeadingPoint(30, 180, 0),
+                new HeadingPoint(-60, 180, 0),
+                new HeadingPoint(10, 240, 0),
+                new HeadingPoint(0, 240, 0)
+        );
+        System.out.println(bouncePath.get(bouncePath.size() - 1));
+        bouncePath.remove();
+        bouncePath.remove();
+        bouncePath.remove();
+        bouncePath.remove();
+        RobotPointPlotter plotter = new RobotPointPlotter(robot);
+        (new Thread(plotter::startCapturingPoints)).start();
+        pathfinder.followPath(bouncePath);
         pathfinder.tickUntil();
         plotter.stopCapturingPoints();
         plotter.showCapturedPoints(100000);
