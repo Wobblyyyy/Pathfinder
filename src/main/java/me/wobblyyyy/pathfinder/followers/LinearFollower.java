@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.followers;
 
 import me.wobblyyyy.pathfinder.geometry.Angle;
+import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
@@ -165,10 +166,18 @@ public class LinearFollower implements Follower {
      */
     @Override
     public void drive() {
+        Point target = Distance.inDirection(
+                Point.ZERO,                 // origin point
+                Point.angleOfDeg(           // angle between pos and end
+                        odometry.getPos(),  // current position
+                        end                 // target position
+                ),                          // angle A to B
+                coefficient                 // speed to move at
+        );
         RTransform transformation = new RTransform(
-                odometry.getPos(),
-                end,
-                Angle.fromDegrees(end.getHeading())
+                Point.ZERO,                          // origin
+                target,                              // "target" point
+                Angle.fromDegrees(end.getHeading())  // angle to turn to
         );
 
         drive.drive(transformation);
