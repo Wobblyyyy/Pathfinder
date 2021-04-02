@@ -30,10 +30,15 @@
 package me.wobblyyyy.pathfinder.geometry;
 
 import com.tejasmehta.OdometryCore.localization.OdometryPosition;
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+import me.wobblyyyy.pathfinder.math.functional.Average;
 
 /**
- * An extension of the default Point class - this time with z.
+ * An extension of the default Point class - this time with z. HeadingPoints
+ * are the very core of much of the geometric operation in Pathfinder.
+ * Such, it's a pretty bulky class, but the core concept is very easy to
+ * understand. A {@code HeadingPoint} can best be expressed as a cartesian
+ * coordinate with a heading value - think of it as {@code (X, Y, Z)}. Makes
+ * sense? Of course it does.
  *
  * <p>
  * For the sake of consistency, every single angle measure in this entire
@@ -265,9 +270,9 @@ public class HeadingPoint extends Point {
     public static HeadingPoint blend(HeadingPoint a,
                                      HeadingPoint b) {
         return new HeadingPoint(
-                Math.average(a.getX(), b.getX()),
-                Math.average(a.getY(), b.getY()),
-                Math.average(a.getHeading(), b.getHeading())
+                Average.of(a.getX(), b.getX()),
+                Average.of(a.getY(), b.getY()),
+                Average.of(a.getHeading(), b.getHeading())
         );
     }
 
@@ -491,22 +496,7 @@ public class HeadingPoint extends Point {
      * @return the blended/averaged points.
      */
     public static HeadingPoint average(HeadingPoint... points) {
-        /*
-         * The cumulative point - the point to be averaged.
-         */
-        HeadingPoint t = new HeadingPoint(0, 0, 0);
-
-        /*
-         * Add to the main point.
-         */
-        for (HeadingPoint p : points) {
-            t = add(t, p);
-        }
-
-        /*
-         * Scale the point, emulating averaging functionality.
-         */
-        return scale(t, points.length);
+        return Average.of(points);
     }
 
     /**

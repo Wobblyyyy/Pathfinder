@@ -47,17 +47,25 @@ import me.wobblyyyy.pathfinder.time.TimeUnit;
  */
 public class SimulatedRobot implements Drive, Odometry {
     /**
-     * Use milliseconds internally.
+     * Use milliseconds internally. Although ms is used as the time unit,
+     * we end up converting ms to seconds later on. I don't know why I chose
+     * to do it this way, but it works like this, and there's no point in
+     * breaking it for no good reason.
      */
     private static final TimeUnit TIME_UNIT = TimeUnit.MILLISECOND;
 
     /**
-     * The position of the robot.
+     * The position of the robot. The robot's position could actually be
+     * represented better as a {@link me.wobblyyyy.pathfinder.geometry.Point}
+     * instead of a {@code HeadingPoint}, but using a point here instead and
+     * having to add a heading to that point for interfacing purposes
+     * ({@link Odometry#getPos()} specifically) would be inefficient.
      */
     private HeadingPoint position = new HeadingPoint(0, 0, 0);
 
     /**
-     * The last recorded time.
+     * The last recorded timestamp. This timestamp is measured in ms, but is
+     * converted to seconds during transformation.
      */
     private double lastTime = Time.relativeTime(TIME_UNIT);
 
@@ -91,15 +99,28 @@ public class SimulatedRobot implements Drive, Odometry {
         double time = Time.relativeTime(TIME_UNIT);
         double elapsedTime = time - lastTime;
 
+        /*
+         * 1. Convert time (ms) to time (s).
+         * 2. Multiply the transformation's values by time in seconds,
+         * 3. Multiply the transformation's values by the coefficient.
+         */
         double distanceX = transform.getX() * (time / 1000) * coefficient;
         double distanceY = transform.getY() * (time / 1000) * coefficient;
 
+        /*
+         * Simulated robot position doesn't have anything to do with angles.
+         * It was mostly created so I can streamline testing paths without
+         * having to physically test the path.
+         */
         position = position.transform(
                 distanceX,
                 distanceY,
                 Angle.fromDegrees(0)
         );
 
+        /*
+         * Update the last timestamp.
+         */
         lastTime = time;
     }
 

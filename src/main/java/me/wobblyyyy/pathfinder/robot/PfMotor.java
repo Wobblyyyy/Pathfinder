@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.robot;
 
+import me.wobblyyyy.pathfinder.math.Invertable;
+
 /**
  * Wrapper for the {@link Motor} interface designed to simplify the process
  * of creating motors that do fancy and epic and cool things. You know.
@@ -163,7 +165,7 @@ public class PfMotor implements Motor {
      */
     @Override
     public void setPower(double power, boolean user) {
-        motor.setPower(isInverted ? power * -1 : power);
+        motor.setPower(Invertable.apply(power, isInverted));
     }
 
     /**
@@ -173,6 +175,6 @@ public class PfMotor implements Motor {
      */
     @Override
     public double getPower() {
-        return isInverted ? motor.getPower() * -1 : motor.getPower();
+        return Invertable.apply(motor.getPower(), isInverted);
     }
 }

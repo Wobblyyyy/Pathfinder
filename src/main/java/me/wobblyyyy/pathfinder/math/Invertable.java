@@ -27,76 +27,31 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.math.functional;
-
-import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.geometry.Point;
-
-import java.util.stream.DoubleStream;
+package me.wobblyyyy.pathfinder.math;
 
 /**
- * Math utility to get the average of a set of numbers.
+ * Represent an invertable of some sort. The best way to demonstrate this
+ * concept is with an example.
  *
- * @author Colin Robertson
- * @since 0.5.0
+ * <p>
+ * Let's say you have a velocity output from a motor, but this motor might
+ * be inverted. You could check to see if the motor was inverted, if it is,
+ * multiply the value by -1. If it isn't, don't multiply it at all. Now,
+ * yes, this would work. Or you could use this lovely class. How kind
+ * and generous of this class to offer that lovely functionality!
+ * </p>
  */
-public class Average {
+public class Invertable {
     /**
-     * Get the average of a set of values.
+     * Apply a potential inversion to a target number.
      *
-     * @param values the values to get the average of.
-     * @return the average of the provided values.
+     * @param target     the number that may or may not be inverted.
+     * @param isInverted is the number inverted?
+     * @return the number multiplied by -1 if it's inverted, the number (not
+     * multiplied at all) if it isn't inverted.
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static double of(double... values) {
-        if (values.length < 1) return 0;
-        else return DoubleStream.of(values).average().getAsDouble();
-    }
-
-    /**
-     * Get the average of an array of points.
-     *
-     * @param points the points to average.
-     * @return the average of the points.
-     */
-    public static Point of(Point... points) {
-        double sumX = 0;
-        double sumY = 0;
-        final int l = points.length;
-
-        for (Point point : points) {
-            sumX += point.getX();
-            sumY += point.getY();
-        }
-
-        return new Point(
-                sumX / l,
-                sumY / l
-        );
-    }
-
-    /**
-     * Get the average of an array of points.
-     *
-     * @param points the points to average.
-     * @return the average of the points.
-     */
-    public static HeadingPoint of(HeadingPoint... points) {
-        double sumX = 0;
-        double sumY = 0;
-        double sumZ = 0;
-        final int l = points.length;
-
-        for (HeadingPoint point : points) {
-            sumX += point.getX();
-            sumY += point.getY();
-            sumZ += point.getHeading();
-        }
-
-        return new HeadingPoint(
-                sumX / l,
-                sumY / l,
-                sumZ / l
-        );
+    public static double apply(double target,
+                               boolean isInverted) {
+        return isInverted ? target * -1 : target;
     }
 }

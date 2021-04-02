@@ -29,7 +29,7 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
-import me.wobblyyyy.intra.ftc2.utils.math.Math;
+import me.wobblyyyy.pathfinder.math.functional.Average;
 
 /**
  * The most simple geometry of all - a singular point.
@@ -195,8 +195,8 @@ public class Point {
          * two inputted points.
          */
         return new Point(
-                Math.average(a.getX(), b.getX()),
-                Math.average(a.getY(), b.getY())
+                Average.of(a.getX(), b.getX()),
+                Average.of(a.getY(), b.getY())
         );
     }
 
@@ -333,13 +333,7 @@ public class Point {
      * @return the blended/averaged points.
      */
     public static Point average(Point... points) {
-        Point t = new Point(0, 0);
-
-        for (Point p : points) {
-            t = add(t, p);
-        }
-
-        return scale(t, 1.0 / points.length);
+        return Average.of(points);
     }
 
     /**
