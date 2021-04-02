@@ -36,19 +36,88 @@ import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.robot.Motor;
 
+/**
+ * An implementation of the meccanum holonomic drivetrain. If you're looking
+ * at this class, chances are you using a meccanum drivetrain already and
+ * want to have an easier time implementing one. If you don't know what
+ * a meccanum drivetrain is, but you want to know oh-so-badly, you can just
+ * Google it. Yeah. That's all.
+ *
+ * @author Colin Robertson
+ * @since 0.5.0
+ */
 public class MeccanumDrive implements Drive {
+    /**
+     * The drivetrain's front-left motor (FL)
+     */
     public final Motor frontLeft;
+
+    /**
+     * The drivetrain's front-right motor (FR)
+     */
     public final Motor frontRight;
+
+    /**
+     * The drivetrain's back-left motor (BL)
+     */
     public final Motor backLeft;
+
+    /**
+     * The drivetrain's back-right motor (BR)
+     */
     public final Motor backRight;
 
+    /**
+     * The position of the FL wheel.
+     */
     public final Point flPos;
+
+    /**
+     * The position of the FR wheel.
+     */
     public final Point frPos;
+
+    /**
+     * The position of the BL wheel.
+     */
     public final Point blPos;
+
+    /**
+     * The position of the BR wheel.
+     */
     public final Point brPos;
 
+    /**
+     * The drivetrain's internal kinematics class.
+     *
+     * @see MeccanumKinematics
+     */
     public final MeccanumKinematics kinematics;
 
+    /**
+     * Create a new {@code MeccanumDrive} by using four inputted motors and
+     * two parameters specifying the gap in between the wheels.
+     *
+     * <p>
+     * This constructor will also set the {@code MeccanumDrive}'s four
+     * positional points based on the provided doubles.
+     * <ul>
+     *     <li>{@link #flPos} is (-x/2, +y/2)</li>
+     *     <li>{@link #frPos} is (+x/2, +y/2)</li>
+     *     <li>{@link #blPos} is (-x/2, -y/2</li>
+     *     <li>{@link #frPos} is (+x/2, -y/2</li>
+     * </ul>
+     * </p>
+     *
+     * @param frontLeft     the front-left (FL) motor.
+     * @param frontRight    the front-right (FR) motor.
+     * @param backLeft      the back-left (BL) motor.
+     * @param backRight     the back-right (BR) motor.
+     * @param wheelBaseGapX the horizontal gap between the right side and
+     *                      the left side of the drivetrain's wheels.
+     * @param wheelBaseGapY the vertical gap between the front and back pairs
+     *                      of wheels of the drivetrain.
+     */
     public MeccanumDrive(Motor frontLeft,
                          Motor frontRight,
                          Motor backLeft,
@@ -60,11 +129,22 @@ public class MeccanumDrive implements Drive {
         this.backLeft = backLeft;
         this.backRight = backRight;
 
+        /*
+         * Determine the position of each of the wheels. This is quite simple,
+         * really. Figure this:
+         *
+         * FL is quad 2 : negative X, positive Y
+         * FR is quad 1 : positive X, positive Y
+         * BL is quad 3 : negative X, negative Y
+         * BR is quad 4 : positive X, negative Y
+         */
         flPos = new Point(-wheelBaseGapX / 2, +wheelBaseGapY / 2);
         frPos = new Point(+wheelBaseGapX / 2, +wheelBaseGapY / 2);
         blPos = new Point(-wheelBaseGapX / 2, -wheelBaseGapY / 2);
         brPos = new Point(+wheelBaseGapX / 2, -wheelBaseGapY / 2);
 
+        // Create a new kinematics instance from the provided points.
+        // Order is always FL, FR, BL, BR.
         this.kinematics = new MeccanumKinematics(
                 flPos,
                 frPos,
@@ -73,18 +153,38 @@ public class MeccanumDrive implements Drive {
         );
     }
 
+    /**
+     * Internal method to access one of the motors.
+     *
+     * @return the front-left motor.
+     */
     private Motor fl() {
         return frontLeft;
     }
 
+    /**
+     * Internal method to access one of the motors.
+     *
+     * @return the front-right motor.
+     */
     private Motor fr() {
         return frontRight;
     }
 
+    /**
+     * Internal method to access one of the motors.
+     *
+     * @return the back-left motor.
+     */
     private Motor bl() {
         return backLeft;
     }
 
+    /**
+     * Internal method to access one of the motors.
+     *
+     * @return the back-right motor.
+     */
     private Motor br() {
         return backRight;
     }
@@ -103,10 +203,20 @@ public class MeccanumDrive implements Drive {
      */
     @Override
     public void drive(RTransform transform) {
+        // Use the drivetrain's kinematics to convert between a desired
+        // transformation and a valid meccanum drive state.
         MeccanumState state = kinematics.toMeccanumState(transform);
 
+        // Normalize the power of each of the module states. If the power
+        // values of any of the modules exceeds 1, all of the module states
+        // will be proportionally scaled down as to preserve movement
+        // direction and force.
         state.normalizeFromMaxUnderOne();
 
+        // Set the normalized states to each of the motors.
+        // In this case, we assume that the user is not controlling the robot.
+        // If they are, sucks for them. That reminds me, actually:
+        // TODO implement user and non-user meccanum control
         fl().setPower(state.flPower(), false);
         fr().setPower(state.frPower(), false);
         bl().setPower(state.blPower(), false);
