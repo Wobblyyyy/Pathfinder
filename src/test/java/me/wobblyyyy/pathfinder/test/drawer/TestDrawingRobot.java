@@ -135,24 +135,26 @@ public class TestDrawingRobot {
                             Arcs.INTERPOLATED_QUAD_4, D5_RADIUS, D5_CENTER);
 
                     DynamicArray<HeadingPoint> B8_A = Arcs.increasingFrom(
-                            Arcs.INTERPOLATED_QUAD_1, B8_RADIUS, B8_CENTER);
-                    DynamicArray<HeadingPoint> B8_B = Arcs.increasingFrom(
                             Arcs.INTERPOLATED_QUAD_2, B8_RADIUS, B8_CENTER);
+                    DynamicArray<HeadingPoint> B8_B = Arcs.increasingFrom(
+                            Arcs.INTERPOLATED_QUAD_1, B8_RADIUS, B8_CENTER);
                     DynamicArray<HeadingPoint> B8_C = Arcs.decreasingFrom(
-                            Arcs.INTERPOLATED_QUAD_3, B8_RADIUS, B8_CENTER);
+                            Arcs.INTERPOLATED_QUAD_4, B8_RADIUS, B8_CENTER);
 
                     DynamicArray<HeadingPoint> D10_A = new DynamicArray<>(
                             new HeadingPoint(0, 275, 0));
-                    DynamicArray<HeadingPoint> D10_B = Arcs.decreasingFrom(
-                            Arcs.INTERPOLATED_QUAD_1, D10_RADIUS, D10_CENTER);
-                    DynamicArray<HeadingPoint> D10_C = Arcs.decreasingFrom(
+                    DynamicArray<HeadingPoint> D10_B = Arcs.increasingFrom(
                             Arcs.INTERPOLATED_QUAD_2, D10_RADIUS, D10_CENTER);
+                    DynamicArray<HeadingPoint> D10_C = Arcs.increasingFrom(
+                            Arcs.INTERPOLATED_QUAD_1, D10_RADIUS, D10_CENTER);
 
                     DynamicArray<HeadingPoint> RETURN_TO_START = new DynamicArray<>(
                             new HeadingPoint(24, 275, 0),
                             new HeadingPoint(22, 150, 0),
-                            new HeadingPoint(20, 0, 0)
+                            new HeadingPoint(20, 0, 0),
+                            new HeadingPoint(0, 0, 0)
                     );
+
                     D5_A.itr().forEach(this::add);
                     D5_B.itr().forEach(this::add);
                     D5_C.itr().forEach(this::add);
