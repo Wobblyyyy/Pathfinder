@@ -34,6 +34,12 @@ import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.geometry.Distance;
 
+/**
+ * Utilities used for rotating {@link Point}s and {@link HeadingPoint}s.
+ *
+ * @author Colin Robertson
+ * @since 0.5.0
+ */
 public class PointRotation {
     private static final Point ZERO = new Point(0, 0);
 

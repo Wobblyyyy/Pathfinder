@@ -207,26 +207,56 @@ public class PidCoefficients {
         kD = coefficient;
     }
 
+    /**
+     * Get the P coefficient.
+     *
+     * @return the P coefficient.
+     */
     public Coefficient getP() {
         return kP;
     }
 
+    /**
+     * Get the I coefficient.
+     *
+     * @return the I coefficient.
+     */
     public Coefficient getI() {
         return kI;
     }
 
+    /**
+     * Get the D coefficient.
+     *
+     * @return the D coefficient.
+     */
     public Coefficient getD() {
         return kD;
     }
 
+    /**
+     * Get the value of the P coefficient.
+     *
+     * @return the value of the P coefficient.
+     */
     public double getPV() {
         return kP.getCoefficient();
     }
 
+    /**
+     * Get the value of the I coefficient.
+     *
+     * @return the value of the I coefficient.
+     */
     public double getIV() {
         return kI.getCoefficient();
     }
 
+    /**
+     * Get the value of the D coefficient.
+     *
+     * @return the value of the D coefficient.
+     */
     public double getDV() {
         return kD.getCoefficient();
     }
