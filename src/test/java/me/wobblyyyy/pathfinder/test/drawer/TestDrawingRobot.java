@@ -52,7 +52,7 @@ public class TestDrawingRobot {
             .drive(robot)
             .odometry(robot)
             .followerType(Followers.LINEAR)
-            .speed(0.0001)
+            .speed(0.00005)
             .build();
     private final Pathfinder pathfinder = new Pathfinder(config);
 
@@ -62,7 +62,7 @@ public class TestDrawingRobot {
         HeadingPoint target2 = new HeadingPoint(20, 10, 0);
         HeadingPoint target3 = new HeadingPoint(30, 30, 0);
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
-        (new Thread(plotter::startCapturingPoints)).start();
+        plotter.startCapturingPoints(10);
         pathfinder.goToPosition(target1);
         pathfinder.tickUntil();
         pathfinder.goToPosition(target2);
@@ -83,7 +83,7 @@ public class TestDrawingRobot {
                 50
         );
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
-        (new Thread(plotter::startCapturingPoints)).start();
+        plotter.startCapturingPoints(10);
         DynamicArray<Point> pointsWOH = interpolator.getPointsFromEnd();
         DynamicArray<HeadingPoint> points = new DynamicArray<>() {{
             pointsWOH.itr().forEach(point -> add(point.withHeading(0)));
@@ -110,7 +110,7 @@ public class TestDrawingRobot {
                 new HeadingPoint(0.2, -60.2, 0)
         );
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
-        (new Thread(plotter::startCapturingPoints)).start();
+        plotter.startCapturingPoints(10);
         pathfinder.followPath(slalomPath);
         pathfinder.tickUntil();
         plotter.stopCapturingPoints();
@@ -171,7 +171,7 @@ public class TestDrawingRobot {
                     RETURN_TO_START.itr().forEach(this::add);
                 }};
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
-        (new Thread(plotter::startCapturingPoints)).start();
+        plotter.startCapturingPoints(2);
         pathfinder.followPath(barrelPath);
         pathfinder.tickUntil();
         plotter.stopCapturingPoints();
@@ -201,7 +201,7 @@ public class TestDrawingRobot {
         bouncePath.remove();
         bouncePath.remove();
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
-        (new Thread(plotter::startCapturingPoints)).start();
+        plotter.startCapturingPoints(1);
         pathfinder.followPath(bouncePath);
         pathfinder.tickUntil();
         plotter.stopCapturingPoints();
