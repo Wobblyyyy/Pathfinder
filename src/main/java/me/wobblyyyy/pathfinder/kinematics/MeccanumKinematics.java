@@ -161,7 +161,7 @@ public class MeccanumKinematics {
         return new RTransform(
                 speedVector.get(0, 0),
                 speedVector.get(1, 0),
-                angle
+                angle.getDegrees()
         );
     }
 }

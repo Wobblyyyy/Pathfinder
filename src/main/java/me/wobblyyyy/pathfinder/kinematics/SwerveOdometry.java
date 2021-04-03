@@ -147,7 +147,7 @@ public class SwerveOdometry {
     }
 
     private double deltaTheta(RTransform transformation) {
-        return transformation.getTurn().getDegrees();
+        return transformation.getTurn();
     }
 
     private HeadingPoint transformCurrentPosition(double time,

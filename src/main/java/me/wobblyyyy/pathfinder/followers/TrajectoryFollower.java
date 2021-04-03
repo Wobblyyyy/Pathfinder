@@ -116,7 +116,7 @@ public class TrajectoryFollower implements Follower {
         return new RTransform(
                 new Point(0, 0), // (0, 0) - default origin
                 targetPoint,     // crafted target point
-                angle            // angle the robot should face
+                0                // angle the robot should face
         );
     }
 

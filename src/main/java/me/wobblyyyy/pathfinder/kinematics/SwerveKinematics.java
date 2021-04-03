@@ -131,7 +131,7 @@ public class SwerveKinematics {
                     0,
                     transform.getX(),
                     transform.getY(),
-                    transform.getTurn().getRadians()
+                    transform.getTurn()
             );
         }};
     }
@@ -267,7 +267,7 @@ public class SwerveKinematics {
         return new RTransform(
                 chassisMatrix.get(0, 0),
                 chassisMatrix.get(1, 0),
-                Angle.fromRadians(chassisMatrix.get(2, 0))
+                chassisMatrix.get(2, 0)
         );
     }
 }

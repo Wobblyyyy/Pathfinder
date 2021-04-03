@@ -177,7 +177,7 @@ public class LinearFollower implements Follower {
         RTransform transformation = new RTransform(
                 Point.ZERO,                          // origin
                 target,                              // "target" point
-                Angle.fromDegrees(end.getHeading())  // angle to turn to
+                0                                    // angle to turn to
         );
 
         drive.drive(transformation);

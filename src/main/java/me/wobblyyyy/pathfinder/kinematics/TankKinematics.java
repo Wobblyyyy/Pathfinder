@@ -29,8 +29,6 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
-import me.wobblyyyy.pathfinder.geometry.Angle;
-
 public class TankKinematics {
     private final double gap;
 
@@ -40,8 +38,8 @@ public class TankKinematics {
 
     public TankState toTankState(RTransform transform) {
         return new TankState(
-                transform.getY() - gap / 2 * transform.getTurn().getRadians(),
-                transform.getY() + gap / 2 * transform.getTurn().getRadians()
+                transform.getY() - gap / 2 * transform.getTurn(),
+                transform.getY() + gap / 2 * transform.getTurn()
         );
     }
 
@@ -49,7 +47,7 @@ public class TankKinematics {
         return new RTransform(
                 0,
                 (state.getL() + state.getR()) / 2,
-                Angle.fromDegrees((state.getR() - state.getL()) / gap)
+                ((state.getR() - state.getL()) / gap)
         );
     }
 }

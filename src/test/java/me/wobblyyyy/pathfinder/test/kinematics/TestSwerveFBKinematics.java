@@ -52,7 +52,7 @@ public class TestSwerveFBKinematics {
 
     @Test
     public void testKinematics() {
-        RTransform transform = new RTransform(1, 1, Angle.fromDegrees(0));
+        RTransform transform = new RTransform(1, 1, Angle.fromDegrees(0).getDegrees());
 
         StaticArray<SwerveState> states = kinematics.getStates(transform);
 
@@ -94,11 +94,11 @@ public class TestSwerveFBKinematics {
         double s4 = 4;
         double s5 = 5;
 
-        RTransform t1 = new RTransform(1, 0, new Angle(0));
-        RTransform t2 = new RTransform(0, 1, new Angle(0));
-        RTransform t3 = new RTransform(1, 1, new Angle(0));
-        RTransform t4 = new RTransform(0, 0, new Angle(0));
-        RTransform t5 = new RTransform(2, 2, new Angle(0));
+        RTransform t1 = new RTransform(1, 0, new Angle(0).getDegrees());
+        RTransform t2 = new RTransform(0, 1, new Angle(0).getDegrees());
+        RTransform t3 = new RTransform(1, 1, new Angle(0).getDegrees());
+        RTransform t4 = new RTransform(0, 0, new Angle(0).getDegrees());
+        RTransform t5 = new RTransform(2, 2, new Angle(0).getDegrees());
 
         StaticArray<SwerveState> ss1 = kinematics.getStates(t1);
         StaticArray<SwerveState> ss2 = kinematics.getStates(t2);

@@ -30,7 +30,6 @@
 package me.wobblyyyy.pathfinder.test.kinematics;
 
 import me.wobblyyyy.edt.DynamicArray;
-import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.AngleUtils;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.MeccanumKinematics;
@@ -62,7 +61,7 @@ public class TestMeccanumKinematics {
         double x = target.getX();
         double y = target.getY();
 
-        return kinematics.toMeccanumState(new RTransform(x, y, new Angle(0)));
+        return kinematics.toMeccanumState(new RTransform(x, y, 0));
     }
 
     @Test

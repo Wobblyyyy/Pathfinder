@@ -86,7 +86,7 @@ public class RTransform {
      * The transformation's facing. This facing should represent the angle that
      * the robot as a whole should be facing.
      */
-    private final Angle turn;
+    private final double turn;
 
     /**
      * X distance between start and stop points.
@@ -109,7 +109,7 @@ public class RTransform {
      */
     public RTransform(Point start,
                       Point stop,
-                      Angle turn) {
+                      double turn) {
         this.start = start;
         this.stop = stop;
         this.turn = turn;
@@ -130,7 +130,7 @@ public class RTransform {
      */
     public RTransform(double x,
                       double y,
-                      Angle turn) {
+                      double turn) {
         this(
                 new Point(0, 0),
                 new Point(x, y),
@@ -145,8 +145,8 @@ public class RTransform {
      * @return angle from degrees.
      */
     @SuppressWarnings("SameParameterValue")
-    private static Angle fd(double d) {
-        return Angle.fromDegrees(d);
+    private static double fd(double d) {
+        return d;
     }
 
     /**
@@ -164,7 +164,7 @@ public class RTransform {
      */
     public static RTransform fromGyro(Point start,
                                       Point stop,
-                                      Angle turn,
+                                      double turn,
                                       Angle gyro) {
         double vX = Distance.distanceX(start, stop);
         double vY = Distance.distanceY(start, stop);
@@ -187,7 +187,7 @@ public class RTransform {
      */
     public static RTransform fromGyro(double vX,
                                       double vY,
-                                      Angle turn,
+                                      double turn,
                                       Angle gyro) {
         return new RTransform(
                 (+vX * gyro.cos()) + (+vY * gyro.sin()),
@@ -220,7 +220,7 @@ public class RTransform {
      *
      * @return the robot's desired heading turn value.
      */
-    public Angle getTurn() {
+    public double getTurn() {
         return turn;
     }
 
@@ -295,7 +295,7 @@ public class RTransform {
     public String toString() {
         return String.format(
                 "Robot Transform: {(vX: %.2f), (vY: %.2f), (vT: %.2f deg)}",
-                x, y, turn.getDegrees()
+                x, y, turn
         );
     }
 }
