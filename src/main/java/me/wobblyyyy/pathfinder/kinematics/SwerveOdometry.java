@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
+import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
@@ -134,7 +135,7 @@ public class SwerveOdometry {
     }
 
     private RTransform getChassisStateFromStates(
-            StaticArray<SwerveState> states) {
+            Arrayable<SwerveState> states) {
         return kinematics.getTransform(states);
     }
 
@@ -191,7 +192,7 @@ public class SwerveOdometry {
      */
     public HeadingPoint update(double currentSeconds,
                                Angle gyroAngle,
-                               StaticArray<SwerveState> states) {
+                               Arrayable<SwerveState> states) {
         double timeSinceLastUpdate = getGapAndUpdateTime(currentSeconds);
         Angle angle = applyAngleOffset(gyroAngle);
         RTransform transformation = getChassisStateFromStates(states);
@@ -248,7 +249,7 @@ public class SwerveOdometry {
      *                       movement vector.
      */
     public HeadingPoint update(Angle gyroAngle,
-                               StaticArray<SwerveState> states) {
+                               Arrayable<SwerveState> states) {
         return update(
                 Time.relativeTime(TimeUnit.SECOND),
                 gyroAngle,

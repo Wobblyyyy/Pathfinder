@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.kinematics;
 
+import me.wobblyyyy.edt.Arrayable;
 import me.wobblyyyy.edt.StaticArray;
 import me.wobblyyyy.pathfinder.math.GearRatio;
 import me.wobblyyyy.pathfinder.math.RotationalVelocity;
@@ -177,9 +178,9 @@ public class SpeedConverter {
      * based on the velocity of each of the wheels. This is significantly more
      * accurate than the alternatives.
      */
-    public static StaticArray<SwerveState> getSwerveModuleStates(
-            StaticArray<SwerveState> originalStates,
-            StaticArray<SpeedConverter> speedConverters) {
+    public static Arrayable<SwerveState> getSwerveModuleStates(
+            Arrayable<SwerveState> originalStates,
+            Arrayable<SpeedConverter> speedConverters) {
         if (originalStates.size() != speedConverters.size()) {
             throw new IllegalArgumentException(
                     "State and speed converter size must be the same!"

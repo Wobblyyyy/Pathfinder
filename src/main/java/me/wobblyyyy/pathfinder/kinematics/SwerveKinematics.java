@@ -208,7 +208,7 @@ public class SwerveKinematics {
      */
     @SuppressWarnings("PointlessArithmeticExpression")
     private SimpleMatrix getModuleStateMatrix(
-            StaticArray<SwerveState> states) {
+            Arrayable<SwerveState> states) {
         return new SimpleMatrix(wheelPositions.size() * 2, 1) {{
             states.itr().forEach(state -> {
                 int i = states.itr().index();
@@ -251,7 +251,7 @@ public class SwerveKinematics {
      *               positions or an exception will be thrown on this method's
      *               invocation. Not cool.
      */
-    public RTransform getTransform(StaticArray<SwerveState> states) {
+    public RTransform getTransform(Arrayable<SwerveState> states) {
         if (states.size() != wheelPositions.size()) {
             throw new IllegalArgumentException(
                     "Error while attempting to get RTransform from a set of " +
