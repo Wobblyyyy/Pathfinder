@@ -29,6 +29,7 @@
 
 package me.wobblyyyy.pathfinder.control;
 
+import me.wobblyyyy.pathfinder.math.Invertable;
 import me.wobblyyyy.pathfinder.math.functional.Sum;
 
 import java.util.function.Supplier;
@@ -170,7 +171,7 @@ public class PidController implements Controller {
         lastActual = current;
         cumulativeError += error;
 
-        return isReversed ? output * -1 : output;
+        return Invertable.apply(output, isReversed);
     }
 
     /**
