@@ -29,7 +29,6 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
-import me.wobblyyyy.pathfinder.geometry.Angle;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
@@ -197,6 +196,10 @@ public class LinearFollower implements Follower {
          * the same, we're done. We can now return true and set power to the
          * motors. Power, of course, meaning 0 - the robot should stop at this
          * point entirely.
+         *
+         * The distance I've selected here - 0.5 - is really low, which might
+         * cause some issues with the robot overshooting the target. If this
+         * is an issue, this can be changed.
          */
         if (Distance.isNearPoint(
                 odometry.getPos(),
@@ -212,5 +215,23 @@ public class LinearFollower implements Follower {
          * follower should continue its execution.
          */
         return false;
+    }
+
+    /**
+     * Return a string representation of the {@code LinearFollower}.
+     *
+     * @return the {@code LinearFollower} in {@code String} form.
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "LinearFollower{{(%f, %f) @ %f}, {(%f, %f) @ %f}}",
+                start.getX(),
+                start.getY(),
+                start.getHeading(),
+                end.getX(),
+                end.getY(),
+                end.getHeading()
+        );
     }
 }

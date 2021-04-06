@@ -79,25 +79,17 @@ public class DriveWrapper implements Drive {
     }
 
     /**
-     * Drive the robot according to a specified transformation. Transformations
-     * are made up of several components, most notably X, Y, and angle. It's
-     * important to note that the angle component of these transformations
-     * represents the angle that the robot SHOULD be facing, not by how much
-     * the robot needs to turn.
-     *
-     * @param transform the robot's desired transformation. It's important to
-     *                  note that this transformation's angle doesn't mean how
-     *                  much the robot should be turning, it means the angle
-     *                  that the robot should currently be facing.
+     * {@inheritDoc}
      */
     @Override
     public void drive(RTransform transform) {
-        transform = driveSwapXY ?
-                new RTransform(
-                        transform.getStart(),
-                        transform.getStop(),
-                        transform.getTurn()
-                ) : transform;
+        if (driveSwapXY) {
+            transform = new RTransform(
+                    transform.getY(),
+                    transform.getX(),
+                    transform.getTurn()
+            );
+        }
 
         if (driveInvertX) transform.invertX();
         if (driveInvertY) transform.invertY();

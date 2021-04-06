@@ -314,4 +314,18 @@ public class Line {
                         point.getY() <= Math.max(a.getY(), b.getY());
         return xPass && yPass;
     }
+
+    /**
+     * Get the line as a string.
+     *
+     * @return the line as a string.
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "Line{%s, %s}",
+                a.toString(),
+                b.toString()
+        );
+    }
 }

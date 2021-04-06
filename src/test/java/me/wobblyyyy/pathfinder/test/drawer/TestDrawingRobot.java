@@ -171,11 +171,25 @@ public class TestDrawingRobot {
                     RETURN_TO_START.itr().forEach(this::add);
                 }};
         RobotPointPlotter plotter = new RobotPointPlotter(robot);
-        plotter.startCapturingPoints(2);
+//        plotter.startCapturingPoints(2);
         pathfinder.followPath(barrelPath);
         pathfinder.tickUntil();
-        plotter.stopCapturingPoints();
-        plotter.showCapturedPoints(100000);
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+        pathfinder.followPath(barrelPath);
+        pathfinder.tickUntil();
+//        plotter.stopCapturingPoints();
+//        plotter.showCapturedPoints(1000);
     }
 
     @Test

@@ -726,6 +726,7 @@ public class PathfinderConfig {
      * Swap the X and Y coordinate inputs.
      */
     public void odometrySwapXY(boolean xy) {
+        this.odometrySwapXY = xy;
         this.wrappedOdometry =
                 new OdometryWrapper(
                         rawOdometry,
@@ -733,7 +734,6 @@ public class PathfinderConfig {
                         odometryInvertX,
                         odometryInvertY
                 );
-        this.odometrySwapXY = xy;
     }
 
     /**
@@ -741,6 +741,7 @@ public class PathfinderConfig {
      * True = inverted, false = normal.
      */
     public void odometryInvertX(boolean invert) {
+        this.odometryInvertX = invert;
         this.wrappedOdometry =
                 new OdometryWrapper(
                         rawOdometry,
@@ -748,7 +749,6 @@ public class PathfinderConfig {
                         odometryInvertX,
                         odometryInvertY
                 );
-        this.odometryInvertX = invert;
     }
 
     /**
@@ -756,6 +756,7 @@ public class PathfinderConfig {
      * True = inverted, false = normal.
      */
     public void odometryInvertY(boolean invert) {
+        this.odometryInvertY = invert;
         this.wrappedOdometry =
                 new OdometryWrapper(
                         rawOdometry,
@@ -763,7 +764,6 @@ public class PathfinderConfig {
                         odometryInvertX,
                         odometryInvertY
                 );
-        this.odometryInvertY = invert;
     }
 
     /**
@@ -791,6 +791,7 @@ public class PathfinderConfig {
      * Swap the X and Y coordinate inputs.
      */
     public void driveSwapXY(boolean xy) {
+        this.driveSwapXY = xy;
         this.wrappedDrive =
                 new DriveWrapper(
                         rawDrive,
@@ -798,7 +799,6 @@ public class PathfinderConfig {
                         driveInvertX,
                         driveInvertY
                 );
-        this.driveSwapXY = xy;
     }
 
     /**
@@ -806,6 +806,7 @@ public class PathfinderConfig {
      * True = inverted, false = normal.
      */
     public void driveInvertX(boolean invert) {
+        this.driveInvertX = invert;
         this.wrappedDrive =
                 new DriveWrapper(
                         rawDrive,
@@ -813,7 +814,6 @@ public class PathfinderConfig {
                         driveInvertX,
                         driveInvertY
                 );
-        this.driveInvertX = invert;
     }
 
     /**
@@ -821,6 +821,7 @@ public class PathfinderConfig {
      * True = inverted, false = normal.
      */
     public void driveInvertY(boolean invert) {
+        this.driveInvertY = invert;
         this.wrappedDrive =
                 new DriveWrapper(
                         rawDrive,
@@ -828,7 +829,6 @@ public class PathfinderConfig {
                         driveInvertX,
                         driveInvertY
                 );
-        this.driveInvertY = invert;
     }
 
     /**

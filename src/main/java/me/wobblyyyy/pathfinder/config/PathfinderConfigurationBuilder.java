@@ -49,6 +49,12 @@ import me.wobblyyyy.pathfinder.util.RobotProfile;
  * {@link #drive(Drive)},
  * {@link #odometry(Odometry)},
  * {@link #map(Map)},
+ * {@link #drivetrainSwapXY(boolean)},
+ * {@link #drivetrainInvertX(boolean)},
+ * {@link #drivetrainInvertY(boolean)},
+ * {@link #odometrySwapXY(boolean)},
+ * {@link #odometryInvertX(boolean)},
+ * {@link #odometryInvertY(boolean)},
  * {@link #speed(double)}, and then finally (this one has to be last)
  * you should call {@link #build()}.
  * </p>
@@ -62,6 +68,12 @@ public class PathfinderConfigurationBuilder {
     private Odometry odometry;
     private Map map = new Map();
     private double speed = 0.225;
+    private boolean drivetrainSwapXY = false;
+    private boolean drivetrainInvertX = false;
+    private boolean drivetrainInvertY = false;
+    private boolean odometrySwapXY = false;
+    private boolean odometryInvertX = false;
+    private boolean odometryInvertY = false;
 
     private PathfinderConfigurationBuilder() {
     }
@@ -95,6 +107,36 @@ public class PathfinderConfigurationBuilder {
         return this;
     }
 
+    public PathfinderConfigurationBuilder drivetrainSwapXY(boolean should) {
+        drivetrainSwapXY = should;
+        return this;
+    }
+
+    public PathfinderConfigurationBuilder drivetrainInvertX(boolean should) {
+        drivetrainInvertX = should;
+        return this;
+    }
+
+    public PathfinderConfigurationBuilder drivetrainInvertY(boolean should) {
+        drivetrainInvertY = should;
+        return this;
+    }
+
+    public PathfinderConfigurationBuilder odometrySwapXY(boolean should) {
+        odometrySwapXY = should;
+        return this;
+    }
+
+    public PathfinderConfigurationBuilder odometryInvertX(boolean should) {
+        odometryInvertX = should;
+        return this;
+    }
+
+    public PathfinderConfigurationBuilder odometryInvertY(boolean should) {
+        odometryInvertY = should;
+        return this;
+    }
+
     public PathfinderConfig build() {
         if (drive == null)
             throw new IllegalArgumentException(
@@ -114,6 +156,13 @@ public class PathfinderConfigurationBuilder {
                 true,
                 true,
                 true
-        );
+        ) {{
+            driveSwapXY(drivetrainSwapXY);
+            driveInvertX(drivetrainInvertX);
+            driveInvertY(drivetrainInvertY);
+            odometrySwapXY(odometrySwapXY);
+            odometryInvertX(odometryInvertX);
+            odometryInvertY(odometryInvertY);
+        }};
     }
 }

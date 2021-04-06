@@ -30,6 +30,7 @@
 package me.wobblyyyy.pathfinder.robot.wrappers;
 
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
+import me.wobblyyyy.pathfinder.math.Invertable;
 import me.wobblyyyy.pathfinder.robot.Odometry;
 
 /**
@@ -76,9 +77,10 @@ public class OdometryWrapper implements Odometry {
             raw = new HeadingPoint(raw.getY(), raw.getX(), raw.getHeading());
         }
 
-        raw.scale(
-                odometryInvertX ? -1 : 1,
-                odometryInvertY ? -1 : 1
+        raw = new HeadingPoint(
+                Invertable.apply(raw.getX(), odometryInvertX),
+                Invertable.apply(raw.getX(), odometryInvertY),
+                raw.getAngle()
         );
 
         return raw;

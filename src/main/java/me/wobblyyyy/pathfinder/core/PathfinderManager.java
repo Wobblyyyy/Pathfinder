@@ -150,8 +150,8 @@ public class PathfinderManager {
         exec = new FollowerExecutor(config.getDrive());
         thread = new PathfinderThreadManager(config.getRawOdometry());
         mainThread = new MainThread(new StaticArray<>(
-                exec::tick,
-                thread::tick
+                thread::tick,
+                exec::tick
         ));
     }
 
@@ -746,8 +746,8 @@ public class PathfinderManager {
      * is active.
      */
     public void tick() {
-        exec.tick();
         thread.tick();
+        exec.tick();
     }
 
     /**
