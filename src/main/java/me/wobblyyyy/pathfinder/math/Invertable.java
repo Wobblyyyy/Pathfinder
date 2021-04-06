@@ -54,4 +54,17 @@ public class Invertable {
                                boolean isInverted) {
         return isInverted ? target * -1 : target;
     }
+    
+    /**
+     * Apply a potential inversion to a target number.
+     *
+     * @param target     the number that may or may not be inverted.
+     * @param isInverted is the number inverted?
+     * @return the number multiplied by -1 if it's inverted, the number (not
+     * multiplied at all) if it isn't inverted.
+     */
+    public static int apply(int target,
+                            boolean isInverted) {
+        return isInverted ? target * -1 : target;
+    }
 }
