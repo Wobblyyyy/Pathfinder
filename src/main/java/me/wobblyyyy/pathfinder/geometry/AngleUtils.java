@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.geometry;
 
+import me.wobblyyyy.pathfinder.math.Range;
+
 /**
  * Utility class for dealing with angles in both radians and degrees.
  *
@@ -46,6 +48,16 @@ public class AngleUtils {
     public static final double PI_OVER_6 = PI / 6;
     public static final double PI_OVER_7 = PI / 7;
     public static final double PI_OVER_8 = PI / 8;
+
+    public static final Range<Double> RANGE_DEG = new Range<>(
+            0D,
+            360D
+    );
+
+    public static final Range<Double> RANGE_RAD = new Range<>(
+            toPiRads(0),
+            toPiRads(2)
+    );
 
     private AngleUtils() {
 
@@ -68,18 +80,24 @@ public class AngleUtils {
     public static double fixRad(double rad) {
         while (rad < toPiRads(0)) rad += toPiRads(2);
         while (rad > toPiRads(2)) rad -= toPiRads(2);
+
         return rad;
     }
 
     /**
-     * Ensure a degree measure fits within the bounds of 0 to 360.
+     * Ensure a degree measure fits within the bounds of 0 to 360. If a degree
+     * measure is below 0, it'll be increased until it's above 0. If a degree
+     * measure is above 360, it'll be decreased until it's below 360. Note that
+     * these measurements are inclusive, meaning you can have a degree that's
+     * exactly 360 degrees or exactly 0 degrees.
      *
      * @param deg the degree measure to check.
      * @return the fixed degree measure.
      */
     public static double fixDeg(double deg) {
-        while (deg < 0) deg += 360;
-        while (deg > 360) deg -= 360;
+        while (deg < 0) deg += 360;   // ensure above 0
+        while (deg > 360) deg -= 360; // ensure below 360
+
         return deg;
     }
 

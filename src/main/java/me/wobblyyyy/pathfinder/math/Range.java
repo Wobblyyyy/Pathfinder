@@ -122,6 +122,24 @@ public class Range<T extends Number> {
     }
 
     /**
+     * "Fix" a number so that it fits within the range. If the number is below
+     * the range's minimum, it'll be added with the size of the range until
+     * it's within the range. If the number is above the range's maximum, it'll
+     * have the range's size subtracted from it until it's within the range.
+     *
+     * @param target the number to "fix".
+     * @return a fixed number.
+     */
+    public double fix(T target) {
+        double v = target.doubleValue();
+
+        while (v < dMin()) v += getSize();
+        while (v > dMax()) v -= getSize();
+
+        return v;
+    }
+
+    /**
      * Check to see if a given number fits within the range.
      *
      * @param number the number to check.

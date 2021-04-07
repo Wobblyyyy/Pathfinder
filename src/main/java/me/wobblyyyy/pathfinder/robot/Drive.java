@@ -50,15 +50,13 @@ import me.wobblyyyy.pathfinder.kinematics.RTransform;
 public interface Drive {
     /**
      * Drive the robot according to a specified transformation. Transformations
-     * are made up of several components, most notably X, Y, and angle. It's
-     * important to note that the angle component of these transformations
-     * represents the angle that the robot SHOULD be facing, not by how much
-     * the robot needs to turn.
+     * are made up of several components, most notably X, Y, and angle.
      *
-     * @param transform the robot's desired transformation. It's important to
-     *                  note that this transformation's angle doesn't mean how
-     *                  much the robot should be turning, it means the angle
-     *                  that the robot should currently be facing.
+     * @param transform the robot's desired transformation. The X and Y
+     *                  components of this transformation are fairly
+     *                  self-explanatory. The "turn" component of this
+     *                  transformation represents how fast the drivetrain
+     *                  should turn.
      */
     void drive(RTransform transform);
 
