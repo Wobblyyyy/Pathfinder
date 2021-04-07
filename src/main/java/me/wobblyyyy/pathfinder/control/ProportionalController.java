@@ -37,16 +37,11 @@ package me.wobblyyyy.pathfinder.control;
  * @author Colin Robertson
  * @since 0.6.1
  */
-public class ProportionalController implements Controller {
+public class ProportionalController extends AbstractController {
     /**
      * The controller's coefficient.
      */
-    private Coefficient proportionalCoefficient;
-
-    /**
-     * The controller's target point.
-     */
-    private double target;
+    private Coefficient coefficient;
 
     /**
      * Create a new {@code ProportionalController}.
@@ -54,7 +49,7 @@ public class ProportionalController implements Controller {
      * @param coefficient the controller's coefficient.
      */
     public ProportionalController(double coefficient) {
-        proportionalCoefficient = new Coefficient(coefficient);
+        this.coefficient = new Coefficient(coefficient);
     }
 
     /**
@@ -63,7 +58,7 @@ public class ProportionalController implements Controller {
      * @param coefficient the controller's coefficient.
      */
     public ProportionalController(Coefficient coefficient) {
-        proportionalCoefficient = coefficient;
+        this.coefficient = coefficient;
     }
 
     /**
@@ -74,7 +69,7 @@ public class ProportionalController implements Controller {
      */
     public ProportionalController(Coefficient coefficient,
                                   double target) {
-        proportionalCoefficient = coefficient;
+        this.coefficient = coefficient;
         this.target = target;
     }
 
@@ -83,8 +78,8 @@ public class ProportionalController implements Controller {
      *
      * @param coefficient the controller's coefficient.
      */
-    public void setProportionalCoefficient(Coefficient coefficient) {
-        proportionalCoefficient = coefficient;
+    public void setCoefficient(Coefficient coefficient) {
+        this.coefficient = coefficient;
     }
 
     /**
@@ -92,29 +87,8 @@ public class ProportionalController implements Controller {
      *
      * @return the controller coefficient.
      */
-    public Coefficient getProportionalCoefficient() {
-        return proportionalCoefficient;
-    }
-
-    /**
-     * Set the controller's target. The controller's target point is the
-     * point that the calculated values will attempt to invert.
-     *
-     * @param target the controller's target value.
-     */
-    @Override
-    public void setTarget(double target) {
-        this.target = target;
-    }
-
-    /**
-     * Get the controller's target value.
-     *
-     * @return the controller's target value.
-     */
-    @Override
-    public double getTarget() {
-        return target;
+    public Coefficient getCoefficient() {
+        return coefficient;
     }
 
     /**
@@ -127,7 +101,7 @@ public class ProportionalController implements Controller {
      */
     @Override
     public double calculate(double current) {
-        return (target - current) * proportionalCoefficient.getCoefficient();
+        return clip((target - current) * coefficient.getCoefficient());
     }
 
     /**

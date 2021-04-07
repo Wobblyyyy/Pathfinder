@@ -44,7 +44,7 @@ import java.util.function.Supplier;
  * @author Colin Robertson
  * @since 0.6.1
  */
-public class PidController implements Controller {
+public class PidController extends AbstractController {
     /**
      * The controller's coefficients.
      */
@@ -66,11 +66,6 @@ public class PidController implements Controller {
     private Supplier<Double> kD;
 
     /**
-     * The controller's current target.
-     */
-    private double target;
-
-    /**
      * A cumulative sum of all of the errors.
      */
     private double cumulativeError;
@@ -84,8 +79,7 @@ public class PidController implements Controller {
      * Is the controller reversed? If yes, all of the outputs will be
      * swapped. If no, the outputs are normal.
      */
-    @SuppressWarnings("FieldMayBeFinal")
-    private boolean isReversed;
+    private final boolean isReversed;
 
     /**
      * Create a new PID controller.
@@ -131,27 +125,6 @@ public class PidController implements Controller {
     }
 
     /**
-     * Set the controller's target. The controller's target point is the
-     * point that the calculated values will attempt to invert.
-     *
-     * @param target the controller's target value.
-     */
-    @Override
-    public void setTarget(double target) {
-        this.target = target;
-    }
-
-    /**
-     * Get the controller's target value.
-     *
-     * @return the controller's target value.
-     */
-    @Override
-    public double getTarget() {
-        return target;
-    }
-
-    /**
      * Use the controller to calculate a value based on a current measurement.
      * This method assumes that the target point has already been set prior
      * to this method's calling.
@@ -171,7 +144,7 @@ public class PidController implements Controller {
         lastActual = current;
         cumulativeError += error;
 
-        return Invertable.apply(output, isReversed);
+        return clip(Invertable.apply(output, isReversed));
     }
 
     /**

@@ -29,79 +29,107 @@
 
 package me.wobblyyyy.pathfinder.control;
 
+import me.wobblyyyy.pathfinder.math.Range;
+
 /**
- * Interface to be extended by {@code Controller} instances. Each controller
- * should be able to calculate a power value based on certain inputs, such
- * as distance from target, etc.
+ * An abstract implementation of the {@code Controller} interface designed to
+ * streamline controller implementations by abstracting common methods (getters
+ * and setters for target, minimum, maximum, etc) and handling output range
+ * clipping. This abstract class can be extended by a controller implementation
+ * so that there's less code required to write a controller.
  *
  * @author Colin Robertson
  * @since 0.6.1
  */
-public interface Controller {
+public abstract class AbstractController implements Controller {
+    /**
+     * The controller's output range. By default, this range is negative to
+     * positive infinity, meaning there aren't any outputs that are invalid.
+     * This can be changed using the {@link #setMax(double)} and the
+     * {@link #setMin(double)} methods.
+     */
+    public Range<Double> outputRange = new Range<>(
+            Double.NEGATIVE_INFINITY,
+            Double.POSITIVE_INFINITY
+    );
+
+    /**
+     * The controller's target.
+     *
+     * @see #setTarget(double)
+     * @see #getTarget()
+     */
+    public double target = 0;
+
+    /**
+     * Clip a value using the controller's output range.
+     *
+     * @param value the value to clip.
+     * @return the clipped value.
+     * @see Range#clip(Number)
+     */
+    public double clip(double value) {
+        return outputRange.clip(value);
+    }
+
     /**
      * Set the controller's target. The controller's target point is the
      * point that the calculated values will attempt to invert.
      *
      * @param target the controller's target value.
      */
-    void setTarget(double target);
+    @Override
+    public void setTarget(double target) {
+        this.target = target;
+    }
 
     /**
      * Get the controller's target value.
      *
      * @return the controller's target value.
      */
-    double getTarget();
-
-    /**
-     * Use the controller to calculate a value based on a current measurement.
-     * This method assumes that the target point has already been set prior
-     * to this method's calling.
-     *
-     * @param current the current measurement to calculate from.
-     * @return a value calculated by the controller.
-     */
-    double calculate(double current);
-
-    /**
-     * Use the controller to calculate a value based on a current measurement.
-     * This method uses the inputted target - in essence, this method should
-     * call the {@link #setTarget(double)} method and then the
-     * {@link #calculate(double)} method.
-     *
-     * @param current the current measurement to calculate from.
-     * @param target the target point that the controller should attempt to
-     *               reach. This point is set to the controller's target
-     *               point when this method is called.
-     * @return a value calculated by the controller.
-     */
-    double calculate(double current, double target);
+    @Override
+    public double getTarget() {
+        return target;
+    }
 
     /**
      * Set the controller's maximum output value.
      *
      * @param max the controller's maximum output value.
      */
-    void setMax(double max);
+    @Override
+    public void setMax(double max) {
+        outputRange.setMax(max);
+    }
 
     /**
      * Get the controller's maximum output value.
      *
      * @return the controller's maximum output value.
      */
-    double getMax();
+    @Override
+    public double getMax() {
+        return outputRange.getMax();
+    }
 
     /**
      * Set the controller's minimum output value.
      *
      * @param min the controller's minimum output value.
      */
-    void setMin(double min);
+    @Override
+    public void setMin(double min) {
+        outputRange.setMin(min);
+    }
 
     /**
      * Get the controller's minimum output value.
      *
      * @return the controller's minimum output value.
      */
-    double getMin();
+    @Override
+    public double getMin() {
+        return outputRange.getMin();
+    }
 }
