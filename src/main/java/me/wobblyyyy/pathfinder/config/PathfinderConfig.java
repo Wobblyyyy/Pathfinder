@@ -38,6 +38,8 @@ import me.wobblyyyy.pathfinder.robot.wrappers.DriveWrapper;
 import me.wobblyyyy.pathfinder.robot.wrappers.OdometryWrapper;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
+import java.util.function.Supplier;
+
 /**
  * The lowest-level and least-abstract configuration available for the
  * Pathfinder library.
@@ -365,6 +367,12 @@ public class PathfinderConfig {
     private boolean driveInvertY = false;
 
     /**
+     * An optional supplier to determine whether any asynchronous threads
+     * should keep running
+     */
+    private Supplier<Boolean> shouldRun = () -> true;
+
+    /**
      * Create a new {@code PathfinderConfig} without any configuration elements
      * set.
      */
@@ -420,6 +428,8 @@ public class PathfinderConfig {
      * @param usesLightning see: {@link PathfinderConfig#usesLightning}
      * @param usesFast      see: {@link PathfinderConfig#usesFast}
      * @param usesThetaStar see: {@link PathfinderConfig#usesThetaStar}
+     * @param shouldRun     An optional supplier to determine whether any
+     *                      asynchronous threads should keep running
      */
     public PathfinderConfig(Odometry rawOdometry,
                             int fieldWidth,
@@ -436,7 +446,8 @@ public class PathfinderConfig {
                             double speed,
                             boolean usesLightning,
                             boolean usesFast,
-                            boolean usesThetaStar) {
+                            boolean usesThetaStar,
+                            Supplier<Boolean> shouldRun) {
         this.rawOdometry = rawOdometry;
         this.wrappedOdometry = new OdometryWrapper(rawOdometry, false, false, false);
         this.fieldHeight = fieldHeight;
@@ -455,7 +466,7 @@ public class PathfinderConfig {
         this.usesLightning = usesLightning;
         this.usesFast = usesFast;
         this.usesThetaStar = usesThetaStar;
-
+        this.shouldRun = shouldRun;
         /*
          * Go read the JavaDoc for NoFindersException if you're confused
          * about what this means.
@@ -491,6 +502,20 @@ public class PathfinderConfig {
 
     public PathfinderConfig setUsesThetaStar(boolean usesThetaStar) {
         this.usesThetaStar = usesThetaStar;
+        return this;
+    }
+
+    /**
+     * Get the shouldRun supplier method
+     *
+     * @return the shouldRun supplier
+     */
+    public Supplier<Boolean> getShouldRun() {
+        return shouldRun;
+    }
+
+    public PathfinderConfig setShouldRun(Supplier<Boolean> shouldRun) {
+        this.shouldRun = shouldRun;
         return this;
     }
 

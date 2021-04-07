@@ -35,6 +35,8 @@ import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.robot.Odometry;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
+import java.util.function.Supplier;
+
 /**
  * Simple interface for creating Pathfinder configurations. Please note
  * that there's no documentation in this class. If you're confused about
@@ -74,6 +76,7 @@ public class PathfinderConfigurationBuilder {
     private boolean odometrySwapXY = false;
     private boolean odometryInvertX = false;
     private boolean odometryInvertY = false;
+    private Supplier<Boolean> shouldRun = () -> true;
 
     private PathfinderConfigurationBuilder() {
     }
@@ -137,6 +140,11 @@ public class PathfinderConfigurationBuilder {
         return this;
     }
 
+    public PathfinderConfigurationBuilder tickerThreadOnStop(Supplier<Boolean> shouldRun) {
+        this.shouldRun = shouldRun;
+        return this;
+    }
+
     public PathfinderConfig build() {
         if (drive == null)
             throw new IllegalArgumentException(
@@ -155,7 +163,8 @@ public class PathfinderConfigurationBuilder {
                 speed,
                 true,
                 true,
-                true
+                true,
+                shouldRun
         ) {{
             driveSwapXY(drivetrainSwapXY);
             driveInvertX(drivetrainInvertX);

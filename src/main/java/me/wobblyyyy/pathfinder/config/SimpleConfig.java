@@ -35,6 +35,8 @@ import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.robot.Odometry;
 import me.wobblyyyy.pathfinder.util.RobotProfile;
 
+import java.util.function.Supplier;
+
 /**
  * A simple pathfinder configuration that relies on a lot less input
  * parameters.
@@ -55,6 +57,7 @@ public class SimpleConfig extends PathfinderConfig {
     private static final boolean LIGHTNING = true;
     private static final boolean FAST = true;
     private static final boolean THETA = true;
+    private static final Supplier<Boolean> SHOULD_RUN = () -> true;
 
     public SimpleConfig() {
         this(
@@ -142,7 +145,8 @@ public class SimpleConfig extends PathfinderConfig {
                 speed,
                 LIGHTNING,
                 FAST,
-                THETA
+                THETA,
+                SHOULD_RUN
         );
     }
 }
