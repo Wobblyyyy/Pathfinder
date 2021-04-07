@@ -27,33 +27,20 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.followers;
+package me.wobblyyyy.pathfinder.control;
 
-import me.wobblyyyy.edt.DynamicArray;
-import me.wobblyyyy.pathfinder.config.PathfinderConfig;
-import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.trajectory.Trajectory;
-
-public class FollowerFactory {
-    public static LinearFollower linear(PathfinderConfig config,
-                                        DynamicArray<HeadingPoint> points) {
-        return new LinearFollower(
-                config.getDrive(),
-                config.getRawOdometry(),
-                points.get(0),
-                points.get(1),
-                config.getSpeed(),
-                config.getTurnController()
-        );
-    }
-
-    public static TrajectoryFollower trajectory(PathfinderConfig config,
-                                                Trajectory trajectory) {
-        return new TrajectoryFollower(
-                trajectory,
-                config.getRawOdometry(),
-                config.getDrive(),
-                config
-        );
+/**
+ * A "default" turn controller. This is the controller that's used when no
+ * other controller is configured for turning.
+ *
+ * @author Colin Robertson
+ * @since 0.6.1
+ */
+public class DefaultTurnController extends ProportionalController {
+    /**
+     * Default turn controller.
+     */
+    public DefaultTurnController() {
+        super(0);
     }
 }

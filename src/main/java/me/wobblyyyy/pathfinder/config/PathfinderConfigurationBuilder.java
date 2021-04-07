@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.config;
 
+import me.wobblyyyy.pathfinder.control.Controller;
+import me.wobblyyyy.pathfinder.control.DefaultTurnController;
 import me.wobblyyyy.pathfinder.followers.Followers;
 import me.wobblyyyy.pathfinder.map.Map;
 import me.wobblyyyy.pathfinder.robot.Drive;
@@ -57,6 +59,7 @@ import java.util.function.Supplier;
  * {@link #odometrySwapXY(boolean)},
  * {@link #odometryInvertX(boolean)},
  * {@link #odometryInvertY(boolean)},
+ * {@link #turnController(Controller)}
  * {@link #speed(double)}, and then finally (this one has to be last)
  * you should call {@link #build()}.
  * </p>
@@ -77,6 +80,7 @@ public class PathfinderConfigurationBuilder {
     private boolean odometryInvertX = false;
     private boolean odometryInvertY = false;
     private Supplier<Boolean> shouldRun = () -> true;
+    private Controller turnController = new DefaultTurnController();
 
     private PathfinderConfigurationBuilder() {
     }
@@ -145,6 +149,11 @@ public class PathfinderConfigurationBuilder {
         return this;
     }
 
+    public PathfinderConfigurationBuilder turnController(Controller controller) {
+        this.turnController = controller;
+        return this;
+    }
+
     public PathfinderConfig build() {
         if (drive == null)
             throw new IllegalArgumentException(
@@ -172,6 +181,7 @@ public class PathfinderConfigurationBuilder {
             odometrySwapXY(odometrySwapXY);
             odometryInvertX(odometryInvertX);
             odometryInvertY(odometryInvertY);
+            setTurnController(turnController);
         }};
     }
 }

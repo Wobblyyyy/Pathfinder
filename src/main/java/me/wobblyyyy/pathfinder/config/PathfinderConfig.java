@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.config;
 
+import me.wobblyyyy.pathfinder.control.Controller;
+import me.wobblyyyy.pathfinder.control.DefaultTurnController;
 import me.wobblyyyy.pathfinder.followers.Followers;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.error.NoFindersException;
@@ -371,6 +373,12 @@ public class PathfinderConfig {
      * should keep running
      */
     private Supplier<Boolean> shouldRun = () -> true;
+
+    /**
+     * The robot's turn controller. This controller determines the speed at
+     * which the robot should rotate.
+     */
+    private Controller turnController = new DefaultTurnController();
 
     /**
      * Create a new {@code PathfinderConfig} without any configuration elements
@@ -875,5 +883,23 @@ public class PathfinderConfig {
      */
     public boolean driveInvertY() {
         return driveInvertY;
+    }
+
+    /**
+     * Get the robot's turn controller.
+     *
+     * @return the robot's turn controller.
+     */
+    public Controller getTurnController() {
+        return turnController;
+    }
+
+    /**
+     * Set the robot's turn controller.
+     *
+     * @param turnController the robot's turn controller.
+     */
+    public void setTurnController(Controller turnController) {
+        this.turnController = turnController;
     }
 }

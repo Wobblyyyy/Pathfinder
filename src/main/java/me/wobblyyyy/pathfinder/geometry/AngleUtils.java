@@ -59,15 +59,54 @@ public class AngleUtils {
         return toPiRads(radsWithoutPi) * 2;
     }
 
+    /**
+     * Ensure a radian measure fits within the bounds of 0 to 2 pi.
+     *
+     * @param rad the radian measure to check.
+     * @return the fixed radian measure.
+     */
     public static double fixRad(double rad) {
         while (rad < toPiRads(0)) rad += toPiRads(2);
         while (rad > toPiRads(2)) rad -= toPiRads(2);
         return rad;
     }
 
+    /**
+     * Ensure a degree measure fits within the bounds of 0 to 360.
+     *
+     * @param deg the degree measure to check.
+     * @return the fixed degree measure.
+     */
     public static double fixDeg(double deg) {
         while (deg < 0) deg += 360;
         while (deg > 360) deg -= 360;
         return deg;
+    }
+
+    /**
+     * Get the current difference in angle between the odometry's reported
+     * angle and the target angle. This value will be fed into the turn
+     * controller and used to determine turn speed.
+     *
+     * @return the difference between the target and current angle, in degrees.
+     * If the distance is above 180deg, it'll be "normalized" by adjusting both
+     * angles down by 180, "fixing" them, and recalculating the delta.
+     */
+    public static double minimumAngleDelta(double currentAngle,
+                                           double targetAngle) {
+
+        double current = fixDeg(currentAngle);
+        double target = fixDeg(targetAngle);
+
+        final double delta;
+
+        if (target - current > 180) {
+            current = fixDeg(current - 180);
+            target = fixDeg(current - 180);
+        }
+
+        delta = target - current;
+
+        return fixDeg(delta);
     }
 }

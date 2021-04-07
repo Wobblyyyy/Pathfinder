@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.followers;
 
+import me.wobblyyyy.pathfinder.control.Controller;
+import me.wobblyyyy.pathfinder.geometry.AngleUtils;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
 import me.wobblyyyy.pathfinder.robot.Drive;
@@ -82,6 +84,11 @@ public class LinearFollower implements Follower {
     private double coefficient;
 
     /**
+     * The follower's turn {@code Controller}.
+     */
+    private final Controller turnController;
+
+    /**
      * Create a new linear follower.
      *
      * @param drive       the robot's drivetrain.
@@ -94,12 +101,14 @@ public class LinearFollower implements Follower {
                           Odometry odometry,
                           HeadingPoint start,
                           HeadingPoint end,
-                          double coefficient) {
+                          double coefficient,
+                          Controller turnController) {
         this.start = start;
         this.end = end;
         this.drive = drive;
         this.odometry = odometry;
         this.coefficient = coefficient;
+        this.turnController = turnController;
     }
 
     /**
@@ -160,6 +169,22 @@ public class LinearFollower implements Follower {
     }
 
     /**
+     * Get the current difference in angle between the odometry's reported
+     * angle and the target angle. This value will be fed into the turn
+     * controller and used to determine turn speed.
+     *
+     * @return the difference between the target and current angle, in degrees.
+     * If the distance is above 180deg, it'll be "normalized" by adjusting both
+     * angles down by 180, "fixing" them, and recalculating the delta.
+     */
+    public double getAngleDelta() {
+        return AngleUtils.minimumAngleDelta(
+                odometry.getPos().getHeading(),
+                end.getHeading()
+        );
+    }
+
+    /**
      * Drive the robot. This method attempts to power the robot by calling
      * the drive method of the drivetrain.
      */
@@ -174,9 +199,9 @@ public class LinearFollower implements Follower {
                 coefficient                 // speed to move at
         );
         RTransform transformation = new RTransform(
-                Point.ZERO,                          // origin
-                target,                              // "target" point
-                0                                    // angle to turn to
+                Point.ZERO,                               // origin
+                target,                                   // "target" point
+                turnController.calculate(getAngleDelta()) // turn rate
         );
 
         drive.drive(transformation);
