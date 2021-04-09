@@ -38,7 +38,7 @@ repositories {
 }
 
 /*
- * Each dependency should be annotated with a breif comment explaining
+ * Each dependency should be annotated with a brief comment explaining
  * what the dependency is needed for and how long it's been included in
  * Pathfinder. This just helps to keep everything on the same page.
  */
@@ -51,22 +51,6 @@ dependencies {
      */
     implementation 'com.github.tmthecoder:OdometryCore:1.0.0'
 
-    /*
-     * Name:    gson
-     * Version: +2.8.6
-     * Since:   0.5.0
-     * For:     Serializing paths and trajectories as JSON files.
-     */
-    implementation 'com.google.code.gson:gson:2.8.6'
-    
-    /*
-     * Name:    Reflections
-     * Version: +0.9.12
-     * Since:   0.4.0
-     * For:     Runtime annotation scanning.
-     */
-    implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
-    
     /*
      * Name:    Efficient Java Matrix Library.
      * Version: +0.4.0
