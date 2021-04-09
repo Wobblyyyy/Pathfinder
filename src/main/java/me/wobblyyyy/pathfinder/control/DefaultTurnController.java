@@ -29,6 +29,8 @@
 
 package me.wobblyyyy.pathfinder.control;
 
+import me.wobblyyyy.pathfinder.math.functional.Reciprocal;
+
 /**
  * A "default" turn controller. This is the controller that's used when no
  * other controller is configured for turning.
@@ -41,6 +43,6 @@ public class DefaultTurnController extends ProportionalController {
      * Default turn controller.
      */
     public DefaultTurnController() {
-        super(0);
+        super(Reciprocal.of(90));
     }
 }

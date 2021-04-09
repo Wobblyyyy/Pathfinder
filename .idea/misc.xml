@@ -9,6 +9,6 @@
     <option name="OPTION_SCOPE" value="private" />
     <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="15" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
   <component name="jetbrains.communicator.idea.IdProvider" IDEtalkID="4B32EE07D9B1962497D8B4841849EB06" />
 </project>
