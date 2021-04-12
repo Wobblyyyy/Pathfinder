@@ -31,7 +31,7 @@ package me.wobblyyyy.pathfinder.test.trajectory;
 
 import me.wobblyyyy.edt.DynamicArray;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.json.JsonIO;
+//import me.wobblyyyy.pathfinder.json.JsonIO;
 import me.wobblyyyy.pathfinder.geometry.Linear;
 import me.wobblyyyy.pathfinder.trajectory.PathGenerator;
 import me.wobblyyyy.pathfinder.geometry.Spline;
@@ -56,6 +56,6 @@ public class PathGenTest {
 
         DynamicArray<HeadingPoint> points = PathGenerator.toPath(trajectory);
 
-        System.out.println(JsonIO.pointsToJson(JsonIO.toArrayList(points)));
+//        System.out.println(JsonIO.pointsToJson(JsonIO.toArrayList(points)));
     }
 }

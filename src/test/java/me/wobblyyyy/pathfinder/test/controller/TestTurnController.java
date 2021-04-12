@@ -27,51 +27,28 @@
  *
  */
 
-package me.wobblyyyy.pathfinder.test.json;
+package me.wobblyyyy.pathfinder.test.controller;
 
-import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
-import me.wobblyyyy.pathfinder.json.JsonIO;
+import me.wobblyyyy.pathfinder.geometry.AngleUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
-public class JsonTest {
+public class TestTurnController {
     @Test
-    public void testSaveAndLoadJson() {
-//        ArrayList<HeadingPoint> points = new ArrayList<>() {{
-//            add(new HeadingPoint(0, 0, 0));
-//            add(new HeadingPoint(10, 10, 0));
-//        }};
-//
-//        String path = FileSystems.getDefault().getPath("Foo.txt").toString();
-//
-//        try {
-//            JsonIO.savePoints(path, points);
-//            ArrayList<HeadingPoint> loadedPoints = JsonIO.loadPoints(path);
-//
-//            for (HeadingPoint p : loadedPoints) {
-//                System.out.println(p.toString());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
+    public void testMinimumAngleDelta() {
+        double[] a = {0, 45, 90, 135, 180, 225, 270, 315, 360};
+        double[] b = new double[a.length];
 
-    @Test
-    public void jsonTesting() {
-        ArrayList<HeadingPoint> points = new ArrayList<>() {{
-            add(new HeadingPoint(0, 0, 0));
-            add(new HeadingPoint(10, 10, 0));
-            add(new HeadingPoint(20, 20, 0));
-            add(new HeadingPoint(30, 30, 0));
-        }};
+        for (int i = 0; i < a.length; i++) {
+            b[i] = AngleUtils.fixDeg(a[i] + 90 * i);
+        }
 
-        String json = JsonIO.pointsToJson(points);
-        System.out.println(json);
-        ArrayList<HeadingPoint> newPoints = JsonIO.pointsFromJson(json);
+        for (int i = 0; i < a.length; i++) {
+            double delta = AngleUtils.minimumAngleDelta(a[i], b[i]);
 
-        for (HeadingPoint p : newPoints) {
-            System.out.println(p.toString());
+            System.out.println("A: " + a[i]);
+            System.out.println("B: " + b[i]);
+            System.out.println("Delta: " + delta);
+            System.out.println();
         }
     }
 }

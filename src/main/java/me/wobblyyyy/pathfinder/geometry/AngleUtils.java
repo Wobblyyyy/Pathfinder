@@ -112,19 +112,30 @@ public class AngleUtils {
      */
     public static double minimumAngleDelta(double currentAngle,
                                            double targetAngle) {
-
+        // Normalize both the target and current values with fixDeg
         double current = fixDeg(currentAngle);
         double target = fixDeg(targetAngle);
 
+        // Declare delta, initialize it later.
         final double delta;
 
+        // If the target is more than 180 degrees away from the current, we
+        // know we can further optimize the angle delta.
         if (target - current > 180) {
+            // Re-calculate the current and target points by subtracting 180
+            // from each of them and fixing the degree measure. This ensures
+            // that the maximum possible angle delta is +- 0.
             current = fixDeg(current - 180);
             target = fixDeg(current - 180);
         }
 
+        // Initialize delta. Very fun.
         delta = target - current;
 
-        return fixDeg(delta);
+        // Now we're done!
+        // Note that we don't use the fixDeg method here because this angle
+        // delta is relative, whereas target and current positions are both
+        // absolute.
+        return delta;
     }
 }

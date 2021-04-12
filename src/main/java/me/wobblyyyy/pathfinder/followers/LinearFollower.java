@@ -39,18 +39,14 @@ import me.wobblyyyy.pathfinder.robot.Odometry;
 import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
- * The most incredibly simple trajectory follower you could possible imagine.
- * This follower works by linearly driving the drivetrain in a given direction.
- * The follower's speed coefficient (how fast the robot moves out of a possible
- * 100% power) can be modified on construction, allowing the follower to be
- * either faster or slower. After the follower's execution has finished
- * entirely, the follower should stop the robot by setting power to each of the
- * drivetrain's motors to 0. Please note that this follower doesn't have any
- * dynamic correction - if the robot is in the wrong place, the follower won't
- * work, and your pathfinder will have a hard time... pathfinding.
+ * The most basic path follower. This follower can follow a single segment
+ * defined by two {@link HeadingPoint} instances. The first of the two points
+ * (the start point) and the second of the two points (the end point) are used
+ * in tandem with the robot's current position to dynamically correct for any
+ * potential movement mishaps, meaning the robot will go to where it's supposed
+ * to, or it'll die trying.
  *
  * @author Colin Robertson
- * @version 1.0.0
  * @since 0.1.0
  */
 public class LinearFollower implements Follower {
@@ -178,9 +174,13 @@ public class LinearFollower implements Follower {
      * angles down by 180, "fixing" them, and recalculating the delta.
      */
     public double getAngleDelta() {
+        // This method call returns a number that can be either positive or
+        // negative. We don't fix the angle because this is a RELATIVE
+        // measurement, unlike an absolute measurement, such as current and
+        // target headings.
         return AngleUtils.minimumAngleDelta(
-                odometry.getPos().getHeading(),
-                end.getHeading()
+                odometry.getPos().getHeading(), // current heading
+                end.getHeading()                // target heading
         );
     }
 
@@ -190,14 +190,32 @@ public class LinearFollower implements Follower {
      */
     @Override
     public void drive() {
+        /*
+         * We create a theoretical target point by using the inDirection
+         * method to create a point that's COEFFICIENT away from 0 in whatever
+         * direction we determine by calculating the angle between the
+         * robot's current position and the robot's target position.
+         */
         Point target = Distance.inDirection(
-                Point.ZERO,                 // origin point
-                Point.angleOfDeg(           // angle between pos and end
-                        odometry.getPos(),  // current position
-                        end                 // target position
-                ),                          // angle A to B
-                coefficient                 // speed to move at
+                Point.ZERO,                               // origin point
+                Point.angleOfDeg(                         // angle to go at
+                        odometry.getPos(),                // current position
+                        end                               // target position
+                ),                                        // angle A to B
+                coefficient                               // speed to move at
         );
+
+        /*
+         * Now we create a transformation from the theoretical target point.
+         * This transformation is a transformation between 0 and the target
+         * point, thus capable of instructing the robot to move how we want.
+         *
+         * The turn controller is utilized here. We determine the current
+         * angle delta (can be positive or negative) and use the controller
+         * to determine the rate at which the robot should move. Because this
+         * can be a positive or negative number as well, the robot can turn
+         * in either direction. Lovely, isn't it?
+         */
         RTransform transformation = new RTransform(
                 Point.ZERO,                               // origin
                 target,                                   // "target" point
