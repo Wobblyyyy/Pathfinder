@@ -140,12 +140,12 @@ public class ThreeWheelChassisTracker implements Tracker {
         this.right = right;
         this.middle = middle;
 
-        OdometryCore.initialize(
-                middle.getCpr(),
-                wheelDiameter,
-                leftOffset,
-                rightOffset,
-                middleOffset
+        OdometryCore.initialize( // singleton, initialize once
+                middle.getCpr(), // wheel CPR (same for each wheel)
+                wheelDiameter,   // diameter of each of the wheels
+                leftOffset,      // offset (left-center)
+                rightOffset,     // offset (right-center)
+                middleOffset     // offset (back-center)
         );
     }
 
@@ -167,6 +167,8 @@ public class ThreeWheelChassisTracker implements Tracker {
      * @see #setOffset(Point)
      */
     public void useCurrentPosAsOffset() {
+        // Set the robot's offset to the inverse of the current position,
+        // thus making the robot think whatever point it's at is 0.
         setOffset(new Point(
                 position.getX() * -1,
                 position.getY() * -1
@@ -256,29 +258,35 @@ public class ThreeWheelChassisTracker implements Tracker {
      */
     @Override
     public void update() {
+        // Create an EncoderPositions instance based on the count of the
+        // left, right and middle encoders. This order is defined inside
+        // OdometryCore.
         EncoderPositions encoderPositions = new EncoderPositions(
                 left.getCount(),
                 right.getCount(),
                 middle.getCount()
         );
 
+        // Get a position from the odometry core's math component. This
+        // position, quite conveniently, contains X, Y, and Z, all of
+        // which are values we need to create a regular, good, ol'
+        // fashioned HeadingPoint.
         OdometryPosition odometryPosition = OdometryCore
                 .getInstance()
                 .getCurrentPosition(encoderPositions);
 
-        /*
-         * Do two things here. Firstly, we convert between an odometry position
-         * and a heading point. Then, we transform the heading point based on
-         * the tracker's offset. By default, there's an offset of zero, but
-         * if the user has changed their offset, this will shift the inputted
-         * point by whatever the offset is.
-         */
+        // Do two things here. Firstly, we convert between an odometry position
+        // and a heading point. Then, we transform the heading point based on
+        // the tracker's offset. By default, there's an offset of zero, but
+        // if the user has changed their offset, this will shift the inputted
+        // point by whatever the offset is.
         position = HeadingPoint
-                .fromOdometryPosition(odometryPosition)
-                .transform(
-                        offset.getX(),
-                        offset.getY(),
-                        Angle.ZERO
+                .fromOdometryPosition(odometryPosition) // convert pos to point
+                .transform(             // transform the point according to
+                                        // the tracker's offset
+                        offset.getX(),  // X offset
+                        offset.getY(),  // Y offset
+                        Angle.ZERO      // there is no angle offset (yet)
                 );
     }
 }

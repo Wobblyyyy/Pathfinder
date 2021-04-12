@@ -41,8 +41,24 @@ import me.wobblyyyy.pathfinder.math.functional.Reciprocal;
 public class DefaultTurnController extends ProportionalController {
     /**
      * Default turn controller.
+     *
+     * <p>
+     * This turn controller is configured to have a coefficient of the
+     * reciprocal of 90, which is equal to about 0.01111111111. Such, the
+     * controller will turn as fast as possible whenever the distance from
+     * the target angle is greater than 90.
+     * </p>
      */
     public DefaultTurnController() {
-        super(Reciprocal.of(90));
+        super(Reciprocal.of(90)); // 1/90, 0.01111111111
+
+        /*
+         * Turn controllers should almost always have a target of zero.
+         * Remember, controllers operate on delta, not absolute.
+         */
+        setTarget(0); // attempt to minimize the angle delta.
+
+        setMin(-1.0); // shouldn't ever turn faster than 1x negative.
+        setMin(+1.0); // shouldn't ever turn faster than 1x positive.
     }
 }

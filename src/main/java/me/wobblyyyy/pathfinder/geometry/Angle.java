@@ -37,6 +37,13 @@ package me.wobblyyyy.pathfinder.geometry;
  * angles are expressed in the correct form - either radians or degrees -
  * when they should be in that form.
  *
+ * <p>
+ * The {@code Angle} class in an immutable object, meaning the internal
+ * degree and radian measurements can not be modified after initialization.
+ * In order to circumvent this, you must create a new {@code Angle} every time
+ * you'd like to modify an angle is some way.
+ * </p>
+ *
  * @author Colin Robertson
  * @since 0.3.0
  */
@@ -45,6 +52,46 @@ public class Angle {
      * Zero degrees, zero radians - you name it. Just zero.
      */
     public static final Angle ZERO = new Angle(0);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_45 = new Angle(45);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_90 = new Angle(90);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_135 = new Angle(135);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_180 = new Angle(180);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_225 = new Angle(225);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_270 = new Angle(270);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_315 = new Angle(315);
+
+    /**
+     * Static angle at a certain degree measure.
+     */
+    public static final Angle DEG_360 = new Angle(360);
 
     /**
      * The angle, notated in degrees.
@@ -63,7 +110,7 @@ public class Angle {
      * @see #fromDegrees(double)
      * @see #fromRadians(double)
      */
-    public Angle(double angleDegrees) {
+    public Angle(final double angleDegrees) {
         this.angleDegrees = angleDegrees;
         this.angleRadians = Math.toRadians(angleDegrees);
     }

@@ -228,7 +228,7 @@ public class LinearFollower implements Follower {
     /**
      * Has the follower finished yet? The follower's finish qualification is
      * determined by whether or not the robot is close enough to the target
-     * position. This tolerance is, by default, 4 units - often inches.
+     * position. This tolerance is, by default, 0.5 units - often inches.
      *
      * @return whether or not the follower has finished.
      */
@@ -263,18 +263,33 @@ public class LinearFollower implements Follower {
     /**
      * Return a string representation of the {@code LinearFollower}.
      *
+     * <p>
+     * This string takes following form:
+     * {@code "LinearFollower{{(%f, %f) @ %f}, {(%f, %f) @ %f}}"}. Each of the
+     * {@code %f} values will be replaced by a number. In this case, the order
+     * of these numbers is as follows:
+     * <ul>
+     *     <li> start point's x value (1) </li>
+     *     <li> start point's y value (2) </li>
+     *     <li> start point's heading (3) </li>
+     *     <li>   end point's x value (4) </li>
+     *     <li>   end point's y value (5) </li>
+     *     <li>   end point's heading (6) </li>
+     * </ul>
+     * </p>
+     *
      * @return the {@code LinearFollower} in {@code String} form.
      */
     @Override
     public String toString() {
         return String.format(
                 "LinearFollower{{(%f, %f) @ %f}, {(%f, %f) @ %f}}",
-                start.getX(),
-                start.getY(),
-                start.getHeading(),
-                end.getX(),
-                end.getY(),
-                end.getHeading()
+                start.getX(),          // start point's x value (1)
+                start.getY(),          // start point's y value (2)
+                start.getHeading(),    // start point's heading (3)
+                end.getX(),            // end point's x value   (4)
+                end.getY(),            // end point's y value   (5)
+                end.getHeading()       // end point's heading   (6)
         );
     }
 }
