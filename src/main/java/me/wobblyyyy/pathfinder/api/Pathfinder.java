@@ -40,6 +40,8 @@ import me.wobblyyyy.pathfinder.followers.Follower;
 import me.wobblyyyy.pathfinder.geometry.HeadingPoint;
 import me.wobblyyyy.pathfinder.trajectory.Trajectory;
 
+import java.util.List;
+
 /**
  * The highest-level Pathfinder available.
  *
@@ -209,6 +211,32 @@ public class Pathfinder {
     }
 
     /**
+     * Follow a provided list of points. Typically, this list of points should
+     * contain two or more target points. Remember, all points are absolute
+     * unless otherwise specific - if you want your robot to go to a point,
+     * such as (10, 10, 90), it'll go to (10, 10, 90) regardless of where the
+     * robot starts following the path.
+     *
+     * <p>
+     * This method calls the {@link #followPath(DynamicArray)} method after
+     * converting the provided {@link List} into an {@link DynamicArray}.
+     * </p>
+     *
+     * @param points a list of target points to follow. This list is typically
+     *               greater than 2 in size. If it isn't, you might want to
+     *               check out the {@link #goToPosition(HeadingPoint)} method.
+     * @return a chainable {@code PromisedFinder} object.
+     * @see #followPath(DynamicArray)
+     */
+    public PromisedFinder followPath(List<HeadingPoint> points) {
+        DynamicArray<HeadingPoint> array = new DynamicArray<>(points.size()) {{
+            points.forEach(this::add);
+        }};
+
+        return followPath(array);
+    }
+
+    /**
      * Follow a given path.
      *
      * <p>
@@ -230,14 +258,6 @@ public class Pathfinder {
      * Path and trajectory generations can be very expensive. The longer the
      * path you'd like to follow, the more paths, and thus the more
      * trajectories, that need to be generated.
-     * </p>
-     *
-     * <p>
-     * This method is used most effectively in conjunction with any type of
-     * trajectory-based follower, such as the {@link SwerveFollower}. Although
-     * it does work with any other type of follower, you don't get any of the
-     * benefits of waypoint-based path generation by using a simpler follower
-     * type, such as the {@link PIDFollower}.
      * </p>
      *
      * @param points the points to be used as waypoints in path generation.

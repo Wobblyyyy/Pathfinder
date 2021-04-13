@@ -36,7 +36,6 @@ import me.wobblyyyy.pathfinder.annotations.Async;
 import me.wobblyyyy.pathfinder.annotations.Sync;
 import me.wobblyyyy.pathfinder.annotations.Wait;
 import me.wobblyyyy.pathfinder.config.PathfinderConfig;
-import me.wobblyyyy.pathfinder.error.InvalidPathException;
 import me.wobblyyyy.pathfinder.finders.GeneratorManager;
 import me.wobblyyyy.pathfinder.followers.Follower;
 import me.wobblyyyy.pathfinder.followers.FollowerFactory;
@@ -154,7 +153,7 @@ public class PathfinderManager {
         this.map = config.getMap();
         finder = new GeneratorManager(config);
         exec = new FollowerExecutor(config.getDrive());
-        thread = new PathfinderThreadManager(config.getRawOdometry());
+        thread = new PathfinderThreadManager(config.getOdometry());
         mainThread = new MainThread(new StaticArray<>(
                 thread::tick,
                 exec::tick
@@ -171,12 +170,6 @@ public class PathfinderManager {
      */
     @Sync
     public void open() {
-//        exec = new FollowerExecutor(config.getDrive());
-//        thread = new PathfinderThreadManager(config.getRawOdometry());
-
-//        exec.start();
-//        thread.start();
-//        mainThread.open();
         tickerThread.start();
     }
 
@@ -230,14 +223,6 @@ public class PathfinderManager {
     @Sync
     public DynamicArray<Point> getPath(HeadingPoint start,
                                        HeadingPoint end) {
-//        if (HeadingPoint.isSame(start, end)) {
-//            try {
-//                throw new InvalidPathException("Points can not be identical!");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-
         return finder.getCoordinatePath(start, end);
     }
 
@@ -269,14 +254,6 @@ public class PathfinderManager {
      */
     @Sync
     public DynamicArray<Point> getWaypointPath(DynamicArray<HeadingPoint> points) {
-        if (points.size() < 2) {
-            try {
-                throw new InvalidPathException("Too few target points!");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         DynamicArray<DynamicArray<Point>> paths = new DynamicArray<>();
 
         points.itr().forEach(point -> {
@@ -304,6 +281,7 @@ public class PathfinderManager {
      * @return a list of followers to follow that path.
      * @see PathfinderConfig#getFollowerType()
      */
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Sync
     public DynamicArray<Follower> generateFollowers(
             DynamicArray<HeadingPoint> path) {
@@ -321,7 +299,7 @@ public class PathfinderManager {
             );
         }
 
-        path.add(0, config.getRawOdometry().getPos());
+        path.add(0, config.getOdometry().getPos());
 
         path.itr().forEach(point -> {
             try {
@@ -339,27 +317,6 @@ public class PathfinderManager {
                                             config, points
                                     )
                             );
-                            break;
-                        case PID:
-//                            followers.add(
-//                                    FollowerFactory.pid(
-//                                            config, points
-//                                    )
-//                            );
-                            break;
-                        case DUAL_PID:
-//                            followers.add(
-//                                    FollowerFactory.dualPid(
-//                                            config, points
-//                                    )
-//                            );
-                            break;
-                        case TRI_PID:
-//                            followers.add(
-//                                    FollowerFactory.triPid(
-//                                            config, points
-//                                    )
-//                            );
                             break;
                         default:
                     }
@@ -382,12 +339,11 @@ public class PathfinderManager {
             Arrayable<Trajectory> trajectories) {
         DynamicArray<Follower> followers =
                 new DynamicArray<>(trajectories.size());
-        trajectories.itr().forEach(trajectory -> {
-            followers.add(FollowerFactory.trajectory(
-                    config,
-                    trajectory
-            ));
-        });
+        trajectories.itr().forEach(trajectory -> followers.add(
+                FollowerFactory.trajectory(
+                        config,
+                        trajectory
+                )));
         return followers;
     }
 
@@ -534,7 +490,7 @@ public class PathfinderManager {
          * should get the job done.
          */
         DynamicArray<Point> path = generateAndQueueFollowers(
-                config.getRawOdometry().getPos(),
+                config.getOdometry().getPos(),
                 end
         ).getPath();
 
@@ -744,7 +700,6 @@ public class PathfinderManager {
      */
     @Sync
     public void close() {
-//        mainThread.close();
         tickerThread.stopThread();
     }
 
