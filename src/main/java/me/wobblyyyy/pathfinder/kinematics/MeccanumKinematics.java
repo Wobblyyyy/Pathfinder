@@ -129,7 +129,7 @@ public class MeccanumKinematics {
                 0,
                 transform.getX(),
                 transform.getY(),
-                0
+                transform.getTurn()
         );
         SimpleMatrix moduleMatrix = kinematicsBackwards.mult(speedVector);
         return new MeccanumState(
