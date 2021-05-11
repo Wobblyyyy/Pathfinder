@@ -102,6 +102,11 @@ public class MeccanumKinematics {
         this.posBl = posBl;
         this.posBr = posBr;
 
+        System.out.println(posFl);
+        System.out.println(posFr);
+        System.out.println(posBl);
+        System.out.println(posBr);
+
         kinematicsBackwards = new SimpleMatrix(4, 3);
         kinematicsBackwards.setRow(0, 0, 1, -1, -(posFl.getX() + posFl.getY()));
         kinematicsBackwards.setRow(1, 0, 1, +1, +(posFr.getX() - posFr.getY()));
@@ -132,12 +137,14 @@ public class MeccanumKinematics {
                 transform.getTurn()
         );
         SimpleMatrix moduleMatrix = kinematicsBackwards.mult(speedVector);
-        return new MeccanumState(
+        MeccanumState state = new MeccanumState(
                 moduleMatrix.get(0, 0),
                 moduleMatrix.get(1, 0),
                 moduleMatrix.get(2, 0),
                 moduleMatrix.get(3, 0)
         );
+        state.normalizeFromMaxUnderOne();
+        return state;
     }
 
     /**
