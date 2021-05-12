@@ -35,13 +35,7 @@ import me.wobblyyyy.pathfinder.math.functional.Reflection;
 import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
- * A representation of a robot's transformation. This representation doesn't
- * include units or rates - rather, everything is measured as a generic unit
- * that can be customized to your likings. As another note, this transformation
- * doesn't include a rotation rate - rather, it includes a desired angle. The
- * robot's movement direction is determined by the two points that represent
- * the robot's transformation. The robot's angle is defined by whatever angle
- * is inputted. The robot should attempt to turn to this angle whenever it can.
+ * A representation of a robot's desired transformation.
  *
  * @author Colin Robertson
  * @since 0.3.0
@@ -83,8 +77,7 @@ public class RTransform {
     private Point stop;
 
     /**
-     * The transformation's facing. This facing should represent the angle that
-     * the robot as a whole should be facing.
+     * The transformation's turn (usually rad/sec)
      */
     private final double turn;
 
@@ -99,13 +92,11 @@ public class RTransform {
     private double y;
 
     /**
-     * Create a new robot transformation instance by using two points and an
-     * angle. This angle represents the angle that the chassis should be facing.
-     * It DOES NOT represent the rate at which the robot should turn.
+     * Create a new transformation.
      *
      * @param start the transformation's start point.
      * @param stop  the transformation's stop point.
-     * @param turn  the angle that the robot should be facing.
+     * @param turn  the robot's rate of turn.
      */
     public RTransform(Point start,
                       Point stop,
@@ -119,14 +110,11 @@ public class RTransform {
     }
 
     /**
-     * Create a new robot transformation instance by using an X and a Y
-     * component translation rather than a pair of points. The angle required
-     * by this constructor should represent the angle that the robot is facing,
-     * not the angle that the robot should be moving in.
+     * Create a new transformation.
      *
-     * @param x    the translation's X component.
-     * @param y    the translation's Y component.
-     * @param turn the translation's angle.
+     * @param start the transformation's X component.
+     * @param stop  the transformation's Y component.
+     * @param turn  the robot's rate of turn.
      */
     public RTransform(double x,
                       double y,
@@ -157,7 +145,7 @@ public class RTransform {
      *
      * @param start the translation's start point.
      * @param stop  the translation's stop point.
-     * @param turn  the angle the robot should be facing.
+     * @param turn  the robot's rate of turn.
      * @param gyro  the gyroscope's angle.
      * @return a newly-created robot transformation that makes use of the gyro
      * angle provided to transform the robot as specified.
@@ -180,7 +168,7 @@ public class RTransform {
      *
      * @param vX   the translation's component X value.
      * @param vY   the translation's component Y value.
-     * @param turn the angle the robot should be facing.
+     * @param turn the robot's rate of turn.
      * @param gyro the gyroscope's angle.
      * @return a newly-created robot transformation that makes use of the gyro
      * angle provided to transform the robot as specified.
@@ -294,7 +282,7 @@ public class RTransform {
     @Override
     public String toString() {
         return String.format(
-                "Robot Transform: {(vX: %.2f), (vY: %.2f), (vT: %.2f deg)}",
+                "Robot Transform: {(vX: %.2f), (vY: %.2f), (vT: %.2f rad/sec)}",
                 x, y, turn
         );
     }
