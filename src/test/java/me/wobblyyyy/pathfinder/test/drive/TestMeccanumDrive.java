@@ -71,6 +71,10 @@ public class TestMeccanumDrive {
         add(new RTransform(-0.5, 0, -0.5));
         add(new RTransform(0, -0.5, -0.5));
         add(new RTransform(-0.5, -0.5, 0.5));
+        add(new RTransform(0, 0, -1));
+        add(new RTransform(10, 0, -1));
+        add(new RTransform(50, 50, 0));
+        add(new RTransform(25, 15, 1));
     }};
 
     @BeforeEach
@@ -81,7 +85,7 @@ public class TestMeccanumDrive {
         this.bl = new DummyMotor();
         this.drive = new MeccanumDrive(
                 fl, fr, bl, br,
-                336 / 100D, 403.5 / 100D
+                336 / 24.3, 403.5 / 24.3
         );
     }
 
