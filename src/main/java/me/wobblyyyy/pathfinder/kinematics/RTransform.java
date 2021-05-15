@@ -30,9 +30,9 @@
 package me.wobblyyyy.pathfinder.kinematics;
 
 import me.wobblyyyy.pathfinder.geometry.Angle;
+import me.wobblyyyy.pathfinder.geometry.Distance;
 import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.math.functional.Reflection;
-import me.wobblyyyy.pathfinder.geometry.Distance;
 
 /**
  * A representation of a robot's desired transformation.
@@ -112,9 +112,9 @@ public class RTransform {
     /**
      * Create a new transformation.
      *
-     * @param start the transformation's X component.
-     * @param stop  the transformation's Y component.
-     * @param turn  the robot's rate of turn.
+     * @param x    the transformation's X component.
+     * @param y    the transformation's Y component.
+     * @param turn the robot's rate of turn.
      */
     public RTransform(double x,
                       double y,

@@ -33,6 +33,7 @@ import me.wobblyyyy.pathfinder.geometry.Point;
 import me.wobblyyyy.pathfinder.kinematics.MeccanumKinematics;
 import me.wobblyyyy.pathfinder.kinematics.MeccanumState;
 import me.wobblyyyy.pathfinder.kinematics.RTransform;
+import me.wobblyyyy.pathfinder.kinematics.RelativeMeccanumKinematics;
 import me.wobblyyyy.pathfinder.robot.Drive;
 import me.wobblyyyy.pathfinder.robot.Motor;
 
@@ -92,7 +93,7 @@ public class MeccanumDrive implements Drive {
      *
      * @see MeccanumKinematics
      */
-    public final MeccanumKinematics kinematics;
+    public final RelativeMeccanumKinematics kinematics;
 
     /**
      * Create a new {@code MeccanumDrive} by using four inputted motors and
@@ -145,12 +146,7 @@ public class MeccanumDrive implements Drive {
 
         // Create a new kinematics instance from the provided points.
         // Order is always FL, FR, BL, BR.
-        this.kinematics = new MeccanumKinematics(
-                flPos,
-                frPos,
-                blPos,
-                brPos
-        );
+        this.kinematics = new RelativeMeccanumKinematics();
     }
 
     /**
@@ -207,25 +203,14 @@ public class MeccanumDrive implements Drive {
         // transformation and a valid meccanum drive state.
         MeccanumState state = kinematics.toMeccanumState(transform);
 
-        // Normalize the power of each of the module states. If the power
-        // values of any of the modules exceeds 1, all of the module states
-        // will be proportionally scaled down as to preserve movement
-        // direction and force.
-        state.normalizeFromMaxUnderOne();
-
-        double multiplier = Math.abs(Math.min((Math.hypot(
-                transform.getX(),
-                transform.getY()
-        ) / Math.hypot(1, 1)) + (transform.getTurn() / 2), 1));
-
         // Set the normalized states to each of the motors.
         // In this case, we assume that the user is not controlling the robot.
         // If they are, sucks for them. That reminds me, actually:
         // TODO implement user and non-user meccanum control
-        fl().setPower(state.flPower() * multiplier, false);
-        fr().setPower(state.frPower() * multiplier, false);
-        bl().setPower(state.blPower() * multiplier, false);
-        br().setPower(state.brPower() * multiplier, false);
+        fl().setPower(state.flPower(), false);
+        fr().setPower(state.frPower(), false);
+        bl().setPower(state.blPower(), false);
+        br().setPower(state.brPower(), false);
     }
 
     /**
