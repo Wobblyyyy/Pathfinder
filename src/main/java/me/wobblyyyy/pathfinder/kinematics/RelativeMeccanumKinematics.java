@@ -91,10 +91,7 @@ public class RelativeMeccanumKinematics {
                 transform.getY(),
                 transform.getX()
         )) + 270);
-        double magnitude = Math.hypot(transform.getX(), transform.getY()) / 1.4;
-
-        double xRatio = transform.getX() / transform.getY();
-        double yRatio = transform.getY() / transform.getX();
+        double magnitude = Math.min(Math.hypot(transform.getX(), transform.getY()), 1);
 
         double fl = calculatePower(movementAngle, ANGLES[0], magnitude);
         double fr = calculatePower(movementAngle, ANGLES[1], magnitude);
@@ -108,6 +105,13 @@ public class RelativeMeccanumKinematics {
 
         MeccanumState state = new MeccanumState(fl, fr, bl, br);
         state.normalizeFromMaxUnderOne();
+
+        state = new MeccanumState(
+                state.flPower() * magnitude,
+                state.frPower() * magnitude,
+                state.blPower() * magnitude,
+                state.brPower() * magnitude
+        );
 
         return state;
     }

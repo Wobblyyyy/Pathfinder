@@ -54,5 +54,6 @@ public class TestRelativeMeccanumKinematics {
         printState(new RTransform(1, 1, 0));
         printState(new RTransform(1, 0, 1));
         printState(new RTransform(0, 1, 1));
+        printState(new RTransform(0.5, 0, 0));
     }
 }
