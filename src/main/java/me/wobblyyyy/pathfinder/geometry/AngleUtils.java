@@ -39,14 +39,23 @@ import me.wobblyyyy.pathfinder.math.Range;
  */
 public class AngleUtils {
     public static final double ZERO = 0;
+
     public static final double PI = Math.PI;
+
     public static final double PI_TIMES_2 = PI * 2;
+
     public static final double PI_OVER_2 = PI / 2;
+
     public static final double PI_OVER_3 = PI / 3;
+
     public static final double PI_OVER_4 = PI / 4;
+
     public static final double PI_OVER_5 = PI / 5;
+
     public static final double PI_OVER_6 = PI / 6;
+
     public static final double PI_OVER_7 = PI / 7;
+
     public static final double PI_OVER_8 = PI / 8;
 
     public static final Range<Double> RANGE_DEG = new Range<>(
@@ -126,7 +135,7 @@ public class AngleUtils {
             // from each of them and fixing the degree measure. This ensures
             // that the maximum possible angle delta is +- 0.
             current = fixDeg(current - 180);
-            target = fixDeg(current - 180);
+            target = fixDeg(target - 180);
         }
 
         // Initialize delta. Very fun.
