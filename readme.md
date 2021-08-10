@@ -1,5 +1,5 @@
 # IMPORTANT NOTICE
-This library IS NO LONGER BEING MAINTAINED! Please see [Pathfinder2](https://github.com/Wobblyyyy/Pathfinder2].
+This library IS NO LONGER BEING MAINTAINED! Please see [Pathfinder2](https://github.com/Wobblyyyy/Pathfinder2).
 You're free to use this library if you choose, but I'm just going to warn you right now that there are a decent
 amount of bugs in it. Pathfinder2 does pretty much exactly the same thing, but better.
 
